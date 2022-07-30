@@ -1,9 +1,9 @@
-import { RolesEnum } from '@decorators/roles.decorator';
+import { TypesEnum } from '@decorators/types.decorator';
 
 export interface JwtDecodeResponse {
   id: number,
   email: string,
-  role: RolesEnum,
+  type: TypesEnum,
   iat: number,
   exp: number,
 }

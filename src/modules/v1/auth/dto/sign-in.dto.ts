@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsEmail,
   IsNotEmpty,
   IsString,
   MaxLength,
@@ -10,7 +9,7 @@ import {
 export default class SignInDto {
   constructor(body: SignInDto | null = null) {
     if (body) {
-      this.email = body.email;
+      this.username = body.username;
       this.password = body.password;
     }
   }
@@ -18,10 +17,9 @@ export default class SignInDto {
   @ApiProperty({ type: String })
   @IsNotEmpty()
   @IsString()
-  @IsEmail()
-  @MinLength(3)
+  @MinLength(4)
   @MaxLength(128)
-  readonly email: string = '';
+  readonly username: string = '';
 
   @ApiProperty({ type: String })
   @IsNotEmpty()

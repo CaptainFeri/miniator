@@ -1,9 +1,9 @@
-import { RolesEnum } from '@decorators/roles.decorator';
+import { TypesEnum } from '@decorators/types.decorator';
 
 export interface LoginPayload {
   readonly id?: number;
 
-  readonly email?: string;
+  readonly username?: string;
 
-  readonly role?: RolesEnum;
+  readonly type?: TypesEnum;
 }

@@ -1,12 +1,12 @@
 import { Exclude, Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
-import { RolesEnum } from '@decorators/roles.decorator';
+import { TypesEnum } from '@decorators/types.decorator';
 
-export class UserResponseEntity {
+export class AccountResponseEntity {
   id: number = 0;
 
-  role: RolesEnum = RolesEnum.user;
+  type: TypesEnum = TypesEnum.user;
 
   verified: boolean = false;
 
@@ -16,9 +16,9 @@ export class UserResponseEntity {
   password: string = '';
 }
 
-export class AllUsersResponseEntity {
+export class AllAccountsResponseEntity {
   @ValidateNested({ each: true })
-  @Type(() => UserResponseEntity)
+  @Type(() => AccountResponseEntity)
   data?: [] = []
 
   collectionName?: string = '';

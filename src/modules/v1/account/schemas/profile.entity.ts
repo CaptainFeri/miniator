@@ -55,7 +55,6 @@ export default class ProfileEntity {
   readonly job: string = '';
 
   @ApiProperty({ type: Date, nullable: true })
-  @Column({ length: 64 })
   readonly birthday: Date = new Date();
 
   @OneToOne(() => AccountEntity, (object) => object.profileEntity, {

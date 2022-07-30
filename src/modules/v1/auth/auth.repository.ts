@@ -13,9 +13,9 @@ export default class AuthRepository {
     this.redisClient = redisService.getClient();
   }
 
-  public async addRefreshToken(email: string, token: string): Promise<void> {
+  public async addRefreshToken(username: string, token: string): Promise<void> {
     await this.redisClient.set(
-      email,
+      username,
       token,
       'EX',
       authConstants.redis.expirationTime.jwt.refreshToken,

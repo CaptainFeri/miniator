@@ -1,60 +1,91 @@
 import * as bcrypt from 'bcryptjs';
 
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import SignUpDto from '@v1/auth/dto/sign-up.dto';
-import UsersRepository from './accounts.repository';
+import AccountsRepository from './accounts.repository';
 import { UpdateResult } from 'typeorm/index';
-import UserEntity from './schemas/account.entity';
-import UpdateUserDto from './dto/update-user.dto';
+import AccountEntity from './schemas/account.entity';
+import UpdateAccountDto from './dto/update-account.dto';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
-import { PaginatedUsersInterface } from '@interfaces/paginatedEntity.interface';
+import { PaginatedAccountsInterface } from '@interfaces/paginatedEntity.interface';
 
 @Injectable()
-export default class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {
-  }
+export default class AccountsService {
+  constructor(private readonly accountsRepository: AccountsRepository) {}
 
-  public async create(user: SignUpDto): Promise<UserEntity> {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
+  public async create(account: SignUpDto): Promise<AccountEntity> {
+    const hashedPassword = await bcrypt.hash(account.password, 10);
 
-    return this.usersRepository.create({
-      ...user,
+    return this.accountsRepository.create({
+      ...account,
       password: hashedPassword,
     });
   }
 
-  public async getByEmail(email: string): Promise<UserEntity | undefined> {
-    return this.usersRepository.getByEmail(email);
+  public async getByEmail(email: string): Promise<AccountEntity | undefined> {
+    return this.accountsRepository.getByEmail(email);
   }
 
-  public async getVerifiedUserByEmail(email: string): Promise<UserEntity | undefined> {
-    return this.usersRepository.getVerifiedUserByEmail(email);
+  public async getVerifiedAccountByEmail(
+    email: string,
+  ): Promise<AccountEntity | undefined> {
+    return this.accountsRepository.getVerifiedAccountByEmail(email);
   }
 
-  public getUnverifiedUserByEmail(email: string): Promise<UserEntity | undefined> {
-    return this.usersRepository.getUnverifiedUserByEmail(email);
+  public async getVerifiedAccountByUsername(
+    username: string,
+  ): Promise<AccountEntity | undefined> {
+    return this.accountsRepository.getVerifiedAccountByUsername(username);
   }
 
-  public async getById(id: number): Promise<UserEntity | undefined> {
-    return this.usersRepository.getById(id);
+  public getUnverifiedAccountByEmail(
+    email: string,
+  ): Promise<AccountEntity | undefined> {
+    return this.accountsRepository.getUnverifiedAccountByEmail(email);
   }
 
-  public async getVerifiedUserById(id: number): Promise<UserEntity | undefined> {
-    return this.usersRepository.getVerifiedUserById(id);
+  public async getById(id: number): Promise<AccountEntity | undefined> {
+    return this.accountsRepository.getById(id);
   }
 
-  public async getUnverifiedUserById(id: number): Promise<UserEntity | undefined> {
-    return this.usersRepository.getUnverifiedUserById(id);
+  public async getVerifiedAccountById(
+    id: number,
+  ): Promise<AccountEntity | undefined> {
+    return this.accountsRepository.getVerifiedAccountById(id);
   }
 
-  update(id: number, data: UpdateUserDto): Promise<UpdateResult> {
-    return this.usersRepository.updateById(id, data);
+  public async getUnverifiedAccountById(
+    id: number,
+  ): Promise<AccountEntity | undefined> {
+    return this.accountsRepository.getUnverifiedAccountById(id);
+  }
+
+  update(id: number, data: UpdateAccountDto): Promise<UpdateResult> {
+    return this.accountsRepository.updateById(id, data);
   }
 
   public async getAllVerifiedWithPagination(
     options: PaginationParamsInterface,
-  ): Promise<PaginatedUsersInterface> {
-    return this.usersRepository.getAllVerifiedWithPagination(options);
+  ): Promise<PaginatedAccountsInterface> {
+    return this.accountsRepository.getAllVerifiedWithPagination(options);
+  }
+
+  public async deleteAccount(
+    id: number,
+    password: string,
+  ): Promise<AccountEntity | undefined> {
+    const account = await this.accountsRepository.getById(id);
+    if (!account) throw new NotFoundException('The item does not exist');
+
+    const passwordCompared = await bcrypt.compare(password, account.password);
+
+    if (!passwordCompared) throw new BadRequestException('Incorrect password');
+
+    return this.accountsRepository.deleteAccount(account);
   }
 }

@@ -40,15 +40,15 @@ export default class AccountEntity {
   @Column({ length: 64 })
   readonly password: string = '';
 
-  @ApiProperty({ type: Boolean })
+  @ApiProperty({ type: Boolean, default: false })
   @Column()
   readonly banned: boolean = false;
 
-  @ApiProperty({ type: Boolean })
+  @ApiProperty({ type: Boolean, default: false })
   @Column()
   readonly blocked: boolean = false;
 
-  @ApiProperty({ type: Boolean })
+  @ApiProperty({ type: Boolean, default: false })
   @Column()
   readonly verified: boolean = false;
 

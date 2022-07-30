@@ -3,11 +3,11 @@ import { IsBoolean, IsOptional } from 'class-validator';
 
 import SignUpDto from '@v1/auth/dto/sign-up.dto';
 
-export default class UpdateUserDto extends PartialType(SignUpDto) {
+export default class UpdateAccountDto extends PartialType(SignUpDto) {
   @ApiPropertyOptional({
     type: Boolean,
   })
   @IsOptional()
   @IsBoolean()
-  readonly verified: boolean = false;
+  readonly verified?: boolean = false;
 }

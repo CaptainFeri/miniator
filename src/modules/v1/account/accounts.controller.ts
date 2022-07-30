@@ -8,6 +8,11 @@ import {
   UseInterceptors,
   BadRequestException,
   Query,
+  Post,
+  Body,
+  Request,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -18,40 +23,100 @@ import {
   ApiParam,
   ApiExtraModels,
   getSchemaPath,
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiConflictResponse,
+  ApiInternalServerErrorResponse,
 } from '@nestjs/swagger';
+import { Request as ExpressRequest } from 'express';
 import JwtAccessGuard from '@guards/jwt-access.guard';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import Serialize from '@decorators/serialization.decorator';
-import { AllUsersResponseEntity } from '@v1/account/entities/user-response.entity';
+import { AllAccountsResponseEntity } from '@v1/account/entities/account-response.entity';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
-import { PaginatedUsersInterface } from '@interfaces/paginatedEntity.interface';
+import { PaginatedAccountsInterface } from '@interfaces/paginatedEntity.interface';
 import { SuccessResponseInterface } from '@interfaces/success-response.interface';
-import UserEntity from './schemas/account.entity';
-import UsersService from './accounts.service';
+import AccountEntity from './schemas/account.entity';
+import AccountsService from './accounts.service';
 import PaginationUtils from '../../../utils/pagination.utils';
 import ResponseUtils from '../../../utils/response.utils';
+import DeleteAccountDto from './dto/delete-account.dto';
+import SignUpDto from '@v1/auth/dto/sign-up.dto';
 
-@ApiTags('Users')
+@ApiTags('Accounts')
 @ApiBearerAuth()
 @UseInterceptors(WrapResponseInterceptor)
-@ApiExtraModels(UserEntity)
+@ApiExtraModels(AccountEntity)
 @Controller()
-export default class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export default class AccountsController {
+  constructor(private readonly accountsService: AccountsService) {}
+
+  @ApiOkResponse({
+    description: '200, Success',
+  })
+  @ApiNotFoundResponse({
+    description: '404. NotFoundException. Account was not found',
+  })
+  @ApiBadRequestResponse({
+    schema: {
+      type: 'object',
+      example: {
+        message: [
+          {
+            target: {
+              password: 'string',
+            },
+            value: 'string',
+            property: 'string',
+            children: [],
+            constraints: {},
+          },
+        ],
+        error: 'Bad Request',
+      },
+    },
+    description: '400. ValidationException',
+  })
+  @ApiUnauthorizedResponse({
+    schema: {
+      type: 'object',
+      example: {
+        message: 'string',
+      },
+    },
+    description: '401. UnauthorizedException.',
+  })
+  @Post('delete-account')
+  @UseGuards(JwtAccessGuard)
+  async deleteAccount(
+    @Body() data: DeleteAccountDto,
+    @Request() req: ExpressRequest,
+  ): Promise<any> {
+    const deletedAccount = await this.accountsService.deleteAccount(
+      (req.user as AccountEntity).id,
+      data.password,
+    );
+
+    if (!deletedAccount) {
+      throw new NotFoundException('The account does not exist');
+    }
+
+    return ResponseUtils.success('accounts', { message: 'Success!' });
+  }
 
   @ApiOkResponse({
     schema: {
       type: 'object',
       properties: {
         data: {
-          $ref: getSchemaPath(UserEntity),
+          $ref: getSchemaPath(AccountEntity),
         },
       },
     },
-    description: '200. Success. Returns a user',
+    description: '200. Success. Returns a account',
   })
   @ApiNotFoundResponse({
-    description: '404. NotFoundException. User was not found',
+    description: '404. NotFoundException. Account was not found',
   })
   @ApiUnauthorizedResponse({
     schema: {
@@ -65,20 +130,17 @@ export default class UsersController {
   @ApiParam({ name: 'id', type: String })
   @Get(':id')
   @UseGuards(JwtAccessGuard)
-  @Serialize(AllUsersResponseEntity)
+  @Serialize(AllAccountsResponseEntity)
   async getById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<SuccessResponseInterface> {
-    const foundUser = await this.usersService.getVerifiedUserById(id);
+    const foundAccount = await this.accountsService.getVerifiedAccountById(id);
 
-    if (!foundUser) {
-      throw new NotFoundException('The user does not exist');
+    if (!foundAccount) {
+      throw new NotFoundException('The account does not exist');
     }
 
-    return ResponseUtils.success(
-      'users',
-      foundUser,
-    );
+    return ResponseUtils.success('accounts', foundAccount);
   }
 
   @ApiOkResponse({
@@ -86,11 +148,11 @@ export default class UsersController {
       type: 'object',
       properties: {
         data: {
-          $ref: getSchemaPath(UserEntity),
+          $ref: getSchemaPath(AccountEntity),
         },
       },
     },
-    description: '200. Success. Returns all users',
+    description: '200. Success. Returns all accounts',
   })
   @ApiUnauthorizedResponse({
     schema: {
@@ -103,23 +165,125 @@ export default class UsersController {
   })
   @Get()
   @UseGuards(JwtAccessGuard)
-  @Serialize(AllUsersResponseEntity)
-  async getAllVerifiedUsers(@Query() query: any) {
-    const paginationParams: PaginationParamsInterface | false = PaginationUtils.normalizeParams(query.page);
+  @Serialize(AllAccountsResponseEntity)
+  async getAllVerifiedAccounts(@Query() query: any) {
+    const paginationParams: PaginationParamsInterface | false =
+      PaginationUtils.normalizeParams(query.page);
     if (!paginationParams) {
       throw new BadRequestException('Invalid pagination parameters');
     }
 
-    const paginatedUsers: PaginatedUsersInterface = await this.usersService.getAllVerifiedWithPagination(paginationParams);
+    const paginatedAccounts: PaginatedAccountsInterface =
+      await this.accountsService.getAllVerifiedWithPagination(paginationParams);
 
     return ResponseUtils.success(
-      'users',
-      paginatedUsers.paginatedResult,
+      'accounts',
+      paginatedAccounts.paginatedResult,
       {
-        location: 'users',
+        location: 'accounts',
         paginationParams,
-        totalCount: paginatedUsers.totalCount,
+        totalCount: paginatedAccounts.totalCount,
       },
     );
+  }
+
+  @ApiOkResponse({
+    schema: {
+      type: 'object',
+      properties: {
+        data: {
+          $ref: getSchemaPath(AccountEntity),
+        },
+      },
+    },
+    description: '200. Success. Returns a account',
+  })
+  @ApiNotFoundResponse({
+    description: '404. NotFoundException. Account was not found',
+  })
+  @ApiUnauthorizedResponse({
+    schema: {
+      type: 'object',
+      example: {
+        message: 'string',
+      },
+    },
+    description: '401. UnauthorizedException.',
+  })
+  @Get('profile')
+  @UseGuards(JwtAccessGuard)
+  @Serialize(AllAccountsResponseEntity)
+  async getProfile(
+    @Request() req: ExpressRequest,
+  ): Promise<SuccessResponseInterface> {
+    const foundAccount = await this.accountsService.getVerifiedAccountById(
+      (req.user as AccountEntity).id,
+    );
+
+    if (!foundAccount) {
+      throw new NotFoundException('The account does not exist');
+    }
+
+    return ResponseUtils.success('accounts', foundAccount);
+  }
+
+  @ApiBody({ type: SignUpDto })
+  @ApiOkResponse({
+    description: '200, Success',
+  })
+  @ApiBadRequestResponse({
+    schema: {
+      type: 'object',
+      example: {
+        message: [
+          {
+            target: {
+              email: 'string',
+              password: 'string',
+            },
+            value: 'string',
+            property: 'string',
+            children: [],
+            constraints: {},
+          },
+        ],
+        error: 'Bad Request',
+      },
+    },
+    description: '400. ValidationException',
+  })
+  @ApiConflictResponse({
+    schema: {
+      type: 'object',
+      example: {
+        message: 'string',
+      },
+    },
+    description: '409. ConflictResponse',
+  })
+  @ApiInternalServerErrorResponse({
+    schema: {
+      type: 'object',
+      example: {
+        message: 'string',
+        details: {},
+      },
+    },
+    description: '500. InternalServerError',
+  })
+  @HttpCode(HttpStatus.OK)
+  @Post('update-profile')
+  @UseGuards(JwtAccessGuard)
+  async updateProfile(
+    @Request() req: ExpressRequest,
+    @Body() account: SignUpDto,
+  ): Promise<any> {
+    console.log();
+    
+    await this.accountsService.update((req.user as AccountEntity).id, account);
+
+    return ResponseUtils.success('accounts', {
+      message: 'Success!',
+    });
   }
 }

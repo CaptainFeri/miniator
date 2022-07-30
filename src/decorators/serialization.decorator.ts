@@ -10,8 +10,8 @@ export function setSerializeType(target:any, serializeType: any) {
   Reflect.defineMetadata(SERIALIZE_TYPE_KEY, serializeType, target);
 }
 
-const Serialize = (role: any) => (proto: any, propName: any, descriptor: any) => {
-  setSerializeType(proto[propName], role);
+const Serialize = (type: any) => (proto: any, propName: any, descriptor: any) => {
+  setSerializeType(proto[propName], type);
   UseInterceptors(ClassSerializerInterceptor)(proto, propName, descriptor);
   UseInterceptors(SerializeInterceptor)(proto, propName, descriptor);
 };

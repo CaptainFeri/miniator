@@ -34,15 +34,15 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 
 import { SuccessResponseInterface } from '@interfaces/success-response.interface';
-import UsersService from '@v1/users/users.service';
+import AccountsService from '@v1/account/accounts.service';
 import JwtAccessGuard from '@guards/jwt-access.guard';
-import RolesGuard from '@guards/roles.guard';
-import UserEntity from '@v1/users/schemas/user.entity';
+import TypesGuard from '@guards/types.guard';
+import AccountEntity from '@v1/account/schemas/account.entity';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import AuthBearer from '@decorators/auth-bearer.decorator';
-import { Roles, RolesEnum } from '@decorators/roles.decorator';
+import { Types, TypesEnum } from '@decorators/types.decorator';
 import authConstants from './auth-constants';
-import { DecodedUser } from './interfaces/decoded-user.interface';
+import { DecodedAccount } from './interfaces/decoded-account.interface';
 import LocalAuthGuard from './guards/local-auth.guard';
 import AuthService from './auth.service';
 import RefreshTokenDto from './dto/refresh-token.dto';
@@ -59,7 +59,7 @@ export default class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly jwtService: JwtService,
-    private readonly usersService: UsersService,
+    private readonly accountsService: AccountsService,
     private readonly mailerService: MailerService,
     private readonly configService: ConfigService,
   ) {}
@@ -107,17 +107,15 @@ export default class AuthController {
     },
     description: '500. InternalServerError',
   })
-  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @Post('sign-in')
-  async signIn(@Request() req: ExpressRequest): Promise<SuccessResponseInterface | never> {
-    const { password, ...user } = req.user as UserEntity;
+  async signIn(
+    @Request() req: ExpressRequest,
+  ): Promise<SuccessResponseInterface | never> {
+    const { password, ...user } = req.user as AccountEntity;
 
-    return ResponseUtils.success(
-      'tokens',
-      await this.authService.login(user),
-    );
+    return ResponseUtils.success('tokens', await this.authService.login(user));
   }
 
   @ApiBody({ type: SignUpDto })
@@ -166,23 +164,26 @@ export default class AuthController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post('sign-up')
-  async signUp(@Body() user: SignUpDto): Promise<any> {
-    const { id, email } = await this.usersService.create(user);
+  async signUp(@Body() account: SignUpDto): Promise<any> {
+    const { id, email } =
+      await this.accountsService.create(account);
     const token = this.authService.createVerifyToken(id);
 
-    await this.mailerService.sendMail({
-      to: email,
-      from: this.configService.get<string>('MAILER_FROM_EMAIL'),
-      subject: authConstants.mailer.verifyEmail.subject,
-      template: `${process.cwd()}/src/templates/verify-password`,
-      context: {
-        token,
-        email,
-        host: this.configService.get<number>('SERVER_HOST'),
-      },
-    });
+    // await this.mailerService.sendMail({
+    //   to: email,
+    //   from: this.configService.get<string>('MAILER_FROM_EMAIL'),
+    //   subject: authConstants.mailer.verifyEmail.subject,
+    //   template: `${process.cwd()}/src/templates/verify-password`,
+    //   context: {
+    //     token,
+    //     email,
+    //     host: this.configService.get<number>('SERVER_HOST'),
+    //   },
+    // });
 
-    return ResponseUtils.success('auth', { message: 'Success! please verify your email' });
+    return ResponseUtils.success('auth', {
+      message: 'Success! please verify your email',
+    });
   }
 
   @ApiOkResponse({
@@ -215,22 +216,20 @@ export default class AuthController {
     },
     description: '500. InternalServerError ',
   })
-  @ApiBearerAuth()
   @Post('refresh-token')
   async refreshToken(
     @Body() refreshTokenDto: RefreshTokenDto,
   ): Promise<SuccessResponseInterface | never> {
-    const decodedUser = this.jwtService.decode(
+    const decodedAccount = this.jwtService.decode(
       refreshTokenDto.refreshToken,
-    ) as DecodedUser;
+    ) as DecodedAccount;
 
-    if (!decodedUser) {
+    if (!decodedAccount) {
       throw new ForbiddenException('Incorrect token');
     }
 
-    const oldRefreshToken:
-      | string
-      | null = await this.authService.getRefreshTokenByEmail(decodedUser.email);
+    const oldRefreshToken: string | null =
+      await this.authService.getRefreshTokenByUsername(decodedAccount.username);
 
     // if the old refresh token is not equal to request refresh token then this user is unauthorized
     if (!oldRefreshToken || oldRefreshToken !== refreshTokenDto.refreshToken) {
@@ -240,8 +239,8 @@ export default class AuthController {
     }
 
     const payload = {
-      id: decodedUser.id,
-      email: decodedUser.email,
+      id: decodedAccount.id,
+      username: decodedAccount.username,
     };
 
     return ResponseUtils.success(
@@ -261,24 +260,29 @@ export default class AuthController {
         error: 'Not Found',
       },
     },
-    description: 'User was not found',
+    description: 'Account was not found',
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Get('verify/:token')
-  async verifyUser(@Param('token') token: string): Promise<SuccessResponseInterface | never> {
+  async verifyAccount(
+    @Param('token') token: string,
+  ): Promise<SuccessResponseInterface | never> {
     const { id } = await this.authService.verifyEmailVerToken(
       token,
-      this.configService.get<string>('ACCESS_TOKEN') || '283f01ccce922bcc2399e7f8ded981285963cec349daba382eb633c1b3a5f282',
+      this.configService.get<string>('ACCESS_TOKEN') ||
+        '283f01ccce922bcc2399e7f8ded981285963cec349daba382eb633c1b3a5f282',
     );
-    const foundUser = await this.usersService.getUnverifiedUserById(id);
+    const foundAccount = await this.accountsService.getUnverifiedAccountById(
+      id,
+    );
 
-    if (!foundUser) {
+    if (!foundAccount) {
       throw new NotFoundException('The user does not exist');
     }
 
     return ResponseUtils.success(
       'users',
-      await this.usersService.update(foundUser.id, { verified: true }),
+      await this.accountsService.update(foundAccount.id, { verified: true }),
     );
   }
 
@@ -309,20 +313,22 @@ export default class AuthController {
   @Delete('logout/:token')
   @HttpCode(HttpStatus.NO_CONTENT)
   async logout(@Param('token') token: string): Promise<{} | never> {
-    const decodedUser: DecodedUser | null = await this.authService.verifyToken(
-      token,
-      this.configService.get<string>('ACCESS_TOKEN') || '283f01ccce922bcc2399e7f8ded981285963cec349daba382eb633c1b3a5f282',
-    );
+    const decodedAccount: DecodedAccount | null =
+      await this.authService.verifyToken(
+        token,
+        this.configService.get<string>('ACCESS_TOKEN') ||
+          '283f01ccce922bcc2399e7f8ded981285963cec349daba382eb633c1b3a5f282',
+      );
 
-    if (!decodedUser) {
+    if (!decodedAccount) {
       throw new ForbiddenException('Incorrect token');
     }
 
-    const deletedUsersCount = await this.authService.deleteTokenByEmail(
-      decodedUser.email,
+    const deletedAccountsCount = await this.authService.deleteTokenByUsername(
+      decodedAccount.username,
     );
 
-    if (deletedUsersCount === 0) {
+    if (deletedAccountsCount === 0) {
       throw new NotFoundException();
     }
 
@@ -344,15 +350,15 @@ export default class AuthController {
   })
   @ApiBearerAuth()
   @Delete('logout-all')
-  @UseGuards(RolesGuard)
-  @Roles(RolesEnum.admin)
+  @UseGuards(TypesGuard)
+  @Types(TypesEnum.admin)
   @HttpCode(HttpStatus.NO_CONTENT)
   async logoutAll(): Promise<{}> {
     return this.authService.deleteAllTokens();
   }
 
   @ApiOkResponse({
-    type: UserEntity,
+    type: AccountEntity,
     description: '200, returns a decoded user from access token',
   })
   @ApiUnauthorizedResponse({
@@ -377,23 +383,22 @@ export default class AuthController {
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
   @Get('token')
-  async getUserByAccessToken(
+  async getAccountByAccessToken(
     @AuthBearer() token: string,
   ): Promise<SuccessResponseInterface | never> {
-    const decodedUser: DecodedUser | null = await this.authService.verifyToken(
-      token,
-      this.configService.get<string>('ACCESS_TOKEN') || '283f01ccce922bcc2399e7f8ded981285963cec349daba382eb633c1b3a5f282',
-    );
+    const decodedAccount: DecodedAccount | null =
+      await this.authService.verifyToken(
+        token,
+        this.configService.get<string>('ACCESS_TOKEN') ||
+          '283f01ccce922bcc2399e7f8ded981285963cec349daba382eb633c1b3a5f282',
+      );
 
-    if (!decodedUser) {
+    if (!decodedAccount) {
       throw new ForbiddenException('Incorrect token');
     }
 
-    const { exp, iat, ...user } = decodedUser;
+    const { exp, iat, ...user } = decodedAccount;
 
-    return ResponseUtils.success(
-      'users',
-      user,
-    );
+    return ResponseUtils.success('users', user);
   }
 }

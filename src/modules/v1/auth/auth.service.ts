@@ -4,11 +4,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
-import UsersService from '@v1/users/users.service';
+import AccountsService from '@v1/account/accounts.service';
 
-import { DecodedUser } from '@v1/auth/interfaces/decoded-user.interface';
+import { DecodedAccount } from '@v1/auth/interfaces/decoded-account.interface';
 import JwtTokensDto from './dto/jwt-tokens.dto';
-import { ValidateUserOutput } from './interfaces/validate-user-output.interface';
+import { ValidateAccountOutput } from './interfaces/validate-account-output.interface';
 import { LoginPayload } from './interfaces/login-payload.interface';
 
 import authConstants from './auth-constants';
@@ -17,29 +17,29 @@ import AuthRepository from './auth.repository';
 @Injectable()
 export default class AuthService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly usersService: AccountsService,
     private readonly jwtService: JwtService,
     private readonly authRepository: AuthRepository,
     private readonly configService: ConfigService,
   ) { }
 
-  async validateUser(
-    email: string,
+  async validateAccount(
+    username: string,
     password: string,
-  ): Promise<null | ValidateUserOutput> {
-    const user = await this.usersService.getVerifiedUserByEmail(email);
+  ): Promise<null | ValidateAccountOutput> {
+    const account = await this.usersService.getVerifiedAccountByUsername(username);
 
-    if (!user) {
+    if (!account) {
       throw new NotFoundException('The item does not exist');
     }
 
-    const passwordCompared = await bcrypt.compare(password, user.password);
+    const passwordCompared = await bcrypt.compare(password, account.password);
 
     if (passwordCompared) {
       return {
-        id: user.id,
-        email: user.email,
-        role: user.role,
+        id: account.id,
+        username: account.username,
+        type: account.type,
       };
     }
 
@@ -49,8 +49,8 @@ export default class AuthService {
   async login(data: LoginPayload): Promise<JwtTokensDto> {
     const payload: LoginPayload = {
       id: data.id,
-      email: data.email,
-      role: data.role,
+      username: data.username,
+      type: data.type,
     };
 
     const accessToken = this.jwtService.sign(payload, {
@@ -63,7 +63,7 @@ export default class AuthService {
     });
 
     await this.authRepository.addRefreshToken(
-      payload.email as string,
+      payload.username as string,
       refreshToken,
     );
 
@@ -73,12 +73,12 @@ export default class AuthService {
     };
   }
 
-  getRefreshTokenByEmail(email: string): Promise<string | null> {
-    return this.authRepository.getToken(email);
+  getRefreshTokenByUsername(username: string): Promise<string | null> {
+    return this.authRepository.getToken(username);
   }
 
-  deleteTokenByEmail(email: string): Promise<number> {
-    return this.authRepository.removeToken(email);
+  deleteTokenByUsername(username: string): Promise<number> {
+    return this.authRepository.removeToken(username);
   }
 
   deleteAllTokens(): Promise<string> {
@@ -102,11 +102,11 @@ export default class AuthService {
   public async verifyToken(
     token: string,
     secret: string,
-  ): Promise<DecodedUser | null> {
+  ): Promise<DecodedAccount | null> {
     try {
       const user = (await this.jwtService.verifyAsync(token, {
         secret,
-      })) as DecodedUser | null;
+      })) as DecodedAccount | null;
 
       return user;
     } catch (error) {
