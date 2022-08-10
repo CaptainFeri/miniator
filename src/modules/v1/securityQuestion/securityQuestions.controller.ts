@@ -29,8 +29,12 @@ export default class SecurityQuestionsController {
   ) {}
 
   @Post('')
-  async create(@Body() securityQuestionDto: CreateSecurityQuestionDto): Promise<any> {
-    const securityQuestion = await this.securityQuestionsService.create(securityQuestionDto);
+  async create(
+    @Body() securityQuestionDto: CreateSecurityQuestionDto,
+  ): Promise<any> {
+    const securityQuestion = await this.securityQuestionsService.create(
+      securityQuestionDto,
+    );
 
     return ResponseUtils.success('securityQuestions', {
       message: 'Success',

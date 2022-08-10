@@ -16,7 +16,9 @@ describe('SecurityQuestion Controller', () => {
       ],
     }).compile();
 
-    controller = module.get<SecurityQuestionsController>(SecurityQuestionsController);
+    controller = module.get<SecurityQuestionsController>(
+      SecurityQuestionsController,
+    );
   });
 
   it('should be defined', () => {

@@ -14,11 +14,11 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 
 import { TypesEnum } from '@decorators/types.decorator';
+import CompanyRoleEntity from '@v1/company/schemas/companyRole.entity';
+import CompanyRoleRequestEntity from '@v1/company/schemas/companyRoleRequest.entity';
 import ProfileEntity from './profile.entity';
 import CompanyProfileEntity from './companyProfile.entity';
 import SecurityQuestionAnswerEntity from './securityQuestionAnswer.entity';
-import CompanyRoleEntity from '@v1/company/schemas/companyRole.entity';
-import CompanyRoleRequestEntity from '@v1/company/schemas/companyRoleRequest.entity';
 
 @Entity('account')
 export default class AccountEntity {
@@ -100,6 +100,7 @@ export default class AccountEntity {
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
   readonly createdAt: Date = new Date();
+
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
   readonly updatedAt: Date = new Date();
 }

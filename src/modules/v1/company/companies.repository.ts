@@ -15,24 +15,17 @@ export default class CompaniesRepository {
     private readonly companiesModel: Repository<CompanyEntity>,
   ) {}
 
-  public create(
-    company: CreateCompanyDto,
-  ): Promise<CompanyEntity> {
+  public create(company: CreateCompanyDto): Promise<CompanyEntity> {
     return this.companiesModel.save({
       ...company,
     });
   }
 
-  public async getById(
-    id: number,
-  ): Promise<CompanyEntity | undefined> {
+  public async getById(id: number): Promise<CompanyEntity | undefined> {
     return this.companiesModel.findOne(id);
   }
 
-  public updateById(
-    id: number,
-    data: UpdateCompanyDto,
-  ): Promise<UpdateResult> {
+  public updateById(id: number, data: UpdateCompanyDto): Promise<UpdateResult> {
     return this.companiesModel.update(id, data);
   }
 

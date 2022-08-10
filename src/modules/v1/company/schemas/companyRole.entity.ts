@@ -10,8 +10,8 @@ import {
   OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import CompanyEntity from './company.entity';
 import AccountEntity from '@v1/account/schemas/account.entity';
+import CompanyEntity from './company.entity';
 import CompanyRoleRequestEntity from './companyRoleRequest.entity';
 
 @Entity('companyRole')
@@ -48,6 +48,7 @@ export default class CompanyRoleEntity {
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
   readonly createdAt: Date = new Date();
+
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
   readonly updatedAt: Date = new Date();
 }

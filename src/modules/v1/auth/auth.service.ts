@@ -21,13 +21,15 @@ export default class AuthService {
     private readonly jwtService: JwtService,
     private readonly authRepository: AuthRepository,
     private readonly configService: ConfigService,
-  ) { }
+  ) {}
 
   async validateAccount(
     username: string,
     password: string,
   ): Promise<null | ValidateAccountOutput> {
-    const account = await this.usersService.getVerifiedAccountByUsername(username);
+    const account = await this.usersService.getVerifiedAccountByUsername(
+      username,
+    );
 
     if (!account) {
       throw new NotFoundException('The item does not exist');
@@ -55,11 +57,15 @@ export default class AuthService {
 
     const accessToken = this.jwtService.sign(payload, {
       expiresIn: authConstants.jwt.expirationTime.accessToken,
-      secret: this.configService.get<string>('ACCESS_TOKEN') || '283f01ccce922bcc2399e7f8ded981285963cec349daba382eb633c1b3a5f282',
+      secret:
+        this.configService.get<string>('ACCESS_TOKEN') ||
+        '283f01ccce922bcc2399e7f8ded981285963cec349daba382eb633c1b3a5f282',
     });
     const refreshToken = this.jwtService.sign(payload, {
       expiresIn: authConstants.jwt.expirationTime.refreshToken,
-      secret: this.configService.get<string>('REFRESH_TOKEN') || 'c15476aec025be7a094f97aac6eba4f69268e706e603f9e1ec4d815396318c86',
+      secret:
+        this.configService.get<string>('REFRESH_TOKEN') ||
+        'c15476aec025be7a094f97aac6eba4f69268e706e603f9e1ec4d815396318c86',
     });
 
     await this.authRepository.addRefreshToken(
@@ -90,7 +96,9 @@ export default class AuthService {
       { id },
       {
         expiresIn: authConstants.jwt.expirationTime.accessToken,
-        secret: this.configService.get<string>('ACCESS_TOKEN') || '283f01ccce922bcc2399e7f8ded981285963cec349daba382eb633c1b3a5f282',
+        secret:
+          this.configService.get<string>('ACCESS_TOKEN') ||
+          '283f01ccce922bcc2399e7f8ded981285963cec349daba382eb633c1b3a5f282',
       },
     );
   }
@@ -104,11 +112,9 @@ export default class AuthService {
     secret: string,
   ): Promise<DecodedAccount | null> {
     try {
-      const user = (await this.jwtService.verifyAsync(token, {
+      return (await this.jwtService.verifyAsync(token, {
         secret,
       })) as DecodedAccount | null;
-
-      return user;
     } catch (error) {
       return null;
     }

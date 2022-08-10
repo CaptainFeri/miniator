@@ -8,26 +8,25 @@ import {
   BadRequestException,
   Query,
   Post,
-  Body, NotFoundException,
+  Body,
+  NotFoundException,
 } from '@nestjs/common';
 import JwtAccessGuard from '@guards/jwt-access.guard';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
-import CompaniesService from './companies.service';
-import PaginationUtils from '../../../utils/pagination.utils';
-import ResponseUtils from '../../../utils/response.utils';
 import UpdateCompanyDto from '@v1/company/dto/update-company.dto';
 import CompanyEntity from '@v1/company/schemas/company.entity';
 import CreateCompanyDto from '@v1/company/dto/create-company.dto';
 import { SuccessResponseInterface } from '@interfaces/success-response.interface';
+import ResponseUtils from '../../../utils/response.utils';
+import PaginationUtils from '../../../utils/pagination.utils';
+import CompaniesService from './companies.service';
 
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
 export default class CompaniesController {
-  constructor(
-    private readonly companiesService: CompaniesService,
-  ) {}
+  constructor(private readonly companiesService: CompaniesService) {}
 
   @Post('')
   async create(@Body() createCompanyDto: CreateCompanyDto): Promise<any> {
@@ -49,9 +48,7 @@ export default class CompaniesController {
     }
 
     const paginatedQuestions: PaginatedEntityInterface<CompanyEntity> =
-      await this.companiesService.getAllWithPagination(
-        paginationParams,
-      );
+      await this.companiesService.getAllWithPagination(paginationParams);
 
     return ResponseUtils.success(
       'companies',

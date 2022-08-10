@@ -1,9 +1,4 @@
-import {
-  IsNotEmpty,
-  MinLength,
-  IsString,
-  MaxLength,
-} from 'class-validator';
+import { IsNotEmpty, MinLength, IsString, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export default class DeleteAccountDto {

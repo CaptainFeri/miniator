@@ -5,16 +5,16 @@ import { PaginationParamsInterface } from '@interfaces/pagination-params.interfa
 import { TypesEnum } from '@decorators/types.decorator';
 
 export class AccountResponseEntity {
-  id: number = 0;
+  id = 0;
 
   type: TypesEnum = TypesEnum.user;
 
-  verified: boolean = false;
+  verified = false;
 
-  email: string = '';
+  email = '';
 
   @Exclude()
-  password: string = '';
+  password = '';
 }
 
 export class AllAccountsResponseEntity {

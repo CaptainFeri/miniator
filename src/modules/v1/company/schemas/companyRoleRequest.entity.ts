@@ -43,6 +43,7 @@ export default class CompanyRoleRequestEntity {
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
   readonly createdAt: Date = new Date();
+
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
   readonly updatedAt: Date = new Date();
 }

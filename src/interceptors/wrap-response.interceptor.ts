@@ -20,7 +20,9 @@ export default class WrapResponseInterceptor implements NestInterceptor {
 
         if (data && collectionName) {
           if (data.length) {
-            serializeOptions.attributes = Object.keys(_.omit(data[0], ['_id', 'id']));
+            serializeOptions.attributes = Object.keys(
+              _.omit(data[0], ['_id', 'id']),
+            );
             data.forEach((item: any) => {
               // eslint-disable-next-line no-param-reassign
               item.id = item._id;
@@ -28,7 +30,9 @@ export default class WrapResponseInterceptor implements NestInterceptor {
               delete item._id;
             });
           } else {
-            serializeOptions.attributes = Object.keys(_.omit(data, ['_id', 'id']));
+            serializeOptions.attributes = Object.keys(
+              _.omit(data, ['_id', 'id']),
+            );
           }
           if (options) {
             serializeOptions.topLevelLinks = PaginationUtils.getPaginationLinks(
@@ -39,7 +43,9 @@ export default class WrapResponseInterceptor implements NestInterceptor {
             serializeOptions.meta = { totalCount: options.totalCount };
           }
 
-          return new Serializer(collectionName, serializeOptions).serialize(data);
+          return new Serializer(collectionName, serializeOptions).serialize(
+            data,
+          );
         }
 
         return {
