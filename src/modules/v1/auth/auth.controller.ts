@@ -41,7 +41,6 @@ import AccountEntity from '@v1/account/schemas/account.entity';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import AuthBearer from '@decorators/auth-bearer.decorator';
 import { Types, TypesEnum } from '@decorators/types.decorator';
-import authConstants from './auth-constants';
 import { DecodedAccount } from './interfaces/decoded-account.interface';
 import LocalAuthGuard from './guards/local-auth.guard';
 import AuthService from './auth.service';
@@ -113,6 +112,7 @@ export default class AuthController {
   async signIn(
     @Request() req: ExpressRequest,
   ): Promise<SuccessResponseInterface | never> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = req.user as AccountEntity;
 
     return ResponseUtils.success('tokens', await this.authService.login(user));
@@ -165,8 +165,9 @@ export default class AuthController {
   @HttpCode(HttpStatus.CREATED)
   @Post('sign-up')
   async signUp(@Body() account: SignUpDto): Promise<any> {
-    const { id, email } =
-      await this.accountsService.create(account);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, email } = await this.accountsService.create(account);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const token = this.authService.createVerifyToken(id);
 
     // await this.mailerService.sendMail({
@@ -397,6 +398,7 @@ export default class AuthController {
       throw new ForbiddenException('Incorrect token');
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { exp, iat, ...user } = decodedAccount;
 
     return ResponseUtils.success('users', user);

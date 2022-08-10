@@ -7,12 +7,12 @@ import {
 } from '@nestjs/common';
 
 import SignUpDto from '@v1/auth/dto/sign-up.dto';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
+import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
+import { UpdateResult } from 'typeorm';
 import AccountsRepository from './accounts.repository';
-import { UpdateResult } from 'typeorm/index';
 import AccountEntity from './schemas/account.entity';
 import UpdateAccountDto from './dto/update-account.dto';
-import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
-import { PaginatedAccountsInterface } from '@interfaces/paginatedEntity.interface';
 
 @Injectable()
 export default class AccountsService {
@@ -71,7 +71,7 @@ export default class AccountsService {
 
   public async getAllVerifiedWithPagination(
     options: PaginationParamsInterface,
-  ): Promise<PaginatedAccountsInterface> {
+  ): Promise<PaginatedEntityInterface<AccountEntity>> {
     return this.accountsRepository.getAllVerifiedWithPagination(options);
   }
 

@@ -1,6 +1,4 @@
-import AccountEntity from '@v1/account/schemas/account.entity';
-
-export interface PaginatedAccountsInterface {
-  readonly paginatedResult: AccountEntity[] | [],
+export interface PaginatedEntityInterface<T> {
+  readonly paginatedResult: T[],
   readonly totalCount: number,
 }

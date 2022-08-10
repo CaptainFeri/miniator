@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm/index';
+import { Repository, UpdateResult } from 'typeorm';
 import SignUpDto from '@v1/auth/dto/sign-up.dto';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
-import { PaginatedAccountsInterface } from '@interfaces/paginatedEntity.interface';
+import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import PaginationUtils from '@utils/pagination.utils';
 import UpdateAccountDto from './dto/update-account.dto';
 import AccountEntity from './schemas/account.entity';
@@ -26,50 +26,68 @@ export default class AccountsRepository {
 
   public async getByEmail(email: string): Promise<AccountEntity | undefined> {
     return this.accountsModel.findOne({
-      where: [{
-        email
-      }],
+      where: [
+        {
+          email,
+        },
+      ],
     });
   }
 
-  public async getVerifiedAccountByEmail(email: string): Promise<AccountEntity | undefined> {
+  public async getVerifiedAccountByEmail(
+    email: string,
+  ): Promise<AccountEntity | undefined> {
     return this.accountsModel.findOne({
-      where: [{
-        email,
-        verified: true,
-      }],
+      where: [
+        {
+          email,
+          verified: true,
+        },
+      ],
     });
   }
 
-  public async getVerifiedAccountByUsername(username: string): Promise<AccountEntity | undefined> {
+  public async getVerifiedAccountByUsername(
+    username: string,
+  ): Promise<AccountEntity | undefined> {
     return this.accountsModel.findOne({
-      where: [{
-        username,
-        verified: true,
-      }],
+      where: [
+        {
+          username,
+          verified: true,
+        },
+      ],
     });
   }
 
-  public async getUnverifiedAccountByEmail(email: string): Promise<AccountEntity | undefined> {
+  public async getUnverifiedAccountByEmail(
+    email: string,
+  ): Promise<AccountEntity | undefined> {
     return this.accountsModel.findOne({
-      where: [{
-        email,
-        verified: false,
-      }],
+      where: [
+        {
+          email,
+          verified: false,
+        },
+      ],
     });
   }
 
   public async getById(id: number): Promise<AccountEntity | undefined> {
-    return  this.accountsModel.findOne(id);
+    return this.accountsModel.findOne(id);
   }
 
-  public async getVerifiedAccountById(id: number): Promise<AccountEntity | undefined> {
+  public async getVerifiedAccountById(
+    id: number,
+  ): Promise<AccountEntity | undefined> {
     return this.accountsModel.findOne(id, {
       where: [{ verified: true }],
     });
   }
 
-  public async getUnverifiedAccountById(id: number): Promise<AccountEntity | undefined> {
+  public async getUnverifiedAccountById(
+    id: number,
+  ): Promise<AccountEntity | undefined> {
     return this.accountsModel.findOne(id, {
       where: [{ verified: false }],
     });
@@ -79,7 +97,9 @@ export default class AccountsRepository {
     return this.accountsModel.update(id, data);
   }
 
-  public async getAllVerifiedWithPagination(options: PaginationParamsInterface): Promise<PaginatedAccountsInterface> {
+  public async getAllVerifiedWithPagination(
+    options: PaginationParamsInterface,
+  ): Promise<PaginatedEntityInterface<AccountEntity>> {
     const verified = true;
     const [users, totalCount] = await Promise.all([
       this.accountsModel.find({
@@ -94,10 +114,15 @@ export default class AccountsRepository {
       }),
     ]);
 
-    return { paginatedResult: users, totalCount };
+    return {
+      paginatedResult: users,
+      totalCount,
+    };
   }
 
-  public async deleteAccount(account: AccountEntity): Promise<AccountEntity | undefined> {
+  public async deleteAccount(
+    account: AccountEntity,
+  ): Promise<AccountEntity | undefined> {
     return this.accountsModel.remove(account);
   }
 }
