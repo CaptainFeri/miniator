@@ -5,13 +5,18 @@ module.exports = {
     mocha: true,
     jest: true,
   },
-  extends: ['airbnb-base'],
+  extends: [
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+    'airbnb-base',
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 11,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint'],
+  ignorePatterns: ['.eslintrc.js'],
+  plugins: ['@typescript-eslint/eslint-plugin'],
   rules: {
     'max-len': ['error', 150],
     'import/no-unresolved': 'off',
@@ -33,6 +38,10 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'consistent-return': 'off',
     'operator-linebreak': 'off',
+    '@typescript-eslint/interface-name-prefix': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
   },
   overrides: [
     {

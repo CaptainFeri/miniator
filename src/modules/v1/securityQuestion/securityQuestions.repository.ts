@@ -39,15 +39,12 @@ export default class SecurityQuestionsRepository {
   public async getAllWithPagination(
     options: PaginationParamsInterface,
   ): Promise<PaginatedEntityInterface<SecurityQuestionEntity>> {
-    const verified = true;
     const [questions, totalCount] = await Promise.all([
       this.securityQuestionsModel.find({
         skip: PaginationUtils.getSkipCount(options.page, options.limit),
         take: PaginationUtils.getLimitCount(options.limit),
       }),
-      this.securityQuestionsModel.count({
-        where: { verified },
-      }),
+      this.securityQuestionsModel.count(),
     ]);
 
     return {

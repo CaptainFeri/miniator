@@ -8,33 +8,34 @@ import {
   BadRequestException,
   Query,
   Post,
-  Body,
+  Body, NotFoundException,
 } from '@nestjs/common';
 import JwtAccessGuard from '@guards/jwt-access.guard';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
-import SecurityQuestionEntity from '@v1/securityQuestion/schemas/securityQuestion.entity';
-import UpdateSecurityQuestionDto from '@v1/securityQuestion/dto/update-securityQuestion.dto';
-import CreateSecurityQuestionDto from '@v1/securityQuestion/dto/create-securityQuestion.dto';
-import SecurityQuestionsService from './securityQuestions.service';
+import CompaniesService from './companies.service';
 import PaginationUtils from '../../../utils/pagination.utils';
 import ResponseUtils from '../../../utils/response.utils';
+import UpdateCompanyDto from '@v1/company/dto/update-company.dto';
+import CompanyEntity from '@v1/company/schemas/company.entity';
+import CreateCompanyDto from '@v1/company/dto/create-company.dto';
+import { SuccessResponseInterface } from '@interfaces/success-response.interface';
 
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
-export default class SecurityQuestionsController {
+export default class CompaniesController {
   constructor(
-    private readonly securityQuestionsService: SecurityQuestionsService,
+    private readonly companiesService: CompaniesService,
   ) {}
 
   @Post('')
-  async create(@Body() securityQuestionDto: CreateSecurityQuestionDto): Promise<any> {
-    const securityQuestion = await this.securityQuestionsService.create(securityQuestionDto);
+  async create(@Body() createCompanyDto: CreateCompanyDto): Promise<any> {
+    const company = await this.companiesService.create(createCompanyDto);
 
-    return ResponseUtils.success('securityQuestions', {
+    return ResponseUtils.success('companies', {
       message: 'Success',
-      securityQuestion,
+      company,
     });
   }
 
@@ -47,31 +48,45 @@ export default class SecurityQuestionsController {
       throw new BadRequestException('Invalid pagination parameters');
     }
 
-    const paginatedQuestions: PaginatedEntityInterface<SecurityQuestionEntity> =
-      await this.securityQuestionsService.getAllWithPagination(
+    const paginatedQuestions: PaginatedEntityInterface<CompanyEntity> =
+      await this.companiesService.getAllWithPagination(
         paginationParams,
       );
 
     return ResponseUtils.success(
-      'securityQuestions',
+      'companies',
       paginatedQuestions.paginatedResult,
       {
-        location: 'securityQuestions',
+        location: 'companies',
         paginationParams,
         totalCount: paginatedQuestions.totalCount,
       },
     );
   }
 
+  @Get(':id')
+  @UseGuards(JwtAccessGuard)
+  async getById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<SuccessResponseInterface> {
+    const foundCompany = await this.companiesService.getById(id);
+
+    if (!foundCompany) {
+      throw new NotFoundException('The company does not exist');
+    }
+
+    return ResponseUtils.success('companies', foundCompany);
+  }
+
   @Post(':id')
   @UseGuards(JwtAccessGuard)
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() securityQuestion: UpdateSecurityQuestionDto,
+    @Body() company: UpdateCompanyDto,
   ): Promise<any> {
-    await this.securityQuestionsService.update(id, securityQuestion);
+    await this.companiesService.update(id, company);
 
-    return ResponseUtils.success('securityQuestions', {
+    return ResponseUtils.success('companies', {
       message: 'Success!',
     });
   }
