@@ -49,6 +49,7 @@ import SignInDto from './dto/sign-in.dto';
 import SignUpDto from './dto/sign-up.dto';
 import JwtTokensDto from './dto/jwt-tokens.dto';
 import ResponseUtils from '../../../utils/response.utils';
+import authConstants from '@v1/auth/auth-constants';
 
 @ApiTags('Auth')
 @UseInterceptors(WrapResponseInterceptor)
@@ -270,8 +271,10 @@ export default class AuthController {
   ): Promise<SuccessResponseInterface | never> {
     const { id } = await this.authService.verifyEmailVerToken(
       token,
-      this.configService.get<string>('ACCESS_TOKEN') ||
-        '283f01ccce922bcc2399e7f8ded981285963cec349daba382eb633c1b3a5f282',
+      this.configService.get<string>(
+        'ACCESS_SECRET',
+        authConstants.jwt.secrets.accessToken,
+      ),
     );
     const foundAccount = await this.accountsService.getUnverifiedAccountById(
       id,
@@ -313,12 +316,14 @@ export default class AuthController {
   @UseGuards(JwtAccessGuard)
   @Delete('logout/:token')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async logout(@Param('token') token: string): Promise<{} | never> {
+  async logout(@Param('token') token: string) {
     const decodedAccount: DecodedAccount | null =
       await this.authService.verifyToken(
         token,
-        this.configService.get<string>('ACCESS_TOKEN') ||
-          '283f01ccce922bcc2399e7f8ded981285963cec349daba382eb633c1b3a5f282',
+        this.configService.get<string>(
+          'ACCESS_SECRET',
+          authConstants.jwt.secrets.accessToken,
+        ),
       );
 
     if (!decodedAccount) {
@@ -332,8 +337,6 @@ export default class AuthController {
     if (deletedAccountsCount === 0) {
       throw new NotFoundException();
     }
-
-    return {};
   }
 
   @ApiNoContentResponse({
@@ -354,7 +357,7 @@ export default class AuthController {
   @UseGuards(TypesGuard)
   @Types(TypesEnum.admin)
   @HttpCode(HttpStatus.NO_CONTENT)
-  async logoutAll(): Promise<{}> {
+  async logoutAll(): Promise<string> {
     return this.authService.deleteAllTokens();
   }
 
@@ -390,8 +393,10 @@ export default class AuthController {
     const decodedAccount: DecodedAccount | null =
       await this.authService.verifyToken(
         token,
-        this.configService.get<string>('ACCESS_TOKEN') ||
-          '283f01ccce922bcc2399e7f8ded981285963cec349daba382eb633c1b3a5f282',
+        this.configService.get<string>(
+          'ACCESS_SECRET',
+          authConstants.jwt.secrets.accessToken,
+        ),
       );
 
     if (!decodedAccount) {

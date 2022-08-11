@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import CompanyRoleEntity from './companyRole.entity';
+import AdminEntity from '@v1/admin/schemas/admin.entity';
 
 @Entity('company')
 export default class CompanyEntity {
@@ -46,6 +48,11 @@ export default class CompanyEntity {
     cascade: true,
   })
   companyRoleEntities?: CompanyRoleEntity[];
+
+  @ManyToOne(() => AdminEntity, (object) => object.companies, {
+    cascade: true,
+  })
+  admin!: AdminEntity;
 
   @CreateDateColumn({
     name: 'created_at',

@@ -14,6 +14,8 @@ import AppController from './app.controller';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      cache: true,
+      expandVariables: true,
     }),
     TypeOrmModule.forRootAsync({
       useFactory: (cfg: ConfigService) => ({

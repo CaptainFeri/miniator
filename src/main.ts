@@ -15,6 +15,7 @@ import { ConfigService } from '@nestjs/config';
 import AppModule from './modules/app/app.module';
 
 import AllExceptionsFilter from './filters/all-exceptions.filter';
+import { SuperAdminGuard } from '@guards/super-admin.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -24,10 +25,9 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
+  app.useGlobalGuards(new SuperAdminGuard(configService));
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new AllExceptionsFilter());
-
-  const port = configService.get<number>('SERVER_PORT') || 3000;
 
   const options = new DocumentBuilder()
     .setTitle('Api v1')
@@ -38,6 +38,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
 
   SwaggerModule.setup('api', app, document);
+
+  const port = configService.get<number>('PORT') || 3000;
 
   await app.listen(port, async () => {
     console.log(
