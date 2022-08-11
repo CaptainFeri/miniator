@@ -7,12 +7,14 @@ import PaginationUtils from '@utils/pagination.utils';
 import CreateSecurityQuestionDto from '@v1/securityQuestion/dto/create-securityQuestion.dto';
 import UpdateSecurityQuestionDto from './dto/update-securityQuestion.dto';
 import SecurityQuestionEntity from './schemas/securityQuestion.entity';
+import SecurityQuestionAnswerEntity from '@v1/account/schemas/securityQuestionAnswer.entity';
 
 @Injectable()
 export default class SecurityQuestionsRepository {
   constructor(
     @InjectRepository(SecurityQuestionEntity)
     private readonly securityQuestionsModel: Repository<SecurityQuestionEntity>,
+    private readonly securityQuestionAnswersModel: Repository<SecurityQuestionAnswerEntity>,
   ) {}
 
   public create(
@@ -34,6 +36,22 @@ export default class SecurityQuestionsRepository {
     data: UpdateSecurityQuestionDto,
   ): Promise<UpdateResult> {
     return this.securityQuestionsModel.update(id, data);
+  }
+
+  set(
+    id: string,
+    userId: string,
+    answer: string,
+  ): Promise<SecurityQuestionAnswerEntity> {
+    return this.securityQuestionAnswersModel.save({
+      accountEntity: {
+        id: userId,
+      },
+      securityQuestionEntity: {
+        id: userId,
+      },
+      answer,
+    });
   }
 
   public async getAllWithPagination(

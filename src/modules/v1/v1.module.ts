@@ -26,7 +26,10 @@ const routes: Routes = [
   imports: [
     RouterModule.register(routes),
     AuthModule,
+    AdminsModule,
     AccountsModule,
+    RolesModule,
+    CompaniesModule,
     SecurityQuestionsModule,
   ],
 })

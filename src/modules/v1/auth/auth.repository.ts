@@ -1,4 +1,4 @@
-import * as Redis from 'ioredis';
+import { Redis } from 'ioredis';
 
 import { Injectable } from '@nestjs/common';
 import { RedisService } from '@liaoliaots/nestjs-redis';
@@ -7,7 +7,7 @@ import authConstants from './auth-constants';
 
 @Injectable()
 export default class AuthRepository {
-  private readonly redisClient: Redis.Redis;
+  private readonly redisClient: Redis;
 
   constructor(private readonly redisService: RedisService) {
     this.redisClient = redisService.getClient();

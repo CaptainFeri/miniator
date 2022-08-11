@@ -22,7 +22,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
       useFactory: (cfg: ConfigService) => ({
         type: 'postgres',
         host: cfg.get('POSTGRESQL_HOST') || 'postgres',
-        port: cfg.get('POSTGRESQL_PORT') as unknown as number,
+        port: cfg.get<number>('POSTGRESQL_PORT'),
         database: cfg.get('POSTGRESQL_DB'),
         username: cfg.get('POSTGRESQL_ROOT_USER'),
         password: cfg.get('POSTGRESQL_PASSWORD'),

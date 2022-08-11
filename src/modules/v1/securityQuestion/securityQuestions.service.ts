@@ -31,6 +31,10 @@ export default class SecurityQuestionsService {
     return this.securityQuestionsRepository.updateById(id, data);
   }
 
+  set(id: string, userId: string, answer: string) {
+    return this.securityQuestionsRepository.set(id, userId, answer);
+  }
+
   public async getAllWithPagination(
     options: PaginationParamsInterface,
   ): Promise<PaginatedEntityInterface<SecurityQuestionEntity>> {

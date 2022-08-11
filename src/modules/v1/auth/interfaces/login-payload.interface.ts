@@ -1,7 +1,7 @@
 import { TypesEnum } from '@decorators/types.decorator';
 
 export interface LoginPayload {
-  readonly id?: number;
+  readonly id?: string;
 
   readonly username?: string;
 

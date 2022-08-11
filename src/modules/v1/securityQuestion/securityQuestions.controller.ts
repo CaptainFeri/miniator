@@ -20,6 +20,8 @@ import CreateSecurityQuestionDto from '@v1/securityQuestion/dto/create-securityQ
 import SecurityQuestionsService from './securityQuestions.service';
 import PaginationUtils from '../../../utils/pagination.utils';
 import ResponseUtils from '../../../utils/response.utils';
+import AccountEntity from '@v1/account/schemas/account.entity';
+import User from '@decorators/user.decorator';
 
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
@@ -28,7 +30,7 @@ export default class SecurityQuestionsController {
     private readonly securityQuestionsService: SecurityQuestionsService,
   ) {}
 
-  @Post('')
+  @Post()
   async create(
     @Body() securityQuestionDto: CreateSecurityQuestionDto,
   ): Promise<any> {
@@ -74,6 +76,20 @@ export default class SecurityQuestionsController {
     @Body() securityQuestion: UpdateSecurityQuestionDto,
   ): Promise<any> {
     await this.securityQuestionsService.update(id, securityQuestion);
+
+    return ResponseUtils.success('securityQuestions', {
+      message: 'Success!',
+    });
+  }
+
+  @Get(':id/set')
+  @UseGuards(JwtAccessGuard)
+  async set(
+    @Param('id', ParseIntPipe) id: string,
+    @User() account: AccountEntity,
+    @Body('answer') answer: string,
+  ): Promise<any> {
+    await this.securityQuestionsService.set(id, account.id, answer);
 
     return ResponseUtils.success('securityQuestions', {
       message: 'Success!',

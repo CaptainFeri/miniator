@@ -27,7 +27,6 @@ import {
   ApiExtraModels,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { JwtService } from '@nestjs/jwt';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 
@@ -59,7 +58,6 @@ import JwtRefreshGuard from '@guards/jwt-refresh.guard';
 export default class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly jwtService: JwtService,
     private readonly accountsService: AccountsService,
     private readonly mailerService: MailerService,
     private readonly configService: ConfigService,
@@ -180,12 +178,14 @@ export default class AuthController {
     //   context: {
     //     token,
     //     email,
-    //     host: this.configService.get<number>('SERVER_HOST'),
+    //     host: this.configService.get('HOST'),
     //   },
     // });
 
     return ResponseUtils.success('auth', {
       message: 'Success! please verify your email',
+      // TODO: remove this for production
+      url: `/v1/auth/verify/${token}`,
     });
   }
 
