@@ -1,7 +1,7 @@
 // registers aliases, DON'T REMOVE THIS LINE!
 import 'module-alias/register';
 
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 
 import {
   FastifyAdapter,
@@ -16,6 +16,7 @@ import AppModule from './modules/app/app.module';
 
 import AllExceptionsFilter from './filters/all-exceptions.filter';
 import { SuperAdminGuard } from '@guards/super-admin.guard';
+import JwtAccessGuard from '@guards/jwt-access.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -24,8 +25,12 @@ async function bootstrap() {
   );
 
   const configService = app.get(ConfigService);
+  const reflector = app.get(Reflector);
 
-  app.useGlobalGuards(new SuperAdminGuard(configService));
+  app.useGlobalGuards(
+    new SuperAdminGuard(configService),
+    new JwtAccessGuard(reflector),
+  );
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new AllExceptionsFilter());
 
@@ -33,7 +38,10 @@ async function bootstrap() {
     .setTitle('Api v1')
     .setDescription('The boilerplate API for nestjs devs')
     .setVersion('1.0')
-    .addBearerAuth({ in: 'header', type: 'http' })
+    .addBearerAuth({
+      in: 'header',
+      type: 'http',
+    })
     .build();
   const document = SwaggerModule.createDocument(app, options);
 
@@ -47,4 +55,5 @@ async function bootstrap() {
     );
   });
 }
+
 bootstrap();

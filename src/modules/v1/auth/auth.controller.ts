@@ -49,6 +49,8 @@ import JwtTokensDto from './dto/jwt-tokens.dto';
 import ResponseUtils from '../../../utils/response.utils';
 import authConstants from '@v1/auth/auth-constants';
 import { User } from '@decorators/user.decorator';
+import { Public } from '@decorators/public.decorator';
+import JwtRefreshGuard from '@guards/jwt-refresh.guard';
 
 @ApiTags('Auth')
 @UseInterceptors(WrapResponseInterceptor)
@@ -218,19 +220,14 @@ export default class AuthController {
     description: '500. InternalServerError ',
   })
   @Post('refresh-token')
+  @Public()
+  @UseGuards(JwtRefreshGuard)
   async refreshToken(
+    @User() account: AccountEntity,
     @Body() refreshTokenDto: RefreshTokenDto,
   ): Promise<SuccessResponseInterface | never> {
-    const decodedAccount = this.jwtService.decode(
-      refreshTokenDto.refreshToken,
-    ) as DecodedAccount;
-
-    if (!decodedAccount) {
-      throw new ForbiddenException('Incorrect token');
-    }
-
     const oldRefreshToken: string | null =
-      await this.authService.getRefreshTokenByUsername(decodedAccount.username);
+      await this.authService.getRefreshTokenByUsername(account.username);
 
     // if the old refresh token is not equal to request refresh token then this user is unauthorized
     if (!oldRefreshToken || oldRefreshToken !== refreshTokenDto.refreshToken) {
@@ -240,8 +237,8 @@ export default class AuthController {
     }
 
     const payload = {
-      id: decodedAccount.id,
-      username: decodedAccount.username,
+      id: account.id,
+      username: account.username,
     };
 
     return ResponseUtils.success(
