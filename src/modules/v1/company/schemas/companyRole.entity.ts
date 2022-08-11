@@ -17,7 +17,7 @@ export default class CompanyRoleEntity extends BaseEntity {
   @ApiProperty({ type: String, maxLength: 64 })
   @Column({ length: 64 })
   @Index({ unique: true })
-  readonly title: string = '';
+  readonly name: string = '';
 
   @ApiProperty({ type: Boolean })
   @Column()

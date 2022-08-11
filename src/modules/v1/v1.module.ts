@@ -6,6 +6,7 @@ import AuthModule from './auth/auth.module';
 import AccountsModule from './account/accounts.module';
 import AdminsModule from './admin/admins.module';
 import CompaniesModule from './company/companies.module';
+import RolesModule from '@v1/roles/roles.module';
 
 const routes: Routes = [
   {
@@ -14,6 +15,7 @@ const routes: Routes = [
       { path: '/auth', module: AuthModule },
       { path: '/admins', module: AdminsModule },
       { path: '/accounts', module: AccountsModule },
+      { path: '/roles', module: RolesModule },
       { path: '/companies', module: CompaniesModule },
       { path: '/security-questions', module: SecurityQuestionsModule },
     ],

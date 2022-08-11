@@ -14,25 +14,25 @@ import {
 import JwtAccessGuard from '@guards/jwt-access.guard';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
-import UpdateCompanyDto from '@v1/company/dto/update-company.dto';
-import CreateCompanyDto from '@v1/company/dto/create-company.dto';
 import { SuccessResponseInterface } from '@interfaces/success-response.interface';
 import ResponseUtils from '../../../utils/response.utils';
 import PaginationUtils from '../../../utils/pagination.utils';
-import CompaniesService from './companies.service';
+import RolesService from './roles.service';
+import UpdateRoleDto from '@v1/roles/dto/update-role.dto';
+import CreateRoleDto from '@v1/roles/dto/create-role.dto';
 
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
-export default class CompaniesController {
-  constructor(private readonly companiesService: CompaniesService) {}
+export default class RolesController {
+  constructor(private readonly rolesService: RolesService) {}
 
   @Post()
-  async create(@Body() createCompanyDto: CreateCompanyDto): Promise<any> {
-    const company = await this.companiesService.create(createCompanyDto);
+  async create(@Body() createRoleDto: CreateRoleDto): Promise<any> {
+    const role = await this.rolesService.create(createRoleDto);
 
-    return ResponseUtils.success('companies', {
+    return ResponseUtils.success('roles', {
       message: 'Success',
-      company,
+      role,
     });
   }
 
@@ -45,19 +45,15 @@ export default class CompaniesController {
       throw new BadRequestException('Invalid pagination parameters');
     }
 
-    const paginatedCompanies = await this.companiesService.getAllWithPagination(
+    const paginatedRoles = await this.rolesService.getAllWithPagination(
       paginationParams,
     );
 
-    return ResponseUtils.success(
-      'companies',
-      paginatedCompanies.paginatedResult,
-      {
-        location: 'companies',
-        paginationParams,
-        totalCount: paginatedCompanies.totalCount,
-      },
-    );
+    return ResponseUtils.success('roles', paginatedRoles.paginatedResult, {
+      location: 'roles',
+      paginationParams,
+      totalCount: paginatedRoles.totalCount,
+    });
   }
 
   @Get(':id')
@@ -65,24 +61,24 @@ export default class CompaniesController {
   async getById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<SuccessResponseInterface> {
-    const foundCompany = await this.companiesService.getById(id);
+    const foundRole = await this.rolesService.getById(id);
 
-    if (!foundCompany) {
-      throw new NotFoundException('The company does not exist');
+    if (!foundRole) {
+      throw new NotFoundException('The role does not exist');
     }
 
-    return ResponseUtils.success('companies', foundCompany);
+    return ResponseUtils.success('roles', foundRole);
   }
 
   @Post(':id')
   @UseGuards(JwtAccessGuard)
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() company: UpdateCompanyDto,
+    @Body() role: UpdateRoleDto,
   ): Promise<any> {
-    await this.companiesService.update(id, company);
+    await this.rolesService.update(id, role);
 
-    return ResponseUtils.success('companies', {
+    return ResponseUtils.success('roles', {
       message: 'Success!',
     });
   }
