@@ -11,7 +11,7 @@ import CompanyEntity from './schemas/company.entity';
 @Injectable()
 export default class CompaniesRepository {
   constructor(
-    @InjectRepository(CompaniesRepository)
+    @InjectRepository(CompanyEntity)
     private readonly companiesModel: Repository<CompanyEntity>,
   ) {}
 

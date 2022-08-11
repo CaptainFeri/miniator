@@ -11,7 +11,7 @@ import CreateRoleDto from '@v1/roles/dto/create-role.dto';
 @Injectable()
 export default class RolesRepository {
   constructor(
-    @InjectRepository(RolesRepository)
+    @InjectRepository(CompanyRoleEntity)
     private readonly rolesModel: Repository<CompanyRoleEntity>,
   ) {}
 

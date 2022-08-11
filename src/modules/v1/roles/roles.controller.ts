@@ -2,7 +2,6 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   UseGuards,
   UseInterceptors,
   BadRequestException,
@@ -10,6 +9,7 @@ import {
   Post,
   Body,
   NotFoundException,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import JwtAccessGuard from '@guards/jwt-access.guard';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
@@ -20,6 +20,8 @@ import PaginationUtils from '../../../utils/pagination.utils';
 import RolesService from './roles.service';
 import UpdateRoleDto from '@v1/roles/dto/update-role.dto';
 import CreateRoleDto from '@v1/roles/dto/create-role.dto';
+import User from '@decorators/user.decorator';
+import AccountEntity from '@v1/account/schemas/account.entity';
 
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
@@ -59,7 +61,7 @@ export default class RolesController {
   @Get(':id')
   @UseGuards(JwtAccessGuard)
   async getById(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: number,
   ): Promise<SuccessResponseInterface> {
     const foundRole = await this.rolesService.getById(id);
 
@@ -73,12 +75,36 @@ export default class RolesController {
   @Post(':id')
   @UseGuards(JwtAccessGuard)
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: number,
     @Body() role: UpdateRoleDto,
   ): Promise<any> {
     await this.rolesService.update(id, role);
 
     return ResponseUtils.success('roles', {
+      message: 'Success!',
+    });
+  }
+
+  @Get(':id/request')
+  async request(
+    @Param('id', ParseUUIDPipe) id: string,
+    @User() account: AccountEntity,
+  ): Promise<any> {
+    await this.rolesService.request(id, account.id);
+
+    return ResponseUtils.success('roleRequests', {
+      message: 'Success!',
+    });
+  }
+
+  @Get(':id/accept')
+  async accept(
+    @Param('id', ParseUUIDPipe) id: string,
+    @User() account: AccountEntity,
+  ): Promise<any> {
+    await this.rolesService.request(id, account.id);
+
+    return ResponseUtils.success('roleRequests', {
       message: 'Success!',
     });
   }
