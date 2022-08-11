@@ -1,6 +1,5 @@
 import { Strategy } from 'passport-local';
 import { validate } from 'class-validator';
-import { Request as ExpressRequest } from 'express';
 import { PassportStrategy } from '@nestjs/passport';
 import {
   BadRequestException,
@@ -23,7 +22,7 @@ export default class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(
-    req: ExpressRequest,
+    req: any,
     username: string,
     password: string,
   ): Promise<ValidateAccountOutput> {

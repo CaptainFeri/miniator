@@ -10,7 +10,6 @@ import {
   Query,
   Post,
   Body,
-  Request,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -28,7 +27,6 @@ import {
   ApiConflictResponse,
   ApiInternalServerErrorResponse,
 } from '@nestjs/swagger';
-import { Request as ExpressRequest } from 'express';
 import JwtAccessGuard from '@guards/jwt-access.guard';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import Serialize from '@decorators/serialization.decorator';
@@ -42,6 +40,7 @@ import AccountsService from './accounts.service';
 import PaginationUtils from '../../../utils/pagination.utils';
 import ResponseUtils from '../../../utils/response.utils';
 import DeleteAccountDto from './dto/delete-account.dto';
+import { User } from '@decorators/user.decorator';
 
 @ApiTags('Accounts')
 @ApiBearerAuth()
@@ -90,10 +89,10 @@ export default class AccountsController {
   @UseGuards(JwtAccessGuard)
   async deleteAccount(
     @Body() data: DeleteAccountDto,
-    @Request() req: ExpressRequest,
+    @User() account: AccountEntity,
   ): Promise<any> {
     const deletedAccount = await this.accountsService.deleteAccount(
-      (req.user as AccountEntity).id,
+      account.id,
       data.password,
     );
 
@@ -217,10 +216,10 @@ export default class AccountsController {
   @UseGuards(JwtAccessGuard)
   @Serialize(AllAccountsResponseEntity)
   async getProfile(
-    @Request() req: ExpressRequest,
+    @User() account: AccountEntity,
   ): Promise<SuccessResponseInterface> {
     const foundAccount = await this.accountsService.getVerifiedAccountById(
-      (req.user as AccountEntity).id,
+      account.id,
     );
 
     if (!foundAccount) {
@@ -278,10 +277,10 @@ export default class AccountsController {
   @Post('update-profile')
   @UseGuards(JwtAccessGuard)
   async updateProfile(
-    @Request() req: ExpressRequest,
-    @Body() account: SignUpDto,
+    @User() account: AccountEntity,
+    @Body() dto: SignUpDto,
   ): Promise<any> {
-    await this.accountsService.update((req.user as AccountEntity).id, account);
+    await this.accountsService.update(account.id, dto);
 
     return ResponseUtils.success('accounts', {
       message: 'Success!',

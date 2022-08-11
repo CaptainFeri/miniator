@@ -1,7 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
 import { JwtDecodeResponse } from '@interfaces/jwt-decode-response.interface';
 import { TypesEnum } from '@decorators/types.decorator';
 
@@ -14,7 +13,7 @@ export default class TypesGuard implements CanActivate {
     if (!types) {
       return true;
     }
-    const request: Request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest();
     const tokenData = (await this.jwtService.decode(
       request.headers.authorization?.split('Bearer')[1].trim() as string,
     )) as JwtDecodeResponse | null;

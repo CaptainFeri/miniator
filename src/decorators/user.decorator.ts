@@ -6,3 +6,5 @@ export const User = createParamDecorator(
     return req.user;
   },
 );
+
+export default User;

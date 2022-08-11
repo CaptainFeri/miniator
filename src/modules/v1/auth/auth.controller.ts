@@ -6,7 +6,6 @@ import {
   Post,
   Delete,
   Param,
-  Request,
   UnauthorizedException,
   UseGuards,
   NotFoundException,
@@ -29,7 +28,6 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { JwtService } from '@nestjs/jwt';
-import { Request as ExpressRequest } from 'express';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 
@@ -50,6 +48,7 @@ import SignUpDto from './dto/sign-up.dto';
 import JwtTokensDto from './dto/jwt-tokens.dto';
 import ResponseUtils from '../../../utils/response.utils';
 import authConstants from '@v1/auth/auth-constants';
+import { User } from '@decorators/user.decorator';
 
 @ApiTags('Auth')
 @UseInterceptors(WrapResponseInterceptor)
@@ -111,10 +110,10 @@ export default class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('sign-in')
   async signIn(
-    @Request() req: ExpressRequest,
+    @User() accountEntity: AccountEntity,
   ): Promise<SuccessResponseInterface | never> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...user } = req.user as AccountEntity;
+    const { password, ...user } = accountEntity;
 
     return ResponseUtils.success('tokens', await this.authService.login(user));
   }

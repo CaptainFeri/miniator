@@ -57,10 +57,7 @@ export default class AuthService {
 
     const accessToken = this.jwtService.sign(payload, {
       expiresIn: authConstants.jwt.expirationTime.accessToken,
-      secret: this.configService.get<string>(
-        'ACCESS_SECRET',
-        authConstants.jwt.secrets.accessToken,
-      ),
+      secret: this.configService.get<string>('ACCESS_SECRET'),
     });
     const refreshToken = this.jwtService.sign(payload, {
       expiresIn: authConstants.jwt.expirationTime.refreshToken,
@@ -95,10 +92,7 @@ export default class AuthService {
       { id },
       {
         expiresIn: authConstants.jwt.expirationTime.accessToken,
-        secret: this.configService.get<string>(
-          'ACCESS_SECRET',
-          authConstants.jwt.secrets.accessToken,
-        ),
+        secret: this.configService.get<string>('ACCESS_SECRET'),
       },
     );
   }

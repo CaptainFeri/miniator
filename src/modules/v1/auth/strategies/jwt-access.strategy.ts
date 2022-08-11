@@ -6,7 +6,6 @@ import { ConfigService } from '@nestjs/config';
 import AccountEntity from '@v1/account/schemas/account.entity';
 
 import { JwtStrategyValidate } from '../interfaces/jwt-strategy-validate.interface';
-import authConstants from '@v1/auth/auth-constants';
 
 @Injectable()
 export default class JwtAccessStrategy extends PassportStrategy(
@@ -17,10 +16,7 @@ export default class JwtAccessStrategy extends PassportStrategy(
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>(
-        'ACCESS_SECRET',
-        authConstants.jwt.secrets.accessToken,
-      ),
+      secretOrKey: configService.get<string>('ACCESS_SECRET'),
     });
   }
 
