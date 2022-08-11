@@ -61,7 +61,7 @@ export default class RolesController {
   @Get(':id')
   @UseGuards(JwtAccessGuard)
   async getById(
-    @Param('id', ParseUUIDPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
   ): Promise<SuccessResponseInterface> {
     const foundRole = await this.rolesService.getById(id);
 
@@ -75,7 +75,7 @@ export default class RolesController {
   @Post(':id')
   @UseGuards(JwtAccessGuard)
   async update(
-    @Param('id', ParseUUIDPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() role: UpdateRoleDto,
   ): Promise<any> {
     await this.rolesService.update(id, role);

@@ -21,11 +21,11 @@ export default class RolesRepository {
     });
   }
 
-  public async getById(id: number): Promise<CompanyRoleEntity | undefined> {
+  public async getById(id: string): Promise<CompanyRoleEntity | undefined> {
     return this.rolesModel.findOne(id);
   }
 
-  public updateById(id: number, data: UpdateRoleDto): Promise<UpdateResult> {
+  public updateById(id: string, data: UpdateRoleDto): Promise<UpdateResult> {
     return this.rolesModel.update(id, data);
   }
 

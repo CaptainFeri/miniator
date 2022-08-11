@@ -17,11 +17,11 @@ export default class CompaniesService {
     });
   }
 
-  public async getById(id: number): Promise<CompanyEntity | undefined> {
+  public async getById(id: string): Promise<CompanyEntity | undefined> {
     return this.companiesRepository.getById(id);
   }
 
-  update(id: number, data: UpdateCompanyDto): Promise<UpdateResult> {
+  update(id: string, data: UpdateCompanyDto): Promise<UpdateResult> {
     return this.companiesRepository.updateById(id, data);
   }
 

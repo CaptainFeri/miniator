@@ -58,7 +58,7 @@ export default class AdminsController {
   @Post(':id')
   @UseGuards(JwtAccessGuard)
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: string,
     @Body() admin: UpdateAdminDto,
   ): Promise<any> {
     await this.adminsService.update(id, admin);

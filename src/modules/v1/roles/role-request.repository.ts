@@ -24,13 +24,13 @@ export default class RoleRequestsRepository {
   }
 
   public async getById(
-    id: number,
+    id: string,
   ): Promise<CompanyRoleRequestEntity | undefined> {
     return this.roleRequestsModel.findOne(id);
   }
 
   public async getByUserId(
-    userId: number,
+    userId: string,
   ): Promise<CompanyRoleRequestEntity | undefined> {
     return this.roleRequestsModel.findOne({
       where: { accountEntity: { id: userId } },

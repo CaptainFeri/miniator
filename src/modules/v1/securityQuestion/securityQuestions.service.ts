@@ -22,12 +22,12 @@ export default class SecurityQuestionsService {
   }
 
   public async getById(
-    id: number,
+    id: string,
   ): Promise<SecurityQuestionEntity | undefined> {
     return this.securityQuestionsRepository.getById(id);
   }
 
-  update(id: number, data: UpdateSecurityQuestionDto): Promise<UpdateResult> {
+  update(id: string, data: UpdateSecurityQuestionDto): Promise<UpdateResult> {
     return this.securityQuestionsRepository.updateById(id, data);
   }
 

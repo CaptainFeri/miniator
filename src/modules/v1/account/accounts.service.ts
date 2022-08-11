@@ -49,23 +49,23 @@ export default class AccountsService {
     return this.accountsRepository.getUnverifiedAccountByEmail(email);
   }
 
-  public async getById(id: number): Promise<AccountEntity | undefined> {
+  public async getById(id: string): Promise<AccountEntity | undefined> {
     return this.accountsRepository.getById(id);
   }
 
   public async getVerifiedAccountById(
-    id: number,
+    id: string,
   ): Promise<AccountEntity | undefined> {
     return this.accountsRepository.getVerifiedAccountById(id);
   }
 
   public async getUnverifiedAccountById(
-    id: number,
+    id: string,
   ): Promise<AccountEntity | undefined> {
     return this.accountsRepository.getUnverifiedAccountById(id);
   }
 
-  update(id: number, data: UpdateAccountDto): Promise<UpdateResult> {
+  update(id: string, data: UpdateAccountDto): Promise<UpdateResult> {
     return this.accountsRepository.updateById(id, data);
   }
 
@@ -76,7 +76,7 @@ export default class AccountsService {
   }
 
   public async deleteAccount(
-    id: number,
+    id: string,
     password: string,
   ): Promise<AccountEntity | undefined> {
     const account = await this.accountsRepository.getById(id);

@@ -70,7 +70,7 @@ export default class SecurityQuestionsController {
   @Post(':id')
   @UseGuards(JwtAccessGuard)
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: string,
     @Body() securityQuestion: UpdateSecurityQuestionDto,
   ): Promise<any> {
     await this.securityQuestionsService.update(id, securityQuestion);

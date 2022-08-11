@@ -15,7 +15,7 @@ import { ConfigService } from '@nestjs/config';
 import AppModule from './modules/app/app.module';
 
 import AllExceptionsFilter from './filters/all-exceptions.filter';
-import { SuperAdminGuard } from '@guards/super-admin.guard';
+import { BasicAuthGuard } from '@guards/basic-auth.guard';
 import JwtAccessGuard from '@guards/jwt-access.guard';
 
 async function bootstrap() {
@@ -28,7 +28,7 @@ async function bootstrap() {
   const reflector = app.get(Reflector);
 
   app.useGlobalGuards(
-    new SuperAdminGuard(configService),
+    new BasicAuthGuard(configService),
     new JwtAccessGuard(reflector),
   );
   app.useGlobalPipes(new ValidationPipe());

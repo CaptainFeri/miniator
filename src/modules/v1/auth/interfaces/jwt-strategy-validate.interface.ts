@@ -1,7 +1,7 @@
 import { TypesEnum } from '@decorators/types.decorator';
 
 export interface JwtStrategyValidate {
-  id: number;
+  id: string;
   username: string;
   type: TypesEnum;
 }

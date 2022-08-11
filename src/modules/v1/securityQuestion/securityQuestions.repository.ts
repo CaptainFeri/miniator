@@ -24,13 +24,13 @@ export default class SecurityQuestionsRepository {
   }
 
   public async getById(
-    id: number,
+    id: string,
   ): Promise<SecurityQuestionEntity | undefined> {
     return this.securityQuestionsModel.findOne(id);
   }
 
   public updateById(
-    id: number,
+    id: string,
     data: UpdateSecurityQuestionDto,
   ): Promise<UpdateResult> {
     return this.securityQuestionsModel.update(id, data);

@@ -134,7 +134,7 @@ export default class AccountsController {
   @UseGuards(JwtAccessGuard)
   @Serialize(AllAccountsResponseEntity)
   async getById(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: string,
   ): Promise<SuccessResponseInterface> {
     const foundAccount = await this.accountsService.getVerifiedAccountById(id);
 

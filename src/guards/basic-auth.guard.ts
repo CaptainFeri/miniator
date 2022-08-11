@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-export class SuperAdminGuard implements CanActivate {
+export class BasicAuthGuard implements CanActivate {
   constructor(private readonly config: ConfigService) {}
 
   canActivate(context: ExecutionContext): boolean {
@@ -15,8 +15,8 @@ export class SuperAdminGuard implements CanActivate {
     const [username, password] = buff.toString('utf-8').split(':');
 
     return (
-      username === this.config.get('SUPER_ADMIN_USERNAME') &&
-      password === this.config.get('SUPER_ADMIN_PASSWORD')
+      username === this.config.get('BASIC_AUTH_USERNAME') &&
+      password === this.config.get('BASIC_AUTH_PASSWORD')
     );
   }
 }

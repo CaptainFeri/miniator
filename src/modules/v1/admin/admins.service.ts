@@ -17,11 +17,11 @@ export default class AdminsService {
     });
   }
 
-  public async getById(id: number): Promise<AdminEntity | undefined> {
+  public async getById(id: string): Promise<AdminEntity | undefined> {
     return this.adminsRepository.getById(id);
   }
 
-  update(id: number, data: UpdateAdminDto): Promise<UpdateResult> {
+  update(id: string, data: UpdateAdminDto): Promise<UpdateResult> {
     return this.adminsRepository.updateById(id, data);
   }
 

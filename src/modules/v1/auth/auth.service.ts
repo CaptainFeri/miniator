@@ -87,7 +87,7 @@ export default class AuthService {
     return this.authRepository.removeAllTokens();
   }
 
-  public createVerifyToken(id: number): string {
+  public createVerifyToken(id: string): string {
     return this.jwtService.sign(
       { id },
       {

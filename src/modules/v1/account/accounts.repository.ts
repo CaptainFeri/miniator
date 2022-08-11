@@ -73,12 +73,12 @@ export default class AccountsRepository {
     });
   }
 
-  public async getById(id: number): Promise<AccountEntity | undefined> {
+  public async getById(id: string): Promise<AccountEntity | undefined> {
     return this.accountsModel.findOne(id);
   }
 
   public async getVerifiedAccountById(
-    id: number,
+    id: string,
   ): Promise<AccountEntity | undefined> {
     return this.accountsModel.findOne(id, {
       where: [{ verified: true }],
@@ -86,14 +86,14 @@ export default class AccountsRepository {
   }
 
   public async getUnverifiedAccountById(
-    id: number,
+    id: string,
   ): Promise<AccountEntity | undefined> {
     return this.accountsModel.findOne(id, {
       where: [{ verified: false }],
     });
   }
 
-  public updateById(id: number, data: UpdateAccountDto): Promise<UpdateResult> {
+  public updateById(id: string, data: UpdateAccountDto): Promise<UpdateResult> {
     return this.accountsModel.update(id, data);
   }
 

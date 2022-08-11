@@ -63,7 +63,7 @@ export default class CompaniesController {
   @Get(':id')
   @UseGuards(JwtAccessGuard)
   async getById(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: string,
   ): Promise<SuccessResponseInterface> {
     const foundCompany = await this.companiesService.getById(id);
 
@@ -77,7 +77,7 @@ export default class CompaniesController {
   @Post(':id')
   @UseGuards(JwtAccessGuard)
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: string,
     @Body() company: UpdateCompanyDto,
   ): Promise<any> {
     await this.companiesService.update(id, company);
