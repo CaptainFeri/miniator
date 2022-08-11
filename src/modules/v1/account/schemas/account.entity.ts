@@ -1,13 +1,10 @@
 import {
   Entity,
   Column,
-  PrimaryGeneratedColumn,
   Index,
   OneToOne,
   JoinColumn,
   OneToMany,
-  CreateDateColumn,
-  UpdateDateColumn,
   ManyToMany,
   JoinTable,
 } from 'typeorm';
@@ -19,13 +16,10 @@ import CompanyRoleRequestEntity from '@v1/company/schemas/companyRoleRequest.ent
 import ProfileEntity from './profile.entity';
 import CompanyProfileEntity from './companyProfile.entity';
 import SecurityQuestionAnswerEntity from './securityQuestionAnswer.entity';
+import { BaseEntity } from '@entities/base.entity';
 
 @Entity('account')
-export default class AccountEntity {
-  @ApiProperty({ type: String })
-  @PrimaryGeneratedColumn()
-  readonly id: number = 1;
-
+export default class AccountEntity extends BaseEntity {
   @ApiProperty({ type: String, maxLength: 64 })
   @Column({ length: 64 })
   @Index({ unique: true })
@@ -97,10 +91,4 @@ export default class AccountEntity {
     },
   })
   companyRoleEntities?: CompanyRoleEntity[];
-
-  @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
-  readonly createdAt: Date = new Date();
-
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
-  readonly updatedAt: Date = new Date();
 }

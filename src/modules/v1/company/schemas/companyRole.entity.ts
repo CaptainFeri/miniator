@@ -1,10 +1,7 @@
 import {
   Entity,
   Column,
-  PrimaryGeneratedColumn,
   Index,
-  CreateDateColumn,
-  UpdateDateColumn,
   ManyToOne,
   ManyToMany,
   OneToMany,
@@ -13,13 +10,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import AccountEntity from '@v1/account/schemas/account.entity';
 import CompanyEntity from './company.entity';
 import CompanyRoleRequestEntity from './companyRoleRequest.entity';
+import { BaseEntity } from '@entities/base.entity';
 
 @Entity('companyRole')
-export default class CompanyRoleEntity {
-  @ApiProperty({ type: String })
-  @PrimaryGeneratedColumn()
-  readonly id: number = 1;
-
+export default class CompanyRoleEntity extends BaseEntity {
   @ApiProperty({ type: String, maxLength: 64 })
   @Column({ length: 64 })
   @Index({ unique: true })
@@ -45,10 +39,4 @@ export default class CompanyRoleEntity {
 
   @ManyToMany(() => AccountEntity, (object) => object.companyRoleEntities)
   accountEntities?: AccountEntity[];
-
-  @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
-  readonly createdAt: Date = new Date();
-
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
-  readonly updatedAt: Date = new Date();
 }

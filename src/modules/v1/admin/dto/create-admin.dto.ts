@@ -6,4 +6,14 @@ export default class CreateAdminDto {
   @IsNotEmpty()
   @IsString()
   readonly username: string = '';
+
+  @ApiProperty({ type: String })
+  @IsNotEmpty()
+  @IsString()
+  readonly password: string = '';
+
+  @ApiProperty({ type: String })
+  @IsNotEmpty()
+  @IsString()
+  readonly email: string = '';
 }

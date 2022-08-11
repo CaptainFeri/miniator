@@ -9,21 +9,15 @@ import CreateAdminDto from '@v1/admin/dto/create-admin.dto';
 
 @Injectable()
 export default class AdminsService {
-  constructor(
-    private readonly adminsRepository: AdminsRepository,
-  ) {}
+  constructor(private readonly adminsRepository: AdminsRepository) {}
 
-  public async create(
-    admin: CreateAdminDto,
-  ): Promise<AdminEntity> {
+  public async create(admin: CreateAdminDto): Promise<AdminEntity> {
     return this.adminsRepository.create({
       ...admin,
     });
   }
 
-  public async getById(
-    id: number,
-  ): Promise<AdminEntity | undefined> {
+  public async getById(id: number): Promise<AdminEntity | undefined> {
     return this.adminsRepository.getById(id);
   }
 

@@ -9,6 +9,7 @@ import V1Module from '@v1/v1.module';
 
 import AppService from './app.service';
 import AppController from './app.controller';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 @Module({
   imports: [
@@ -26,7 +27,9 @@ import AppController from './app.controller';
         username: cfg.get('POSTGRESQL_ROOT_USER'),
         password: cfg.get('POSTGRESQL_PASSWORD'),
         entities: ['dist/**/*.entity{.ts,.js}'],
-        synchronize: true,
+        autoLoadEntities: true,
+        synchronize: cfg.get('NODE_ENV') === 'development',
+        namingStrategy: new SnakeNamingStrategy(),
       }),
       inject: [ConfigService],
     }),

@@ -24,17 +24,11 @@ import UpdateAdminDto from '@v1/admin/dto/update-admin.dto';
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
 export default class AdminsController {
-  constructor(
-    private readonly adminsService: AdminsService,
-  ) {}
+  constructor(private readonly adminsService: AdminsService) {}
 
   @Post('')
-  async create(
-    @Body() adminDto: CreateAdminDto,
-  ): Promise<any> {
-    const admin = await this.adminsService.create(
-      adminDto,
-    );
+  async create(@Body() adminDto: CreateAdminDto): Promise<any> {
+    const admin = await this.adminsService.create(adminDto);
 
     return ResponseUtils.success('admins', {
       message: 'Success',
@@ -52,19 +46,13 @@ export default class AdminsController {
     }
 
     const paginatedAdmins: PaginatedEntityInterface<AdminEntity> =
-      await this.adminsService.getAllWithPagination(
-        paginationParams,
-      );
+      await this.adminsService.getAllWithPagination(paginationParams);
 
-    return ResponseUtils.success(
-      'admins',
-      paginatedAdmins.paginatedResult,
-      {
-        location: 'admins',
-        paginationParams,
-        totalCount: paginatedAdmins.totalCount,
-      },
-    );
+    return ResponseUtils.success('admins', paginatedAdmins.paginatedResult, {
+      location: 'admins',
+      paginationParams,
+      totalCount: paginatedAdmins.totalCount,
+    });
   }
 
   @Post(':id')

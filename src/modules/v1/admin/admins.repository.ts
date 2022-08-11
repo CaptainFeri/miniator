@@ -15,24 +15,17 @@ export default class AdminsRepository {
     private readonly adminsModel: Repository<AdminEntity>,
   ) {}
 
-  public create(
-    admin: CreateAdminDto,
-  ): Promise<AdminEntity> {
+  public create(admin: CreateAdminDto): Promise<AdminEntity> {
     return this.adminsModel.save({
       ...admin,
     });
   }
 
-  public async getById(
-    id: number,
-  ): Promise<AdminEntity | undefined> {
+  public async getById(id: number): Promise<AdminEntity | undefined> {
     return this.adminsModel.findOne(id);
   }
 
-  public updateById(
-    id: number,
-    data: UpdateAdminDto,
-  ): Promise<UpdateResult> {
+  public updateById(id: number, data: UpdateAdminDto): Promise<UpdateResult> {
     return this.adminsModel.update(id, data);
   }
 

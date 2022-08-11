@@ -1,35 +1,36 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  Index,
-  OneToOne,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, Column, Index, OneToOne } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import AccountEntity from './account.entity';
+import { BaseEntity } from '@entities/base.entity';
 
 @Entity('companyProfile')
-export default class CompanyProfileEntity {
-  @ApiProperty({ type: String })
-  @PrimaryGeneratedColumn()
-  readonly id: number = 1;
-
-  @ApiProperty({ type: String, maxLength: 64 })
+export default class CompanyProfileEntity extends BaseEntity {
+  @ApiProperty({
+    type: String,
+    maxLength: 64,
+  })
   @Column({ length: 64 })
   @Index({ unique: true })
   readonly economicCode: string = '';
 
-  @ApiProperty({ type: String, maxLength: 64 })
+  @ApiProperty({
+    type: String,
+    maxLength: 64,
+  })
   @Column({ length: 64 })
   readonly registrationId: string = '';
 
-  @ApiProperty({ type: String, maxLength: 64 })
+  @ApiProperty({
+    type: String,
+    maxLength: 64,
+  })
   @Column({ length: 64 })
   readonly phone: string = '';
 
-  @ApiProperty({ type: String, maxLength: 64 })
+  @ApiProperty({
+    type: String,
+    maxLength: 64,
+  })
   @Column({ length: 64 })
   readonly activityField: string = '';
 
@@ -37,10 +38,4 @@ export default class CompanyProfileEntity {
     onDelete: 'CASCADE',
   })
   accountEntity?: AccountEntity;
-
-  @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
-  readonly createdAt: Date = new Date();
-
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
-  readonly updatedAt: Date = new Date();
 }

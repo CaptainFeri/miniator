@@ -1,22 +1,11 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  Index,
-  ManyToOne,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, Column, Index, ManyToOne } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import SecurityQuestionEntity from '@v1/securityQuestion/schemas/securityQuestion.entity';
 import AccountEntity from './account.entity';
+import { BaseEntity } from '@entities/base.entity';
 
 @Entity('securityQuestionAnswer')
-export default class SecurityQuestionAnswerEntity {
-  @ApiProperty({ type: String })
-  @PrimaryGeneratedColumn()
-  readonly id: number = 1;
-
+export default class SecurityQuestionAnswerEntity extends BaseEntity {
   @ApiProperty({
     type: String,
     maxLength: 64,
@@ -42,16 +31,4 @@ export default class SecurityQuestionAnswerEntity {
     },
   )
   securityQuestionEntity?: SecurityQuestionEntity;
-
-  @CreateDateColumn({
-    name: 'created_at',
-    type: 'timestamp with time zone',
-  })
-  readonly createdAt: Date = new Date();
-
-  @UpdateDateColumn({
-    name: 'updated_at',
-    type: 'timestamp with time zone',
-  })
-  readonly updatedAt: Date = new Date();
 }
