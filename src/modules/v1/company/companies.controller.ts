@@ -20,6 +20,7 @@ import { SuccessResponseInterface } from '@interfaces/success-response.interface
 import ResponseUtils from '../../../utils/response.utils';
 import PaginationUtils from '../../../utils/pagination.utils';
 import CompaniesService from './companies.service';
+import { Types, TypesEnum } from '@decorators/types.decorator';
 
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
@@ -27,6 +28,7 @@ export default class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
   @Post()
+  @Types(TypesEnum.superAdmin)
   async create(@Body() createCompanyDto: CreateCompanyDto): Promise<any> {
     const company = await this.companiesService.create(createCompanyDto);
 
@@ -76,6 +78,7 @@ export default class CompaniesController {
 
   @Post(':id')
   @UseGuards(JwtAccessGuard)
+  @Types(TypesEnum.superAdmin)
   async update(
     @Param('id', ParseIntPipe) id: string,
     @Body() company: UpdateCompanyDto,

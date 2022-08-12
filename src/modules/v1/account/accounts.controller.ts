@@ -41,6 +41,7 @@ import PaginationUtils from '../../../utils/pagination.utils';
 import ResponseUtils from '../../../utils/response.utils';
 import DeleteAccountDto from './dto/delete-account.dto';
 import { User } from '@decorators/user.decorator';
+import { Types, TypesEnum } from '@decorators/types.decorator';
 
 @ApiTags('Accounts')
 @ApiBearerAuth()
@@ -166,7 +167,7 @@ export default class AccountsController {
     description: '401. UnauthorizedException.',
   })
   @Get()
-  @UseGuards(JwtAccessGuard)
+  @Types(TypesEnum.superAdmin)
   @Serialize(AllAccountsResponseEntity)
   async getAllVerifiedAccounts(@Query() query: any) {
     const paginationParams: PaginationParamsInterface | false =

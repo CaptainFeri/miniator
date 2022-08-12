@@ -1,14 +1,14 @@
 import {
+  BadRequestException,
+  Body,
   Controller,
   Get,
   Param,
   ParseIntPipe,
+  Post,
+  Query,
   UseGuards,
   UseInterceptors,
-  BadRequestException,
-  Query,
-  Post,
-  Body,
 } from '@nestjs/common';
 import JwtAccessGuard from '@guards/jwt-access.guard';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
@@ -22,6 +22,7 @@ import PaginationUtils from '../../../utils/pagination.utils';
 import ResponseUtils from '../../../utils/response.utils';
 import AccountEntity from '@v1/account/schemas/account.entity';
 import User from '@decorators/user.decorator';
+import { Types, TypesEnum } from '@decorators/types.decorator';
 
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
@@ -31,6 +32,7 @@ export default class SecurityQuestionsController {
   ) {}
 
   @Post()
+  @Types(TypesEnum.superAdmin)
   async create(
     @Body() securityQuestionDto: CreateSecurityQuestionDto,
   ): Promise<any> {
@@ -70,7 +72,7 @@ export default class SecurityQuestionsController {
   }
 
   @Post(':id')
-  @UseGuards(JwtAccessGuard)
+  @Types(TypesEnum.superAdmin)
   async update(
     @Param('id', ParseIntPipe) id: string,
     @Body() securityQuestion: UpdateSecurityQuestionDto,

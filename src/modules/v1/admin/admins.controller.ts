@@ -20,13 +20,15 @@ import ResponseUtils from '../../../utils/response.utils';
 import CreateAdminDto from '@v1/admin/dto/create-admin.dto';
 import AdminEntity from '@v1/admin/schemas/admin.entity';
 import UpdateAdminDto from '@v1/admin/dto/update-admin.dto';
+import { Types, TypesEnum } from '@decorators/types.decorator';
 
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
 export default class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
-  @Post('')
+  @Post()
+  @Types(TypesEnum.superAdmin)
   async create(@Body() adminDto: CreateAdminDto): Promise<any> {
     const admin = await this.adminsService.create(adminDto);
 
@@ -38,6 +40,7 @@ export default class AdminsController {
 
   @Get()
   @UseGuards(JwtAccessGuard)
+  @Types(TypesEnum.superAdmin)
   async getAll(@Query() query: any) {
     const paginationParams: PaginationParamsInterface | false =
       PaginationUtils.normalizeParams(query.page);
@@ -57,6 +60,7 @@ export default class AdminsController {
 
   @Post(':id')
   @UseGuards(JwtAccessGuard)
+  @Types(TypesEnum.superAdmin)
   async update(
     @Param('id', ParseIntPipe) id: string,
     @Body() admin: UpdateAdminDto,
