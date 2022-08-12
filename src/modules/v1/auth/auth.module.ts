@@ -12,9 +12,11 @@ import authConstants from './auth-constants';
 
 import AuthController from './auth.controller';
 import AuthService from './auth.service';
+import AdminsModule from '@v1/admin/admins.module';
 
 @Module({
   imports: [
+    AdminsModule,
     AccountsModule,
     PassportModule,
     JwtModule.register({

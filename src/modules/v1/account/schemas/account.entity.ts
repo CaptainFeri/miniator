@@ -9,8 +9,6 @@ import {
   JoinTable,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-
-import { TypesEnum } from '@decorators/types.decorator';
 import CompanyRoleEntity from '@v1/company/schemas/companyRole.entity';
 import CompanyRoleRequestEntity from '@v1/company/schemas/companyRoleRequest.entity';
 import ProfileEntity from './profile.entity';
@@ -45,10 +43,6 @@ export default class AccountEntity extends BaseEntity {
   @ApiProperty({ type: Boolean, default: false })
   @Column()
   readonly verified: boolean = false;
-
-  @ApiProperty({ type: String, default: TypesEnum.user, enum: TypesEnum })
-  @Column({ type: 'enum', enum: TypesEnum, default: TypesEnum.user })
-  readonly type: TypesEnum = TypesEnum.user;
 
   @OneToOne(() => ProfileEntity, (object) => object.accountEntity, {
     cascade: true,

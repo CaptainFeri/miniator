@@ -13,6 +13,7 @@ import { LoginPayload } from './interfaces/login-payload.interface';
 
 import authConstants from './auth-constants';
 import AuthRepository from './auth.repository';
+import { TypesEnum } from '@decorators/types.decorator';
 
 @Injectable()
 export default class AuthService {
@@ -41,7 +42,32 @@ export default class AuthService {
       return {
         id: account.id,
         username: account.username,
-        type: account.type,
+        type: TypesEnum.user,
+      };
+    }
+
+    return null;
+  }
+
+  async validateAdmin(
+    username: string,
+    password: string,
+  ): Promise<null | ValidateAccountOutput> {
+    const account = await this.usersService.getVerifiedAccountByUsername(
+      username,
+    );
+
+    if (!account) {
+      throw new NotFoundException('The item does not exist');
+    }
+
+    const passwordCompared = await bcrypt.compare(password, account.password);
+
+    if (passwordCompared) {
+      return {
+        id: account.id,
+        username: account.username,
+        type: TypesEnum.admin,
       };
     }
 
@@ -65,7 +91,8 @@ export default class AuthService {
     });
 
     await this.authRepository.addRefreshToken(
-      payload.username as string,
+      ((data.type === TypesEnum.admin ? 'admin:' : '') +
+        payload.username) as string,
       refreshToken,
     );
 

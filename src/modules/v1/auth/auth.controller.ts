@@ -50,6 +50,8 @@ import authConstants from '@v1/auth/auth-constants';
 import { User } from '@decorators/user.decorator';
 import { Public } from '@decorators/public.decorator';
 import JwtRefreshGuard from '@guards/jwt-refresh.guard';
+import AdminEntity from '@v1/admin/schemas/admin.entity';
+import AdminLocalAuthGuard from '@v1/auth/guards/admin-local-auth.guard';
 
 @ApiTags('Auth')
 @UseInterceptors(WrapResponseInterceptor)
@@ -110,12 +112,23 @@ export default class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('sign-in')
   async signIn(
-    @User() accountEntity: AccountEntity,
+    @User() accountEntity: any,
   ): Promise<SuccessResponseInterface | never> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = accountEntity;
 
     return ResponseUtils.success('tokens', await this.authService.login(user));
+  }
+
+  @UseGuards(AdminLocalAuthGuard)
+  @Post('admins/sign-in')
+  async adminSignIn(
+    @User() adminEntity: any,
+  ): Promise<SuccessResponseInterface | never> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...admin } = adminEntity;
+
+    return ResponseUtils.success('tokens', await this.authService.login(admin));
   }
 
   @ApiBody({ type: SignUpDto })
@@ -239,6 +252,38 @@ export default class AuthController {
     const payload = {
       id: account.id,
       username: account.username,
+      type: TypesEnum.user,
+    };
+
+    return ResponseUtils.success(
+      'tokens',
+      await this.authService.login(payload),
+    );
+  }
+
+  @Post('admins/refresh-token')
+  @Public()
+  @UseGuards(JwtRefreshGuard)
+  async adminRefreshToken(
+    @User() admin: AdminEntity,
+    @Body() refreshTokenDto: RefreshTokenDto,
+  ): Promise<SuccessResponseInterface | never> {
+    const oldRefreshToken: string | null =
+      await this.authService.getRefreshTokenByUsername(
+        'admin:' + admin.username,
+      );
+
+    // if the old refresh token is not equal to request refresh token then this user is unauthorized
+    if (!oldRefreshToken || oldRefreshToken !== refreshTokenDto.refreshToken) {
+      throw new UnauthorizedException(
+        'Authentication credentials were missing or incorrect',
+      );
+    }
+
+    const payload = {
+      id: admin.id,
+      username: admin.username,
+      type: TypesEnum.admin,
     };
 
     return ResponseUtils.success(
@@ -327,7 +372,8 @@ export default class AuthController {
     }
 
     const deletedAccountsCount = await this.authService.deleteTokenByUsername(
-      decodedAccount.username,
+      (decodedAccount.type === TypesEnum.admin ? 'admin:' : '') +
+        decodedAccount.username,
     );
 
     if (deletedAccountsCount === 0) {

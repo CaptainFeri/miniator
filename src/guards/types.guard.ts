@@ -17,7 +17,7 @@ export default class TypesGuard implements CanActivate {
     const tokenData = (await this.jwtService.decode(
       request.headers.authorization?.split('Bearer')[1].trim() as string,
     )) as JwtDecodeResponse | null;
-    if (tokenData?.type === TypesEnum.admin) {
+    if (tokenData?.type === TypesEnum.superAdmin) {
       return true;
     }
     return !tokenData ? false : types.includes(tokenData?.type);
