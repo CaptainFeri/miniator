@@ -6,11 +6,11 @@ class PaginationUtils {
     location: string,
     paginationParams?: PaginationParamsInterface,
   ): string {
-    if (!process.env.SERVER_HOST) {
-      throw new Error('SERVER_HOST parameter did not provide in env');
+    if (!process.env.HOST) {
+      throw new Error('HOST parameter did not provide in env');
     }
 
-    let url = `${process.env.SERVER_HOST}/${location}?`;
+    let url = `${process.env.HOST}/${location}?`;
     let count = 0;
     if (paginationParams) {
       if (paginationParams.page) {

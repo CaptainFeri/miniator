@@ -5,6 +5,7 @@ services:
       context: .
       dockerfile: ./docker/App.Dockerfile
     container_name: app
+    command: npm run start:dev
     volumes:
       - ./:/var/www/app:cached
       - /var/www/app/node_modules # anonymous volume for node_modules only

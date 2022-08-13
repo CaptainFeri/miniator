@@ -23,6 +23,7 @@ import ResponseUtils from '../../../utils/response.utils';
 import AccountEntity from '@v1/account/schemas/account.entity';
 import User from '@decorators/user.decorator';
 import { Types, TypesEnum } from '@decorators/types.decorator';
+import { Public } from '@decorators/public.decorator';
 
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
@@ -46,8 +47,8 @@ export default class SecurityQuestionsController {
     });
   }
 
+  @Public()
   @Get()
-  @UseGuards(JwtAccessGuard)
   async getAll(@Query() query: any) {
     const paginationParams: PaginationParamsInterface | false =
       PaginationUtils.normalizeParams(query.page);

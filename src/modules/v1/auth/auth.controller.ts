@@ -177,6 +177,7 @@ export default class AuthController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post('sign-up')
+  @Public()
   async signUp(@Body() account: SignUpDto): Promise<any> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, email } = await this.accountsService.create(account);
@@ -307,6 +308,7 @@ export default class AuthController {
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Get('verify/:token')
+  @Public()
   async verifyAccount(
     @Param('token') token: string,
   ): Promise<SuccessResponseInterface | never> {

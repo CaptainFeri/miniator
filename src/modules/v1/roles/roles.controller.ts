@@ -23,6 +23,7 @@ import CreateRoleDto from '@v1/roles/dto/create-role.dto';
 import User from '@decorators/user.decorator';
 import AccountEntity from '@v1/account/schemas/account.entity';
 import { Types, TypesEnum } from '@decorators/types.decorator';
+import { Public } from '@decorators/public.decorator';
 
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
@@ -40,8 +41,8 @@ export default class RolesController {
     });
   }
 
+  @Public()
   @Get()
-  @UseGuards(JwtAccessGuard)
   async getAll(@Query() query: any) {
     const paginationParams: PaginationParamsInterface | false =
       PaginationUtils.normalizeParams(query.page);
@@ -60,8 +61,8 @@ export default class RolesController {
     });
   }
 
+  @Public()
   @Get(':id')
-  @UseGuards(JwtAccessGuard)
   async getById(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<SuccessResponseInterface> {

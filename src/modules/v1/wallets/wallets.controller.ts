@@ -7,10 +7,8 @@ import {
   ParseIntPipe,
   Post,
   Query,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import JwtAccessGuard from '@guards/jwt-access.guard';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import WalletsService from './wallets.service';
@@ -37,7 +35,6 @@ export default class WalletsController {
   }
 
   @Get()
-  @UseGuards(JwtAccessGuard)
   async getAll(@Query() query: any) {
     const paginationParams: PaginationParamsInterface | false =
       PaginationUtils.normalizeParams(query.page);

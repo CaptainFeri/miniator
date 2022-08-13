@@ -3,7 +3,6 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  UseGuards,
   UseInterceptors,
   BadRequestException,
   Query,
@@ -11,7 +10,6 @@ import {
   Body,
   NotFoundException,
 } from '@nestjs/common';
-import JwtAccessGuard from '@guards/jwt-access.guard';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import UpdateCompanyDto from '@v1/company/dto/update-company.dto';
@@ -39,7 +37,6 @@ export default class CompaniesController {
   }
 
   @Get()
-  @UseGuards(JwtAccessGuard)
   async getAll(@Query() query: any) {
     const paginationParams: PaginationParamsInterface | false =
       PaginationUtils.normalizeParams(query.page);
@@ -63,7 +60,6 @@ export default class CompaniesController {
   }
 
   @Get(':id')
-  @UseGuards(JwtAccessGuard)
   async getById(
     @Param('id', ParseIntPipe) id: string,
   ): Promise<SuccessResponseInterface> {
@@ -77,7 +73,6 @@ export default class CompaniesController {
   }
 
   @Post(':id')
-  @UseGuards(JwtAccessGuard)
   @Types(TypesEnum.superAdmin)
   async update(
     @Param('id', ParseIntPipe) id: string,
