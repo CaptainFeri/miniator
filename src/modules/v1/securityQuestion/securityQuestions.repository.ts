@@ -14,6 +14,7 @@ export default class SecurityQuestionsRepository {
   constructor(
     @InjectRepository(SecurityQuestionEntity)
     private readonly securityQuestionsModel: Repository<SecurityQuestionEntity>,
+    @InjectRepository(SecurityQuestionAnswerEntity)
     private readonly securityQuestionAnswersModel: Repository<SecurityQuestionAnswerEntity>,
   ) {}
 

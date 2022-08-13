@@ -21,11 +21,11 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
     TypeOrmModule.forRootAsync({
       useFactory: (cfg: ConfigService) => ({
         type: 'postgres',
-        host: cfg.get('POSTGRESQL_HOST') || 'postgres',
-        port: cfg.get<number>('POSTGRESQL_PORT'),
-        database: cfg.get('POSTGRESQL_DB'),
-        username: cfg.get('POSTGRESQL_ROOT_USER'),
-        password: cfg.get('POSTGRESQL_PASSWORD'),
+        host: cfg.get('DB_HOST'),
+        port: cfg.get<number>('DB_PORT'),
+        username: cfg.get('DB_USER'),
+        password: cfg.get('DB_PASSWORD'),
+        database: cfg.get('DB_NAME'),
         entities: ['dist/**/*.entity{.ts,.js}'],
         autoLoadEntities: true,
         synchronize: cfg.get('NODE_ENV') === 'development',
@@ -36,7 +36,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
     RedisModule.forRootAsync({
       useFactory: (cfg: ConfigService) => ({
         config: {
-          url: cfg.get('REDIS_URL'),
+          host: cfg.get('REDIS_HOST'),
+          port: 6379,
         },
       }),
       inject: [ConfigService],

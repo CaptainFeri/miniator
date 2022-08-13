@@ -39,7 +39,7 @@ export default class CompanyEntity extends BaseEntity {
   companyRoleEntities?: CompanyRoleEntity[];
 
   @ManyToOne(() => AdminEntity, (object) => object.companies, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   admin?: AdminEntity;
 }
