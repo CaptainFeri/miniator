@@ -28,7 +28,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
         database: cfg.get('DB_NAME'),
         entities: ['dist/**/*.entity{.ts,.js}'],
         autoLoadEntities: true,
-        synchronize: cfg.get('NODE_ENV') === 'development',
+        synchronize: cfg.get('NODE_ENV', 'development') === 'development',
         namingStrategy: new SnakeNamingStrategy(),
       }),
       inject: [ConfigService],
