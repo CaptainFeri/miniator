@@ -39,6 +39,13 @@ describe('Roles Controller', () => {
     expect(service.create).toBeCalled();
   });
 
+  it('should findOne', async () => {
+    expect(controller.getById).toBeDefined();
+    service.getById.mockReturnValueOnce({});
+    await controller.getById({} as any);
+    expect(service.getById).toBeCalled();
+  });
+
   it('should update', async () => {
     expect(controller.update).toBeDefined();
     await controller.update('', {} as any);
