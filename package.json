@@ -98,11 +98,12 @@
       "^@interfaces(.*)$": "<rootDir>/interfaces$1",
       "^@pipes(.*)$": "<rootDir>/pipes$1",
       "^@dto(.*)$": "<rootDir>/dto$1",
+      "^@utils(.*)$": "<rootDir>/utils$1",
       "^@responses(.*)$": "<rootDir>/responses$1",
       "^@interceptors(.*)$": "<rootDir>/interceptors$1",
       "^@decorators(.*)$": "<rootDir>/decorators$1",
-      "^@v1(.*)$": "<rootDir>/src/modules/v1$1",
-      "^@exceptions(.*)$": "<rootDir>/src/exceptions/v1$1"
+      "^@v1(.*)$": "<rootDir>/modules/v1$1",
+      "^@exceptions(.*)$": "<rootDir>/exceptions/v1$1"
     },
     "moduleFileExtensions": [
       "js",

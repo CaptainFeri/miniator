@@ -1,9 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import UsersService from '@v1/account/accounts.service';
-import { JwtService } from '@nestjs/jwt';
+import AccountsService from '@v1/account/accounts.service';
 import AuthController from './auth.controller';
 import AuthService from './auth.service';
+import { MailerService } from '@nestjs-modules/mailer';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 describe('Auth Controller', () => {
   let controller: AuthController;
@@ -13,15 +15,23 @@ describe('Auth Controller', () => {
       controllers: [AuthController],
       providers: [
         {
+          provide: JwtService,
+          useValue: {},
+        },
+        {
           provide: AuthService,
           useValue: {},
         },
         {
-          provide: UsersService,
+          provide: AccountsService,
           useValue: {},
         },
         {
-          provide: JwtService,
+          provide: MailerService,
+          useValue: {},
+        },
+        {
+          provide: ConfigService,
           useValue: {},
         },
       ],
