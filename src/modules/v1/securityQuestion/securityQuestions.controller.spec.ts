@@ -1,9 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import SecurityQuestionsController from './securityQuestions.controller';
 import SecurityQuestionsService from './securityQuestions.service';
+import { MockType } from '@v1/types';
 
 describe('SecurityQuestion Controller', () => {
   let controller: SecurityQuestionsController;
+  let service: MockType<SecurityQuestionsService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -11,7 +13,13 @@ describe('SecurityQuestion Controller', () => {
       providers: [
         {
           provide: SecurityQuestionsService,
-          useValue: {},
+          useValue: {
+            create: jest.fn(),
+            getById: jest.fn(),
+            update: jest.fn(),
+            getAllWithPagination: jest.fn(),
+            set: jest.fn(),
+          },
         },
       ],
     }).compile();
@@ -19,9 +27,35 @@ describe('SecurityQuestion Controller', () => {
     controller = module.get<SecurityQuestionsController>(
       SecurityQuestionsController,
     );
+    service = module.get(SecurityQuestionsService);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  it('should create', async () => {
+    expect(controller.create).toBeDefined();
+    await controller.create({} as any);
+    expect(service.create).toBeCalled();
+  });
+
+  it('should update', async () => {
+    expect(controller.update).toBeDefined();
+    await controller.update('', {} as any);
+    expect(service.update).toBeCalled();
+  });
+
+  it('should getAllWithPagination', async () => {
+    expect(controller.getAll).toBeDefined();
+    service.getAllWithPagination.mockReturnValueOnce({});
+    await controller.getAll({} as any);
+    expect(service.getAllWithPagination).toBeCalled();
+  });
+
+  it('should set', async () => {
+    expect(controller.set).toBeDefined();
+    await controller.set('', {} as any, '');
+    expect(service.set).toBeCalled();
   });
 });
