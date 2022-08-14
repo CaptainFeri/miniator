@@ -103,11 +103,8 @@ export default class RolesController {
 
   @Get(':id/accept')
   @Types(TypesEnum.superAdmin, TypesEnum.admin)
-  async accept(
-    @Param('id', ParseUUIDPipe) id: string,
-    @User() account: AccountEntity,
-  ): Promise<any> {
-    await this.rolesService.request(id, account.id);
+  async accept(@Param('id', ParseUUIDPipe) id: string): Promise<any> {
+    await this.rolesService.accept(id);
 
     return ResponseUtils.success('roleRequests', {
       message: 'Success!',
