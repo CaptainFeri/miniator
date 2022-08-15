@@ -4,7 +4,7 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Post,
   Query,
   UseGuards,
@@ -75,7 +75,7 @@ export default class SecurityQuestionsController {
   @Post(':id')
   @Types(TypesEnum.superAdmin)
   async update(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() securityQuestion: UpdateSecurityQuestionDto,
   ): Promise<any> {
     await this.securityQuestionsService.update(id, securityQuestion);
@@ -88,7 +88,7 @@ export default class SecurityQuestionsController {
   @Get(':id/set')
   @UseGuards(JwtAccessGuard)
   async set(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @User() account: AccountEntity,
     @Body('answer') answer: string,
   ): Promise<any> {

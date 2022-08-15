@@ -11,7 +11,7 @@ export default class SecurityQuestionEntity extends BaseEntity {
   })
   @Column({ length: 64 })
   @Index({ unique: true })
-  readonly question: string = '';
+  readonly question: string;
 
   @OneToMany(
     () => SecurityQuestionAnswerEntity,

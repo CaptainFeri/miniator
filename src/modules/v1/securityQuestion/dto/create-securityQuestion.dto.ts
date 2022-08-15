@@ -5,5 +5,5 @@ export default class CreateSecurityQuestionDto {
   @ApiProperty({ type: String })
   @IsNotEmpty()
   @IsString()
-  readonly question: string = '';
+  readonly question: string;
 }
