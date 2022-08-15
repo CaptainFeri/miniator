@@ -16,6 +16,7 @@ import AppModule from './modules/app/app.module';
 
 import AllExceptionsFilter from './filters/all-exceptions.filter';
 import JwtAccessGuard from '@guards/jwt-access.guard';
+import { BasicAuthGuard } from '@guards/basic-auth.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -27,7 +28,7 @@ async function bootstrap() {
   const reflector = app.get(Reflector);
 
   app.useGlobalGuards(
-    // new BasicAuthGuard(configService),
+    new BasicAuthGuard(configService),
     new JwtAccessGuard(reflector, configService),
   );
   app.useGlobalPipes(

@@ -11,8 +11,6 @@ import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 @Catch()
 export default class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
-    console.error(exception);
-
     const ctx: HttpArgumentsHost = host.switchToHttp();
     const res = ctx.getResponse<ExpressResponse>();
     const exceptionMessage: string | null = exception.message || null;
