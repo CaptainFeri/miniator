@@ -2,13 +2,13 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   UseInterceptors,
   BadRequestException,
   Query,
   Post,
   Body,
   NotFoundException,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
@@ -61,7 +61,7 @@ export default class CompaniesController {
 
   @Get(':id')
   async getById(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseUUIDPipe) id: string,
   ): Promise<SuccessResponseInterface> {
     const foundCompany = await this.companiesService.getById(id);
 
@@ -75,7 +75,7 @@ export default class CompaniesController {
   @Post(':id')
   @Types(TypesEnum.superAdmin)
   async update(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() company: UpdateCompanyDto,
   ): Promise<any> {
     await this.companiesService.update(id, company);

@@ -10,28 +10,28 @@ export default class CompanyEntity extends BaseEntity {
     type: String,
     maxLength: 64,
   })
-  @Column({ length: 64 })
-  readonly name: string = '';
+  @Column({ length: 64, unique: true })
+  readonly name: string;
 
   @ApiProperty({ type: Number })
   @Column()
-  readonly minDeposit: number = 0;
+  readonly minDeposit: number;
 
   @ApiProperty({ type: Number })
   @Column()
-  readonly maxDeposit: number = 0;
+  readonly maxDeposit: number;
 
   @ApiProperty({ type: Number })
   @Column()
-  readonly minWithdrawal: number = 0;
+  readonly minWithdrawal: number;
 
   @ApiProperty({ type: Number })
   @Column()
-  readonly maxWithdrawal: number = 0;
+  readonly maxWithdrawal: number;
 
   @ApiProperty({ type: Number })
   @Column()
-  readonly maxCapacity: number = 0;
+  readonly maxCapacity: number;
 
   @OneToMany(() => CompanyRoleEntity, (object) => object.companyEntity, {
     cascade: true,

@@ -5,30 +5,30 @@ export default class CreateCompanyDto {
   @ApiProperty({ type: String, maxLength: 64 })
   @IsNotEmpty()
   @IsString()
-  readonly name: string = '';
+  readonly name: string;
 
   @ApiProperty({ type: Number })
   @IsNotEmpty()
   @IsNumber()
-  readonly minDeposit: number = 0;
+  readonly minDeposit: number;
 
   @ApiProperty({ type: Number })
   @IsNotEmpty()
   @IsNumber()
-  readonly maxDeposit: number = 0;
+  readonly maxDeposit: number;
 
   @ApiProperty({ type: Number })
   @IsNotEmpty()
   @IsNumber()
-  readonly minWithdrawal: number = 0;
+  readonly minWithdrawal: number;
 
   @ApiProperty({ type: Number })
   @IsNotEmpty()
   @IsNumber()
-  readonly maxWithdrawal: number = 0;
+  readonly maxWithdrawal: number;
 
   @ApiProperty({ type: Number })
   @IsNotEmpty()
   @IsNumber()
-  readonly maxCapacity: number = 0;
+  readonly maxCapacity: number;
 }
