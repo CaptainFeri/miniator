@@ -4,7 +4,7 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Post,
   Query,
   UseInterceptors,
@@ -56,7 +56,7 @@ export default class WalletsController {
   @Post(':id')
   @Types(TypesEnum.superAdmin)
   async update(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() wallet: UpdateWalletDto,
   ): Promise<any> {
     await this.walletsService.update(id, wallet);

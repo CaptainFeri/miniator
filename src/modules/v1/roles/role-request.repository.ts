@@ -13,10 +13,15 @@ export default class RoleRequestsRepository {
     private readonly roleRequestsModel: Repository<CompanyRoleRequestEntity>,
   ) {}
 
-  public create(
+  public async create(
     roleId: string,
     userId: string,
   ): Promise<CompanyRoleRequestEntity> {
+    const role = await this.roleRequestsModel.findOne(roleId, {
+      relations: ['companyRoleEntity'],
+    });
+    if (!role.companyRoleEntity?.requestable)
+      throw new Error('role is not special');
     return this.roleRequestsModel.save({
       accountEntity: { id: userId },
       companyRoleEntity: { id: roleId },

@@ -2,7 +2,7 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   UseGuards,
   UseInterceptors,
   BadRequestException,
@@ -64,7 +64,7 @@ export default class AdminsController {
   @UseGuards(JwtAccessGuard)
   @Types(TypesEnum.superAdmin)
   async update(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() admin: UpdateAdminDto,
   ): Promise<any> {
     await this.adminsService.update(id, admin);

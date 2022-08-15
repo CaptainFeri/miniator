@@ -33,6 +33,7 @@ const routes: Routes = [
     RolesModule,
     CompaniesModule,
     SecurityQuestionsModule,
+    WalletsModule,
   ],
 })
 export default class V1Module {}

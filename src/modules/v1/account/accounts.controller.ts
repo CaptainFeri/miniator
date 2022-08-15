@@ -3,7 +3,7 @@ import {
   Get,
   NotFoundException,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   UseGuards,
   UseInterceptors,
   BadRequestException,
@@ -135,7 +135,7 @@ export default class AccountsController {
   @UseGuards(JwtAccessGuard)
   @Serialize(AllAccountsResponseEntity)
   async getById(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseUUIDPipe) id: string,
   ): Promise<SuccessResponseInterface> {
     const foundAccount = await this.accountsService.getVerifiedAccountById(id);
 
