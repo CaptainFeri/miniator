@@ -7,6 +7,7 @@ import AccountsModule from './account/accounts.module';
 import AdminsModule from './admin/admins.module';
 import CompaniesModule from './company/companies.module';
 import RolesModule from '@v1/roles/roles.module';
+import WalletsModule from '@v1/wallets/wallets.module';
 
 const routes: Routes = [
   {
@@ -17,6 +18,7 @@ const routes: Routes = [
       { path: '/accounts', module: AccountsModule },
       { path: '/roles', module: RolesModule },
       { path: '/companies', module: CompaniesModule },
+      { path: '/wallets', module: WalletsModule },
       { path: '/security-questions', module: SecurityQuestionsModule },
     ],
   },

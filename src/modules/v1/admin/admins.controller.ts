@@ -21,6 +21,8 @@ import CreateAdminDto from '@v1/admin/dto/create-admin.dto';
 import AdminEntity from '@v1/admin/schemas/admin.entity';
 import UpdateAdminDto from '@v1/admin/dto/update-admin.dto';
 import { Types, TypesEnum } from '@decorators/types.decorator';
+import Serialize from '@decorators/serialization.decorator';
+import { AllAdminsResponseEntity } from '@v1/admin/entities/admin-response.entity';
 
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
@@ -30,14 +32,14 @@ export default class AdminsController {
   @Post()
   @Types(TypesEnum.superAdmin)
   async create(@Body() adminDto: CreateAdminDto): Promise<any> {
-    const admin = await this.adminsService.create(adminDto);
+    await this.adminsService.create(adminDto);
 
     return ResponseUtils.success('admins', {
       message: 'Success',
-      admin,
     });
   }
 
+  @Serialize(AllAdminsResponseEntity)
   @Get()
   @UseGuards(JwtAccessGuard)
   @Types(TypesEnum.superAdmin)
