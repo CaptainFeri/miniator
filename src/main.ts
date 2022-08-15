@@ -15,9 +15,7 @@ import { ConfigService } from '@nestjs/config';
 import AppModule from './modules/app/app.module';
 
 import AllExceptionsFilter from './filters/all-exceptions.filter';
-import { BasicAuthGuard } from '@guards/basic-auth.guard';
 import JwtAccessGuard from '@guards/jwt-access.guard';
-import { SuperAdminInterceptor } from '@v1/auth/interceptors/super-admin.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -29,11 +27,10 @@ async function bootstrap() {
   const reflector = app.get(Reflector);
 
   app.useGlobalGuards(
-    new BasicAuthGuard(configService),
-    new JwtAccessGuard(reflector),
+    // new BasicAuthGuard(configService),
+    new JwtAccessGuard(reflector, configService),
   );
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalInterceptors(new SuperAdminInterceptor(configService));
   app.useGlobalFilters(new AllExceptionsFilter());
 
   const options = new DocumentBuilder()
@@ -58,4 +55,4 @@ async function bootstrap() {
   });
 }
 
-bootstrap();
+bootstrap().then();
