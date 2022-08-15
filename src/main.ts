@@ -30,7 +30,13 @@ async function bootstrap() {
     // new BasicAuthGuard(configService),
     new JwtAccessGuard(reflector, configService),
   );
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
   app.useGlobalFilters(new AllExceptionsFilter());
 
   const options = new DocumentBuilder()

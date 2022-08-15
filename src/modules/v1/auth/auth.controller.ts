@@ -12,6 +12,7 @@ import {
   ForbiddenException,
   HttpStatus,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -109,6 +110,7 @@ export default class AuthController {
     description: '500. InternalServerError',
   })
   @HttpCode(HttpStatus.OK)
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('sign-in')
   async signIn(
@@ -199,7 +201,7 @@ export default class AuthController {
     return ResponseUtils.success('auth', {
       message: 'Success! please verify your email',
       // TODO: remove this for production
-      url: `/v1/auth/verify/${token}`,
+      url: `${this.configService.get('HOST')}/auth/verify?token=${token}`,
     });
   }
 
@@ -307,10 +309,10 @@ export default class AuthController {
     description: 'Account was not found',
   })
   @HttpCode(HttpStatus.NO_CONTENT)
-  @Get('verify/:token')
+  @Get('verify')
   @Public()
   async verifyAccount(
-    @Param('token') token: string,
+    @Query('token') token: string,
   ): Promise<SuccessResponseInterface | never> {
     const { id } = await this.authService.verifyEmailVerToken(
       token,
