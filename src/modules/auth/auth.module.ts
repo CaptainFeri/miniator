@@ -8,7 +8,7 @@ import LocalStrategy from './strategies/local.strategy';
 import JwtAccessStrategy from './strategies/jwt-access.strategy';
 import JwtRefreshStrategy from './strategies/jwt-refresh.strategy';
 
-import authConstants from './auth-constants';
+import authConstants from './constants/auth-constants';
 
 import AuthController from './auth.controller';
 import AuthService from './auth.service';

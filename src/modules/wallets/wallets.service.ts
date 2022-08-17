@@ -11,13 +11,11 @@ import CreateWalletDto from './dto/create-wallet.dto';
 export default class WalletsService {
   constructor(private readonly walletsRepository: WalletsRepository) {}
 
-  public async create(wallet: CreateWalletDto): Promise<WalletEntity> {
-    return this.walletsRepository.create({
-      ...wallet,
-    });
+  async create(wallet: CreateWalletDto): Promise<WalletEntity> {
+    return this.walletsRepository.create(wallet);
   }
 
-  public async getById(id: string): Promise<WalletEntity | undefined> {
+  async getById(id: string): Promise<WalletEntity | undefined> {
     return this.walletsRepository.getById(id);
   }
 
@@ -25,9 +23,7 @@ export default class WalletsService {
     return this.walletsRepository.updateById(id, data);
   }
 
-  public async getAllWithPagination(
-    options: PaginationParamsInterface,
-  ): Promise<PaginatedEntityInterface<WalletEntity>> {
+  async getAllWithPagination(options: PaginationParamsInterface): Promise<PaginatedEntityInterface<WalletEntity>> {
     return this.walletsRepository.getAllWithPagination(options);
   }
 }

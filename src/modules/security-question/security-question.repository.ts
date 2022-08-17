@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
@@ -16,34 +16,25 @@ export default class SecurityQuestionsRepository {
     private readonly securityQuestionsModel: Repository<SecurityQuestionEntity>,
     @InjectRepository(SecurityQuestionAnswerEntity)
     private readonly securityQuestionAnswersModel: Repository<SecurityQuestionAnswerEntity>,
-  ) {}
+  ) { }
 
-  public create(
-    securityQuestion: CreateSecurityQuestionDto,
-  ): Promise<SecurityQuestionEntity> {
-    return this.securityQuestionsModel.save({
-      ...securityQuestion,
-    });
+  create(securityQuestion: CreateSecurityQuestionDto): Promise<SecurityQuestionEntity> {
+    return this.securityQuestionsModel.save(securityQuestion);
   }
 
-  public async getById(
-    id: string,
-  ): Promise<SecurityQuestionEntity | undefined> {
-    return this.securityQuestionsModel.findOne(id);
+  async getById(id: string): Promise<SecurityQuestionEntity> {
+    const item = await this.securityQuestionsModel.findOne(id);
+    if(!item) {
+      throw new NotFoundException('Security question not found');
+    }
+    return item;
   }
 
-  public updateById(
-    id: string,
-    data: UpdateSecurityQuestionDto,
-  ): Promise<UpdateResult> {
+  updateById(id: string,data: UpdateSecurityQuestionDto): Promise<UpdateResult> {
     return this.securityQuestionsModel.update(id, data);
   }
 
-  set(
-    id: string,
-    userId: string,
-    answer: string,
-  ): Promise<SecurityQuestionAnswerEntity> {
+  set(id: string,userId: string,answer: string): Promise<SecurityQuestionAnswerEntity> {
     return this.securityQuestionAnswersModel.save({
       accountEntity: {
         id: userId,
@@ -55,9 +46,7 @@ export default class SecurityQuestionsRepository {
     });
   }
 
-  public async getAllWithPagination(
-    options: PaginationParamsInterface,
-  ): Promise<PaginatedEntityInterface<SecurityQuestionEntity>> {
+  public async getAllWithPagination(options: PaginationParamsInterface): Promise<PaginatedEntityInterface<SecurityQuestionEntity>> {
     const [questions, totalCount] = await Promise.all([
       this.securityQuestionsModel.find({
         skip: PaginationUtils.getSkipCount(options.page, options.limit),

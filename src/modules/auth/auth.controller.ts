@@ -28,9 +28,7 @@ import {
   ApiExtraModels,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
-
 import { SuccessResponseInterface } from 'src/shared/interfaces/success-response.interface';
 import AccountsService from 'src/modules/account/accounts.service';
 import JwtAccessGuard from 'src/shared/guards/jwt-access.guard';
@@ -52,7 +50,7 @@ import { Public } from 'src/shared/decorators/public.decorator';
 import JwtRefreshGuard from 'src/shared/guards/jwt-refresh.guard';
 import AdminLocalAuthGuard from './guards/admin-local-auth.guard';
 import AdminEntity from '../admin/schemas/admin.entity';
-import authConstants from './auth-constants';
+import authConstants from './constants/auth-constants';
 
 @ApiTags('Auth')
 @UseInterceptors(WrapResponseInterceptor)
@@ -62,7 +60,6 @@ export default class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly accountsService: AccountsService,
-    private readonly mailerService: MailerService,
     private readonly configService: ConfigService,
   ) {}
 

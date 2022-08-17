@@ -7,7 +7,7 @@ import AccountsService from 'src/modules/account/accounts.service';
 import JwtTokensDto from './dto/jwt-tokens.dto';
 import { ValidateAccountOutput } from './interfaces/validate-account-output.interface';
 import { LoginPayload } from './interfaces/login-payload.interface';
-import authConstants from './auth-constants';
+import authConstants from './constants/auth-constants';
 import AuthRepository from './auth.repository';
 import { TypesEnum } from 'src/shared/decorators/types.decorator';
 import { DecodedAccount } from './interfaces/decoded-account.interface';

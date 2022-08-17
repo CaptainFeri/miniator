@@ -5,7 +5,9 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
+  Put,
   Query,
   UseGuards,
   UseInterceptors,
@@ -30,13 +32,11 @@ import UpdateSecurityQuestionDto from './dto/update-security-question.dto';
 export default class SecurityQuestionsController {
   constructor(
     private readonly securityQuestionsService: SecurityQuestionsService,
-  ) {}
+  ) { }
 
   @Post()
   @Types(TypesEnum.superAdmin)
-  async create(
-    @Body() securityQuestionDto: CreateSecurityQuestionDto,
-  ): Promise<any> {
+  async create(@Body() securityQuestionDto: CreateSecurityQuestionDto): Promise<any> {
     const securityQuestion = await this.securityQuestionsService.create(
       securityQuestionDto,
     );
@@ -72,12 +72,9 @@ export default class SecurityQuestionsController {
     );
   }
 
-  @Post(':id')
+  @Put(':id')
   @Types(TypesEnum.superAdmin)
-  async update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() securityQuestion: UpdateSecurityQuestionDto,
-  ): Promise<any> {
+  async update(@Param('id', ParseUUIDPipe) id: string, @Body() securityQuestion: UpdateSecurityQuestionDto): Promise<any> {
     await this.securityQuestionsService.update(id, securityQuestion);
 
     return ResponseUtils.success('securityQuestions', {
@@ -85,13 +82,9 @@ export default class SecurityQuestionsController {
     });
   }
 
-  @Get(':id/set')
+  @Patch(':id/set')
   @UseGuards(JwtAccessGuard)
-  async set(
-    @Param('id', ParseUUIDPipe) id: string,
-    @User() account: AccountEntity,
-    @Body('answer') answer: string,
-  ): Promise<any> {
+  async set(@Param('id', ParseUUIDPipe) id: string, @User() account: AccountEntity, @Body('answer') answer: string): Promise<any> {
     await this.securityQuestionsService.set(id, account.id, answer);
 
     return ResponseUtils.success('securityQuestions', {
