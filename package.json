@@ -103,7 +103,7 @@
       "^@responses(.*)$": "<rootDir>/responses$1",
       "^@interceptors(.*)$": "<rootDir>/interceptors$1",
       "^@decorators(.*)$": "<rootDir>/decorators$1",
-      "^@v1(.*)$": "<rootDir>/modules/v1$1",
+      "^@modules(.*)$": "<rootDir>/modules$1",
       "^@exceptions(.*)$": "<rootDir>/exceptions/v1$1"
     },
     "moduleFileExtensions": [

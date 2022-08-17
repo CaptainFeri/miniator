@@ -12,49 +12,27 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
-import AppModule from './modules/app/app.module';
+import AppModule from './app.module';
 
-import AllExceptionsFilter from './filters/all-exceptions.filter';
-import JwtAccessGuard from '@guards/jwt-access.guard';
-import { BasicAuthGuard } from '@guards/basic-auth.guard';
+import AllExceptionsFilter from './shared/filters/all-exceptions.filter';
+import JwtAccessGuard from 'src/shared/guards/jwt-access.guard';
+import { BasicAuthGuard } from 'src/shared/guards/basic-auth.guard';
+import { swaggerConfig } from './config/swagger';
+import { useGlobalGuards } from './config/global-guards';
+import { useGlobalPipes } from './config/global-pipe';
+
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({ logger: true }),
   );
-
   const configService = app.get(ConfigService);
-  const reflector = app.get(Reflector);
-
-  app.useGlobalGuards(
-    new BasicAuthGuard(configService),
-    new JwtAccessGuard(reflector, configService),
-  );
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      forbidNonWhitelisted: true,
-    }),
-  );
+  useGlobalGuards(app);
+  useGlobalPipes(app);
   app.useGlobalFilters(new AllExceptionsFilter());
-
-  const options = new DocumentBuilder()
-    .setTitle('Api v1')
-    .setDescription('The boilerplate API for nestjs devs')
-    .setVersion('1.0')
-    .addBearerAuth({
-      in: 'header',
-      type: 'http',
-    })
-    .build();
-  const document = SwaggerModule.createDocument(app, options);
-
-  SwaggerModule.setup('api', app, document);
-
+  swaggerConfig(app);
   const port = configService.get<number>('PORT') || 3000;
-
   await app.listen(port, '0.0.0.0', async () => {
     console.log(
       `The server is running on ${port} port: http://localhost:${port}/api`,
