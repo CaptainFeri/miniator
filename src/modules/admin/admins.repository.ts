@@ -7,6 +7,7 @@ import PaginationUtils from 'src/shared/utils/pagination.utils';
 import UpdateAdminDto from './dto/update-admin.dto';
 import AdminEntity from './schemas/admin.entity';
 import CreateAdminDto from './dto/create-admin.dto';
+import { TypesEnum } from '@decorators/types.decorator';
 
 @Injectable()
 export default class AdminsRepository {
@@ -42,5 +43,22 @@ export default class AdminsRepository {
       paginatedResult: questions,
       totalCount,
     };
+  }
+
+  async login(email: string, password: string) {
+    const user = await this.adminsModel.findOne({
+      where: [
+        {
+          email,
+        },
+      ],
+    });
+    if (user) {
+      if (user.password === password) {
+        return { status: true, username: user.username, id: user.id, type: TypesEnum.admin };
+      }
+      return { status: false, message: 'Wrong password' };
+    }
+    return { status: false, message: 'User not found' }
   }
 }

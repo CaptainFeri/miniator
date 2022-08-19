@@ -34,4 +34,9 @@ export default class AdminsService {
   ): Promise<PaginatedEntityInterface<AdminEntity>> {
     return this.adminsRepository.getAllWithPagination(options);
   }
+
+  async login(username: string, password: string) {
+    password = await bcrypt.hash(password, 10);
+    return await this.adminsRepository.login(username,password);
+  }
 }

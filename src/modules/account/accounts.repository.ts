@@ -7,13 +7,15 @@ import AccountEntity from './schemas/account.entity';
 import PaginationUtils from 'src/shared/utils/pagination.utils';
 import { UpdateAccountDto } from './dto';
 import SignUpDto from '../auth/dto/sign-up.dto';
+import { LoginModel } from './models/login.model';
+import { TypesEnum } from '@decorators/types.decorator';
 
 @Injectable()
 export default class AccountsRepository {
   constructor(
     @InjectRepository(AccountEntity)
     private readonly accountsModel: Repository<AccountEntity>,
-  ) {}
+  ) { }
 
   public create(user: SignUpDto): Promise<AccountEntity> {
     return this.accountsModel.save({
@@ -110,5 +112,22 @@ export default class AccountsRepository {
 
   public async deleteAccount(account: AccountEntity): Promise<AccountEntity | undefined> {
     return this.accountsModel.remove(account);
+  }
+
+  async login(email: string, password: string): Promise<LoginModel> {
+    const user = await this.accountsModel.findOne({
+      where: [
+        {
+          email,
+        },
+      ],
+    });
+    if (user) {
+      if (user.password === password) {
+        return { status: true, username: user.username, id: user.id, type: TypesEnum.user };
+      }
+      return { status: false, message: 'Wrong password' };
+    }
+    return { status: false, message: 'User not found' }
   }
 }

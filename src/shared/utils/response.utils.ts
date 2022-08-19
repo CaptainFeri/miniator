@@ -16,4 +16,11 @@ export default new class ResponseUtils {
       options,
     };
   }
+
+  public error(message: string) {
+    return {
+      status:false,
+      message,
+    }
+  }
 }

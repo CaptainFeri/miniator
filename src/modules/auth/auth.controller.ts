@@ -51,6 +51,8 @@ import JwtRefreshGuard from 'src/shared/guards/jwt-refresh.guard';
 import AdminLocalAuthGuard from './guards/admin-local-auth.guard';
 import AdminEntity from '../admin/schemas/admin.entity';
 import authConstants from './constants/auth-constants';
+import { GrpcMethod } from '@nestjs/microservices';
+import { Metadata, ServerUnaryCall } from '@grpc/grpc-js';
 
 @ApiTags('Auth')
 @UseInterceptors(WrapResponseInterceptor)
@@ -60,12 +62,32 @@ export default class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly accountsService: AccountsService,
+    private readonly adminService: AccountsService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
-  @Public()  
+  @GrpcMethod('AuthService')
+  async Login(data: SignInDto, metadata: Metadata, call: ServerUnaryCall<SignInDto, any>) {
+    const login = await this.accountsService.login(data.username, data.password);
+    if (login.status) {
+      const user = { username: login.username, id: login.id, type: login.type };
+      return ResponseUtils.success('tokens', await this.authService.login(user));
+    }
+    return ResponseUtils.error(login.message);
+  }
+
+  @GrpcMethod('AuthService')
+  async LoginAdmin(data: SignInDto, metadata: Metadata, call: ServerUnaryCall<SignInDto, any>) {
+    const login = await this.adminService.login(data.username, data.password);
+    if (login.status) {
+      const user = { username: login.username, id: login.id, type: login.type };
+      return ResponseUtils.success('tokens', await this.authService.login(user));
+    }
+    return ResponseUtils.error(login.message);
+  }
+  @Public()
   @Post('sign-in')
-  async signIn(@User() accountEntity: any): Promise<SuccessResponseInterface | never> {
+  async signInApi(@User() accountEntity: any): Promise<SuccessResponseInterface | never> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = accountEntity;
 
@@ -325,7 +347,7 @@ export default class AuthController {
 
     const deletedAccountsCount = await this.authService.deleteTokenByUsername(
       (decodedAccount.type === TypesEnum.admin ? 'admin:' : '') +
-        decodedAccount.username,
+      decodedAccount.username,
     );
 
     if (deletedAccountsCount === 0) {
