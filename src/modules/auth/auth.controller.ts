@@ -63,67 +63,18 @@ export default class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
-  @ApiBody({ type: SignInDto })
-  @ApiOkResponse({
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          $ref: getSchemaPath(JwtTokensDto),
-        },
-      },
-    },
-    description: 'Returns jwt tokens',
-  })
-  @ApiBadRequestResponse({
-    schema: {
-      type: 'object',
-      example: {
-        message: [
-          {
-            target: {
-              email: 'string',
-              password: 'string',
-            },
-            value: 'string',
-            property: 'string',
-            children: [],
-            constraints: {},
-          },
-        ],
-        error: 'Bad Request',
-      },
-    },
-    description: '400. ValidationException',
-  })
-  @ApiInternalServerErrorResponse({
-    schema: {
-      type: 'object',
-      example: {
-        message: 'string',
-        details: {},
-      },
-    },
-    description: '500. InternalServerError',
-  })
-  @HttpCode(HttpStatus.OK)
-  @Public()
-  @UseGuards(LocalAuthGuard)
+  @Public()  
   @Post('sign-in')
-  async signIn(
-    @User() accountEntity: any,
-  ): Promise<SuccessResponseInterface | never> {
+  async signIn(@User() accountEntity: any): Promise<SuccessResponseInterface | never> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = accountEntity;
 
     return ResponseUtils.success('tokens', await this.authService.login(user));
   }
 
-  @UseGuards(AdminLocalAuthGuard)
+  @Public()
   @Post('admins/sign-in')
-  async adminSignIn(
-    @User() adminEntity: any,
-  ): Promise<SuccessResponseInterface | never> {
+  async adminSignIn(@User() adminEntity: any): Promise<SuccessResponseInterface | never> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...admin } = adminEntity;
 

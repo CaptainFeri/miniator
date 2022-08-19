@@ -15,7 +15,7 @@ export default class WalletsService {
     return this.walletsRepository.create(wallet);
   }
 
-  async getById(id: string): Promise<WalletEntity | undefined> {
+  async getById(id: string): Promise<WalletEntity> {
     return this.walletsRepository.getById(id);
   }
 
