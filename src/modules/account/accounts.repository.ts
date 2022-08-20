@@ -9,12 +9,20 @@ import { UpdateAccountDto } from './dto';
 import SignUpDto from '../auth/dto/sign-up.dto';
 import { LoginModel } from './models/login.model';
 import { TypesEnum } from '@decorators/types.decorator';
+import { UpdateProfileDto } from './dto/update-profile.dto';
+import ProfileEntity from './schemas/profile.entity';
+import CompanyProfileEntity from './schemas/companyProfile.entity';
+import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
 
 @Injectable()
 export default class AccountsRepository {
   constructor(
     @InjectRepository(AccountEntity)
     private readonly accountsModel: Repository<AccountEntity>,
+    @InjectRepository(ProfileEntity)
+    private readonly profileModel: Repository<ProfileEntity>,
+    @InjectRepository(CompanyProfileEntity)
+    private readonly companyProfileModel: Repository<CompanyProfileEntity>,
   ) { }
 
   public create(user: SignUpDto): Promise<AccountEntity> {
@@ -114,14 +122,15 @@ export default class AccountsRepository {
     return this.accountsModel.remove(account);
   }
 
-  async login(email: string, password: string): Promise<LoginModel> {
+  async login(username: string, password: string): Promise<LoginModel> {
+    console.log(username + "df");
     const user = await this.accountsModel.findOne({
-      where: [
-        {
-          email,
-        },
-      ],
+      where: {
+        username: username,
+      }
     });
+    console.log(username);
+    console.log(user);
     if (user) {
       if (user.password === password) {
         return { status: true, username: user.username, id: user.id, type: TypesEnum.user };
@@ -129,5 +138,26 @@ export default class AccountsRepository {
       return { status: false, message: 'Wrong password' };
     }
     return { status: false, message: 'User not found' }
+  }
+
+  async updateProfile(id: string, data: UpdateProfileDto) {
+    const account = await this.accountsModel.findOne(id);    
+    await this.accountsModel.save({
+      ...account,
+      profileEntity: data,
+    });
+  }
+
+  async getProfile(id: string) {
+    const account = await this.accountsModel.findOne(id);
+    return account.profileEntity;
+  }
+
+  async updateComponyProfile(id: string,data: UpdateCompanyProfileDto) {
+    const account = await this.accountsModel.findOne(id);
+    await this.accountsModel.save({
+      ...account,
+      profileEntity: data,
+    });
   }
 }

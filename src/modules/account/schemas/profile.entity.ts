@@ -51,12 +51,9 @@ export default class ProfileEntity extends BaseEntity {
   @Column({ length: 64 })
   readonly phone: string = '';
 
-  @ApiProperty({
-    type: String,
-    maxLength: 64,
-  })
-  @Column({ length: 64 })
-  readonly socilaMedia: string = '';
+
+  @Column('jsonb', { nullable: true })
+  readonly socilaMedia: object[];
 
   @ApiProperty({
     type: String,

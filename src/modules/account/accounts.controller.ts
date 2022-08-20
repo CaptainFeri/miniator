@@ -38,8 +38,6 @@ import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.
 import { SuccessResponseInterface } from 'src/shared/interfaces/success-response.interface';
 import AccountEntity from './schemas/account.entity';
 import AccountsService from './accounts.service';
-
-
 import { User } from 'src/shared/decorators/user.decorator';
 import { Types, TypesEnum } from 'src/shared/decorators/types.decorator';
 import { API_CONFLICT, API_INTERNAL_SERVER_ERROR, API_UNAUTHORIZED, DELETE_ACCOUNT_BAD, GET_PROFILE, UPDATE_ACCOUNT_BAD, DELETE_ACCOUNT, API_NOT_FOUND, UPDATE_ACCOUNT, API_PARAM_CONSTANTS } from './constants';
@@ -47,6 +45,10 @@ import { DeleteAccountDto } from './dto';
 import ResponseUtils from 'src/shared/utils/response.utils';
 import PaginationUtils from 'src/shared/utils/pagination.utils';
 import SignUpDto from '../auth/dto/sign-up.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
+
+import { Public } from 'src/shared/decorators/public.decorator';
+import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
 
 @ApiTags('Accounts')
 @ApiBearerAuth()
@@ -65,7 +67,7 @@ export default class AccountsController {
   @Delete()
   @UseGuards(JwtAccessGuard)
   async deleteAccount(@Body() data: DeleteAccountDto, @User() account: AccountEntity): Promise<any> {
-    const deletedAccount = await this.accountsService.deleteAccount(account.id,data.password);
+    const deletedAccount = await this.accountsService.deleteAccount(account.id, data.password);
     if (!deletedAccount) {
       throw new NotFoundException('The account does not exist');
     }
@@ -135,8 +137,36 @@ export default class AccountsController {
   @HttpCode(HttpStatus.OK)
   @Put()
   @UseGuards(JwtAccessGuard)
-  async updateProfile(@User() account: AccountEntity, @Body() dto: SignUpDto): Promise<any> {
+  async update(@User() account: AccountEntity, @Body() dto: SignUpDto): Promise<any> {
     await this.accountsService.update(account.id, dto);
+    return ResponseUtils.success('accounts', {
+      message: 'Success!',
+    });
+  }
+
+  @UseGuards(JwtAccessGuard)
+  @Put('profile')
+  async updateProfile(@Body() body: UpdateProfileDto, @User() account: AccountEntity): Promise<any> {
+    await this.accountsService.updateProfile(account.id, body);
+    return ResponseUtils.success('accounts', {
+      message: 'Success!',
+    });
+  }
+
+  // @UseGuards(JwtAccessGuard)
+  // @Get('profile')
+  // async getProfile(@User() account: AccountEntity): Promise<any> {
+  //   const profile = await this.accountsService.getProfile(account.id);
+  //   return ResponseUtils.success('accounts', {
+  //     message: 'Success!',
+  //     profile,
+  //   });
+  // }
+
+  @UseGuards(JwtAccessGuard)
+  @Put('compony/profile')
+  async updateComponyProfile(@Body() body: UpdateCompanyProfileDto, @User() account: AccountEntity): Promise<any> {
+    await this.accountsService.updateComponyProfile(account.id, body);
     return ResponseUtils.success('accounts', {
       message: 'Success!',
     });

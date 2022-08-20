@@ -18,6 +18,8 @@ export default class JwtAccessStrategy extends PassportStrategy(
   }
 
   async validate(payload): Promise<JwtStrategyValidate> {
+    //
+    console.log(payload);
     return {
       id: payload.id,
       username: payload.username,

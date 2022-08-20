@@ -32,4 +32,6 @@ export default class AdminEntity extends BaseEntity {
     cascade: true,
   })
   companies!: CompanyEntity[];
+
+  
 }

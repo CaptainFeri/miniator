@@ -8,6 +8,8 @@ import UpdateAdminDto from './dto/update-admin.dto';
 import AdminEntity from './schemas/admin.entity';
 import CreateAdminDto from './dto/create-admin.dto';
 import { TypesEnum } from '@decorators/types.decorator';
+import * as bcrypt from 'bcryptjs';
+
 
 @Injectable()
 export default class AdminsRepository {
@@ -45,16 +47,15 @@ export default class AdminsRepository {
     };
   }
 
-  async login(email: string, password: string) {
+  async login(username: string, password: string) {
+    console.log(password);
     const user = await this.adminsModel.findOne({
-      where: [
-        {
-          email,
-        },
-      ],
+      where: {
+        username,
+      }
     });
     if (user) {
-      if (user.password === password) {
+      if (bcrypt.compare(password, user.password)) {
         return { status: true, username: user.username, id: user.id, type: TypesEnum.admin };
       }
       return { status: false, message: 'Wrong password' };

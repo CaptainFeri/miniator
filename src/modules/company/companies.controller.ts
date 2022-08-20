@@ -9,6 +9,7 @@ import {
   Body,
   NotFoundException,
   ParseUUIDPipe,
+  Put,
 } from '@nestjs/common';
 import WrapResponseInterceptor from 'src/shared/interceptors/wrap-response.interceptor';
 import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
@@ -70,7 +71,7 @@ export default class CompaniesController {
     return ResponseUtils.success('companies', foundCompany);
   }
 
-  @Post(':id')
+  @Put(':id')
   @Types(TypesEnum.superAdmin)
   async update(@Param('id', ParseUUIDPipe) id: string, @Body() company: UpdateCompanyDto): Promise<any> {
     await this.companiesService.update(id, company);

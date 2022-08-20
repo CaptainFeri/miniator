@@ -20,7 +20,7 @@ async function bootstrap() {
       new FastifyAdapter({ logger: true }),
     );
     const configService = app.get(ConfigService);
-    useGlobalGuards(app);
+    // useGlobalGuards(app);
     useGlobalPipes(app);
     app.useGlobalFilters(new AllExceptionsFilter());
     swaggerConfig(app);
@@ -31,17 +31,13 @@ async function bootstrap() {
       );
     });
   } else {
+    console.log('MODE: ', process.env.PORT);
     const app = await NestFactory.createMicroservice(AppModule, {
-      name:"aith",
+      name:"auth",
       transport: Transport.GRPC,
       options: {
-        host: process.env.HOST,
-        port : process.env.PORT,
         package: 'auth',
-        protoPath: [
-          join(__dirname, '../proto/auth.proto'),
-        ]
-    
+        protoPath: join(__dirname, '../proto/auth.proto'),
       },
     });
     await app.listen();

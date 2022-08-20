@@ -7,6 +7,8 @@ import AccountsRepository from './accounts.repository';
 import AccountEntity from './schemas/account.entity';
 import { UpdateAccountDto } from './dto';
 import SignUpDto from '../auth/dto/sign-up.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
+import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
 
 
 @Injectable()
@@ -79,8 +81,20 @@ export default class AccountsService {
     return this.accountsRepository.deleteAccount(account);
   }
 
-  async login(username: string,password: string){
+  async login(username: string, password: string) {
     password = await bcrypt.hash(password, 10);
-    return await this.accountsRepository.login(username,password);
+    return await this.accountsRepository.login(username, password);
+  }
+
+  async updateProfile(id: string, data: UpdateProfileDto) {
+    const item = this.accountsRepository.updateProfile(id, data);
+  }
+
+  async getProfile(id: string) {
+    return await this.accountsRepository.getProfile(id);
+  }
+
+  async updateComponyProfile(id: string, data: UpdateCompanyProfileDto) {
+    const item = this.accountsRepository.updateComponyProfile(id, data);
   }
 }

@@ -53,20 +53,24 @@ import AdminEntity from '../admin/schemas/admin.entity';
 import authConstants from './constants/auth-constants';
 import { GrpcMethod } from '@nestjs/microservices';
 import { Metadata, ServerUnaryCall } from '@grpc/grpc-js';
+import JwtRefreshToken from '@decorators/jwt-refresh-token-grpc.decorator';
+import AdminsService from '@modules/admin/admins.service';
+import VerifyAccountDto from './dto/verify-user.dto';
+import VerifyAccountTokenDto from './dto/verify-account.dto';
 
-@ApiTags('Auth')
-@UseInterceptors(WrapResponseInterceptor)
-@ApiExtraModels(JwtTokensDto)
-@Controller()
+// @ApiTags('Auth')
+// @UseInterceptors(WrapResponseInterceptor)
+// @ApiExtraModels(JwtTokensDto)
+@Controller('auth')
 export default class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly accountsService: AccountsService,
-    private readonly adminService: AccountsService,
+    private readonly adminService: AdminsService,
     private readonly configService: ConfigService,
   ) { }
 
-  @GrpcMethod('AuthService')
+  @GrpcMethod('AuthService','Login')
   async Login(data: SignInDto, metadata: Metadata, call: ServerUnaryCall<SignInDto, any>) {
     const login = await this.accountsService.login(data.username, data.password);
     if (login.status) {
@@ -76,15 +80,88 @@ export default class AuthController {
     return ResponseUtils.error(login.message);
   }
 
-  @GrpcMethod('AuthService')
+  @GrpcMethod('AuthService','LoginAdmin')
   async LoginAdmin(data: SignInDto, metadata: Metadata, call: ServerUnaryCall<SignInDto, any>) {
     const login = await this.adminService.login(data.username, data.password);
     if (login.status) {
       const user = { username: login.username, id: login.id, type: login.type };
-      return ResponseUtils.success('tokens', await this.authService.login(user));
+      const data =  ResponseUtils.success('tokens', await this.authService.login(user));
+      console.log(data);
+      return data;
     }
     return ResponseUtils.error(login.message);
   }
+
+  @UseGuards(JwtRefreshGuard)
+  @GrpcMethod('AuthService','refreshToken1')
+  async refreshToken1( data: RefreshTokenDto, metadata: Metadata, call: ServerUnaryCall<SignInDto, any>, @User('authorization') account) {
+    console.log(data);
+    console.log("fdsf");
+    const oldRefreshToken: string | null =
+      await this.authService.getRefreshTokenByUsername(account.username);
+    // if the old refresh token is not equal to request refresh token then this user is unauthorized
+    if (!oldRefreshToken || oldRefreshToken !== data.refreshToken) {
+      throw new UnauthorizedException(
+        'Authentication credentials were missing or incorrect',
+      );
+    }
+    const payload = {
+      id: account.id,
+      username: account.username,
+      type: TypesEnum.user,
+    };
+    return ResponseUtils.success(
+      'tokens',
+      await this.authService.login(payload),
+    );
+  }
+
+  @GrpcMethod('AuthService','SignUp')
+  async SignUp(data: SignUpDto, metadata: Metadata, call: ServerUnaryCall<SignUpDto, any>) {
+    const { id, email } = await this.accountsService.create(data);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const token = this.authService.createVerifyToken(id);
+
+    // await this.mailerService.sendMail({
+    //   to: email,
+    //   from: this.configService.get<string>('MAILER_FROM_EMAIL'),
+    //   subject: authConstants.mailer.verifyEmail.subject,
+    //   template: `${process.cwd()}/src/templates/verify-password`,
+    //   context: {
+    //     token,
+    //     email,
+    //     host: this.configService.get('HOST'),
+    //   },
+    // });
+    return ResponseUtils.success('auth', {
+      message: 'Success! please verify your email',
+      // TODO: remove this for production
+      url: `${this.configService.get('HOST')}/auth/verify?token=${token}`,
+    });
+  }
+
+  @GrpcMethod('AuthService','Verify')
+  async Verify(data: VerifyAccountTokenDto, metadata: Metadata, call: ServerUnaryCall<SignUpDto, any>) {
+    const { id } = await this.authService.verifyEmailVerToken(
+      data.token,
+      this.configService.get<string>(
+        'ACCESS_SECRET',
+        authConstants.jwt.secrets.accessToken,
+      ),
+    );
+    const foundAccount = await this.accountsService.getUnverifiedAccountById(
+      id,
+    );
+    if (!foundAccount) {
+      throw new NotFoundException('The user does not exist');
+    }
+
+    return ResponseUtils.success(
+      'users',
+      await this.accountsService.update(foundAccount.id, { verified: true }),
+    );
+  }
+  
   @Public()
   @Post('sign-in')
   async signInApi(@User() accountEntity: any): Promise<SuccessResponseInterface | never> {
@@ -103,51 +180,6 @@ export default class AuthController {
     return ResponseUtils.success('tokens', await this.authService.login(admin));
   }
 
-  @ApiBody({ type: SignUpDto })
-  @ApiOkResponse({
-    description: '201, Success',
-  })
-  @ApiBadRequestResponse({
-    schema: {
-      type: 'object',
-      example: {
-        message: [
-          {
-            target: {
-              email: 'string',
-              password: 'string',
-            },
-            value: 'string',
-            property: 'string',
-            children: [],
-            constraints: {},
-          },
-        ],
-        error: 'Bad Request',
-      },
-    },
-    description: '400. ValidationException',
-  })
-  @ApiConflictResponse({
-    schema: {
-      type: 'object',
-      example: {
-        message: 'string',
-      },
-    },
-    description: '409. ConflictResponse',
-  })
-  @ApiInternalServerErrorResponse({
-    schema: {
-      type: 'object',
-      example: {
-        message: 'string',
-        details: {},
-      },
-    },
-    description: '500. InternalServerError',
-  })
-  @HttpCode(HttpStatus.CREATED)
   @Post('sign-up')
   @Public()
   async signUp(@Body() account: SignUpDto): Promise<any> {
@@ -175,36 +207,7 @@ export default class AuthController {
     });
   }
 
-  @ApiOkResponse({
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          $ref: getSchemaPath(JwtTokensDto),
-        },
-      },
-    },
-    description: '200, returns new jwt tokens',
-  })
-  @ApiUnauthorizedResponse({
-    schema: {
-      type: 'object',
-      example: {
-        message: 'string',
-      },
-    },
-    description: '401. Token has been expired',
-  })
-  @ApiInternalServerErrorResponse({
-    schema: {
-      type: 'object',
-      example: {
-        message: 'string',
-        details: {},
-      },
-    },
-    description: '500. InternalServerError ',
-  })
+ 
   @Post('refresh-token')
   @Public()
   @UseGuards(JwtRefreshGuard)
@@ -265,20 +268,7 @@ export default class AuthController {
     );
   }
 
-  @ApiNoContentResponse({
-    description: 'No content. 204',
-  })
-  @ApiNotFoundResponse({
-    schema: {
-      type: 'object',
-      example: {
-        message: 'string',
-        error: 'Not Found',
-      },
-    },
-    description: 'Account was not found',
-  })
-  @HttpCode(HttpStatus.NO_CONTENT)
+ 
   @Get('verify')
   @Public()
   async verifyAccount(
@@ -305,28 +295,7 @@ export default class AuthController {
     );
   }
 
-  @ApiNoContentResponse({
-    description: 'no content',
-  })
-  @ApiUnauthorizedResponse({
-    schema: {
-      type: 'object',
-      example: {
-        message: 'string',
-      },
-    },
-    description: 'Token has been expired',
-  })
-  @ApiInternalServerErrorResponse({
-    schema: {
-      type: 'object',
-      example: {
-        message: 'string',
-        details: {},
-      },
-    },
-    description: 'InternalServerError',
-  })
+
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
   @Delete('logout/:token')
@@ -355,19 +324,7 @@ export default class AuthController {
     }
   }
 
-  @ApiNoContentResponse({
-    description: 'no content',
-  })
-  @ApiInternalServerErrorResponse({
-    schema: {
-      type: 'object',
-      example: {
-        message: 'string',
-        details: {},
-      },
-    },
-    description: '500. InternalServerError',
-  })
+  
   @ApiBearerAuth()
   @Delete('logout-all')
   @UseGuards(TypesGuard)
@@ -377,29 +334,7 @@ export default class AuthController {
     return this.authService.deleteAllTokens();
   }
 
-  @ApiOkResponse({
-    type: AccountEntity,
-    description: '200, returns a decoded user from access token',
-  })
-  @ApiUnauthorizedResponse({
-    schema: {
-      type: 'object',
-      example: {
-        message: 'string',
-      },
-    },
-    description: '403, says you Unauthorized',
-  })
-  @ApiInternalServerErrorResponse({
-    schema: {
-      type: 'object',
-      example: {
-        message: 'string',
-        details: {},
-      },
-    },
-    description: '500. InternalServerError',
-  })
+  
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
   @Get('token')

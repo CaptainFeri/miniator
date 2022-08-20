@@ -40,7 +40,7 @@ export default class SecurityQuestionsRepository {
         id: userId,
       },
       securityQuestionEntity: {
-        id: userId,
+        id,
       },
       answer,
     });
