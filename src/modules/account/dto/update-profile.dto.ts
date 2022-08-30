@@ -1,9 +1,10 @@
+import { GenderEnum } from "@entities/profile.entity";
 import { IsArray, IsDateString, IsEnum, IsNotEmpty, IsString } from "class-validator";
-import { GenderEnum } from "../schemas/profile.entity";
+
 
 export class UpdateProfileDto {   
 
-    
+
     @IsString()
     @IsNotEmpty()
     readonly nationalCode: string = '';

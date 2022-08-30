@@ -3,7 +3,7 @@ import { UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
 import AdminsRepository from './admins.repository';
-import AdminEntity from './schemas/admin.entity';
+import AdminEntity from '@entities/admin.entity';
 import UpdateAdminDto from './dto/update-admin.dto';
 import * as bcrypt from 'bcryptjs';
 import CreateAdminDto from './dto/create-admin.dto';

@@ -5,7 +5,7 @@ import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-para
 import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
 import PaginationUtils from 'src/shared/utils/pagination.utils';
 import UpdateCompanyDto from './dto/update-company.dto';
-import CompanyEntity from './schemas/company.entity';
+import CompanyEntity from '@entities/company.entity';
 import CreateCompanyDto from './dto/create-company.dto';
 
 @Injectable()

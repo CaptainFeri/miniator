@@ -1,7 +1,7 @@
 import { Entity, Column, ManyToOne } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import AccountEntity from 'src/modules/account/schemas/account.entity';
-import CompanyRoleEntity from './company-role.entity';
+import AccountEntity from '@entities/account.entity';
+import CompanyRoleEntity from '@entities/company-role.entity';
 import { BaseEntity } from '@entities/base.entity';
 
 @Entity('companyRole')

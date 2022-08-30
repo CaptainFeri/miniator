@@ -3,7 +3,7 @@ import { UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
 import SecurityQuestionsRepository from './security-question.repository';
-import SecurityQuestionEntity from './schemas/security-question.entity';
+import SecurityQuestionEntity from '@entities//security-question.entity';
 import UpdateSecurityQuestionDto from './dto/update-security-question.dto';
 import CreateSecurityQuestionDto from './dto/create-security-question.dto';
 

@@ -3,9 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import SecurityQuestionController from './security-question.controller';
 import SecurityQuestionsService from './security-question.service';
-import SecurityQuestionEntity from './schemas/security-question.entity';
-import SecurityQuestionAnswerEntity from 'src/modules/account/schemas/securityQuestionAnswer.entity';
+import SecurityQuestionEntity from '@entities/security-question.entity';
+import SecurityQuestionAnswerEntity from '@entities/securityQuestionAnswer.entity';
 import SecurityQuestionsRepository from './security-question.repository';
+import SecurityQuestionsGrpcController from './security-question-grpc.controller';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import SecurityQuestionsRepository from './security-question.repository';
       SecurityQuestionAnswerEntity,
     ]),
   ],
-  controllers: [SecurityQuestionController],
+  controllers: [SecurityQuestionsGrpcController],
   providers: [SecurityQuestionsService, SecurityQuestionsRepository],
   exports: [SecurityQuestionsService, SecurityQuestionsRepository],
 })

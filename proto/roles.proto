@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package auth;
+
+service RolesService {
+    rpc Create(CreateRequestRoles) returns (OtherResponseRoles) { }
+    rpc GetAll(GetAllRequestRoles) returns (GetAllResponseRoles) { }
+    rpc GetItem(GetItemRequestRoles) returns (OtherResponseRoles) { } 
+    rpc Update(UpdateRequestRoles) returns (OtherResponseRoles) { }
+    rpc Request(SetRequestRoles) returns (OtherResponseRoles) { }
+    rpc Accept(SetRequestRoles) returns (OtherResponseRoles) { }
+
+}
+
+/*
+    * request
+*/
+message CreateRequestRoles {
+    string token = 1;
+    string name = 2;
+}
+
+message GetAllRequestRoles {
+    int32 page = 2;
+}
+
+message GetItemRequestRoles {
+    string id=1;
+}
+
+message UpdateRequestRoles {
+    string token=1;
+    string id=2;
+    string name=3;
+}
+
+message SetRequestRoles {
+    string token=1;
+    string id=2;   
+}
+
+/*
+    * response
+*/
+message OtherResponseRoles {
+    DataRoles data = 1;
+}
+
+message GetAllResponseRoles {
+    LinksRoles  links = 1;
+    MetaRoles  meta = 2;
+    repeated DataRoles  data = 3;
+}
+
+message LinksRoles {
+    string self=1;
+    string next=2;
+    string prev=3;
+    string first=4;
+    string last=5;
+}
+
+message MetaRoles {
+    int32 totalCount=1;
+}
+message DataRoles {
+    string type=1;
+    AttributesRoles attributes=2;
+}
+
+message AttributesRoles {
+    string message=1;
+    Roles securityquestion =2;
+}
+
+message Roles {
+    bool deleted=1;
+    string id=2;
+    string name=3;
+    bool requestable=4;
+}

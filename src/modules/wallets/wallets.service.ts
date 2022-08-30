@@ -3,7 +3,7 @@ import { UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
 import WalletsRepository from './wallets.repository';
-import WalletEntity from './schemas/wallet.entity';
+import WalletEntity from '@entities/wallet.entity';
 import UpdateWalletDto from './dto/update-wallet.dto';
 import CreateWalletDto from './dto/create-wallet.dto';
 
@@ -19,8 +19,8 @@ export default class WalletsService {
     return this.walletsRepository.getById(id);
   }
 
-  update(id: string, data: UpdateWalletDto): Promise<UpdateResult> {
-    return this.walletsRepository.updateById(id, data);
+  update(data: UpdateWalletDto): Promise<UpdateResult> {
+    return this.walletsRepository.updateById(data.id,data);
   }
 
   async getAllWithPagination(options: PaginationParamsInterface): Promise<PaginatedEntityInterface<WalletEntity>> {

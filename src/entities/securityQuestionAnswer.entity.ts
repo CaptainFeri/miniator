@@ -1,8 +1,8 @@
 import { Entity, Column, Index, ManyToOne } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import AccountEntity from './account.entity';
+import AccountEntity from '@entities/account.entity';
 import { BaseEntity } from '@entities/base.entity';
-import SecurityQuestionEntity from 'src/modules/security-question/schemas/security-question.entity';
+import SecurityQuestionEntity from '@entities/security-question.entity';
 
 @Entity('securityQuestionAnswer')
 export default class SecurityQuestionAnswerEntity extends BaseEntity {

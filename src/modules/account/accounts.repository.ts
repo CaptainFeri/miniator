@@ -3,15 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
-import AccountEntity from './schemas/account.entity';
+import AccountEntity from '../../entities/account.entity';
 import PaginationUtils from 'src/shared/utils/pagination.utils';
 import { UpdateAccountDto } from './dto';
 import SignUpDto from '../auth/dto/sign-up.dto';
 import { LoginModel } from './models/login.model';
 import { TypesEnum } from '@decorators/types.decorator';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import ProfileEntity from './schemas/profile.entity';
-import CompanyProfileEntity from './schemas/companyProfile.entity';
+import ProfileEntity from '@entities/profile.entity';
+import CompanyProfileEntity from '@entities/companyProfile.entity';
 import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
 
 @Injectable()
@@ -39,6 +39,7 @@ export default class AccountsRepository {
       where: [
         {
           email,
+          deleted: false,
         },
       ],
     });
@@ -50,6 +51,7 @@ export default class AccountsRepository {
         {
           email,
           verified: true,
+          deleted: false,
         },
       ],
     });
@@ -61,6 +63,7 @@ export default class AccountsRepository {
         {
           username,
           verified: true,
+          deleted: false,
         },
       ],
     });
@@ -68,33 +71,42 @@ export default class AccountsRepository {
 
   public async getUnverifiedAccountByEmail(email: string): Promise<AccountEntity | undefined> {
     return this.accountsModel.findOne({
-      where: [
-        {
-          email,
-          verified: false,
-        },
-      ],
+
+      email,
+      verified: false,
+      deleted: false,
+
     });
   }
 
   public async getById(id: string): Promise<AccountEntity | undefined> {
-    return this.accountsModel.findOne(id);
+    return this.accountsModel.findOne({
+      id,
+      deleted: false,
+    });
   }
 
   public async getVerifiedAccountById(id: string): Promise<AccountEntity | undefined> {
-    return this.accountsModel.findOne(id, {
-      where: [{ verified: true }],
+    return this.accountsModel.findOne({
+      id,
+      verified: true,
+      deleted: false,
     });
   }
 
   public async getUnverifiedAccountById(id: string): Promise<AccountEntity | undefined> {
-    return this.accountsModel.findOne(id, {
-      where: [{ verified: false }],
+    return this.accountsModel.findOne({
+      id,
+      verified: false,
+      deleted: false,
     });
   }
 
   public updateById(id: string, data: UpdateAccountDto): Promise<UpdateResult> {
-    return this.accountsModel.update(id, data);
+    return this.accountsModel.update({
+      id,
+      deleted: false,
+    }, data);
   }
 
   public async getAllVerifiedWithPagination(options: PaginationParamsInterface): Promise<PaginatedEntityInterface<AccountEntity>> {
@@ -103,6 +115,7 @@ export default class AccountsRepository {
       this.accountsModel.find({
         where: {
           verified,
+          deleted: false,
         },
         skip: PaginationUtils.getSkipCount(options.page, options.limit),
         take: PaginationUtils.getLimitCount(options.limit),
@@ -118,19 +131,21 @@ export default class AccountsRepository {
     };
   }
 
-  public async deleteAccount(account: AccountEntity): Promise<AccountEntity | undefined> {
-    return this.accountsModel.remove(account);
+  public async deleteAccount(account: AccountEntity): Promise<AccountEntity> {
+    await this.accountsModel.update(account.id, {
+      deleted: true,
+    });
+    return await this.accountsModel.findOne(account.id);
+    
   }
 
   async login(username: string, password: string): Promise<LoginModel> {
-    console.log(username + "df");
     const user = await this.accountsModel.findOne({
       where: {
         username: username,
+        deleted: false,
       }
     });
-    console.log(username);
-    console.log(user);
     if (user) {
       if (user.password === password) {
         return { status: true, username: user.username, id: user.id, type: TypesEnum.user };
@@ -141,7 +156,7 @@ export default class AccountsRepository {
   }
 
   async updateProfile(id: string, data: UpdateProfileDto) {
-    const account = await this.accountsModel.findOne(id);    
+    const account = await this.accountsModel.findOne(id);
     await this.accountsModel.save({
       ...account,
       profileEntity: data,
@@ -153,11 +168,20 @@ export default class AccountsRepository {
     return account.profileEntity;
   }
 
-  async updateComponyProfile(id: string,data: UpdateCompanyProfileDto) {
+  async updateComponyProfile(id: string, data: UpdateCompanyProfileDto) {
     const account = await this.accountsModel.findOne(id);
     await this.accountsModel.save({
       ...account,
       profileEntity: data,
+    });
+  }
+
+  async banOrUnbanAccount(id: string, banned: boolean) {
+    await this.accountsModel.update({
+      id,
+      deleted: false,
+    }, {
+      banned,
     });
   }
 }

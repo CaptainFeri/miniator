@@ -33,7 +33,7 @@ import { SuccessResponseInterface } from 'src/shared/interfaces/success-response
 import AccountsService from 'src/modules/account/accounts.service';
 import JwtAccessGuard from 'src/shared/guards/jwt-access.guard';
 import TypesGuard from 'src/shared/guards/types.guard';
-import AccountEntity from 'src/modules/account/schemas/account.entity';
+import AccountEntity from '@entities/account.entity';
 import WrapResponseInterceptor from 'src/shared/interceptors/wrap-response.interceptor';
 import AuthBearer from 'src/shared/decorators/auth-bearer.decorator';
 import { Types, TypesEnum } from 'src/shared/decorators/types.decorator';
@@ -49,7 +49,7 @@ import { User } from 'src/shared/decorators/user.decorator';
 import { Public } from 'src/shared/decorators/public.decorator';
 import JwtRefreshGuard from 'src/shared/guards/jwt-refresh.guard';
 import AdminLocalAuthGuard from './guards/admin-local-auth.guard';
-import AdminEntity from '../admin/schemas/admin.entity';
+import AdminEntity from '@entities/admin.entity';
 import authConstants from './constants/auth-constants';
 import { GrpcMethod } from '@nestjs/microservices';
 import { Metadata, ServerUnaryCall } from '@grpc/grpc-js';

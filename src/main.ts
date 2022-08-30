@@ -37,7 +37,12 @@ async function bootstrap() {
       transport: Transport.GRPC,
       options: {
         package: 'auth',
-        protoPath: join(__dirname, '../proto/auth.proto'),
+        protoPath: [
+          join(__dirname, '../proto/auth.proto'),
+          join(__dirname, '../proto/wallet.proto'),
+          join(__dirname, '../proto/question.proto'),
+          
+        ]
       },
     });
     await app.listen();

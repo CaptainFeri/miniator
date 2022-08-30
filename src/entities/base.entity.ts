@@ -1,4 +1,5 @@
 import {
+  Column,
   CreateDateColumn,
   DeleteDateColumn,
   PrimaryGeneratedColumn,
@@ -19,4 +20,9 @@ export abstract class BaseEntity {
 
   @DeleteDateColumn()
   readonly deletedAt: Date;
+
+  @Column({
+    default: false,
+  })
+  readonly deleted: boolean = false;
 }

@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import AdminsController from './admins.controller';
 import AdminsService from './admins.service';
-import AdminEntity from './schemas/admin.entity';
+import AdminEntity from '@entities/admin.entity';
 import AdminsRepository from './admins.repository';
 
 @Module({

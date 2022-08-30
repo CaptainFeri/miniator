@@ -1,6 +1,6 @@
 import { Entity, Column, Index, OneToOne } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import AccountEntity from './account.entity';
+import AccountEntity from '@entities/account.entity';
 import { BaseEntity } from '@entities/base.entity';
 
 export enum GenderEnum {

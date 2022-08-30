@@ -13,8 +13,8 @@ import ProfileEntity from './profile.entity';
 import CompanyProfileEntity from './companyProfile.entity';
 import SecurityQuestionAnswerEntity from './securityQuestionAnswer.entity';
 import { BaseEntity } from '@entities/base.entity';
-import CompanyRoleRequestEntity from 'src/modules/company/schemas/company-role-request.entity';
-import CompanyRoleEntity from 'src/modules/company/schemas/company-role.entity';
+import CompanyRoleRequestEntity from '@entities/company-role-request.entity';
+import CompanyRoleEntity from '@entities/company-role.entity';
 
 @Entity('account')
 export default class AccountEntity extends BaseEntity {

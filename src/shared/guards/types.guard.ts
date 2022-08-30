@@ -8,18 +8,27 @@ import { TypesEnum } from 'src/shared/decorators/types.decorator';
 export default class TypesGuard implements CanActivate {
   constructor(private reflector: Reflector, private jwtService: JwtService) {}
 
+  getRequest(context: ExecutionContext) {
+    return context.switchToRpc().getContext();
+  }
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const types = this.reflector.get<string[]>('types', context.getHandler());
-    if (!types) {
-      return true;
+    const request = this.getRequest(context);
+    // console.log(request.refreshToken);
+    const type = context.getType();
+    const prefix = 'Bearer ';
+
+    let header: any;
+    if (type === 'rpc') {
+        const token = context.getArgByIndex(0)['auth'];
+        const tokenData = (await this.jwtService.decode(
+          token?.split('Bearer')[1].trim() as string,
+        )) as JwtDecodeResponse | null;
+        if (tokenData?.type === TypesEnum.superAdmin) {
+          return true;
+        }
+        return true;
     }
-    const request = context.switchToHttp().getRequest();
-    const tokenData = (await this.jwtService.decode(
-      request.headers.authorization?.split('Bearer')[1].trim() as string,
-    )) as JwtDecodeResponse | null;
-    if (tokenData?.type === TypesEnum.superAdmin) {
-      return true;
-    }
-    return !tokenData ? false : types.includes(tokenData?.type);
+    return true;
   }
 }

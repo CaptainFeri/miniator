@@ -5,8 +5,8 @@ import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-para
 import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
 import PaginationUtils from 'src/shared/utils/pagination.utils';
 import UpdateSecurityQuestionDto from './dto/update-security-question.dto';
-import SecurityQuestionEntity from './schemas/security-question.entity';
-import SecurityQuestionAnswerEntity from 'src/modules/account/schemas/securityQuestionAnswer.entity';
+import SecurityQuestionEntity from '@entities/security-question.entity';
+import SecurityQuestionAnswerEntity from '@entities/securityQuestionAnswer.entity';
 import CreateSecurityQuestionDto from './dto/create-security-question.dto';
 
 @Injectable()

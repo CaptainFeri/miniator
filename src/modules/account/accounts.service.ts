@@ -4,7 +4,7 @@ import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-para
 import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
 import { UpdateResult } from 'typeorm';
 import AccountsRepository from './accounts.repository';
-import AccountEntity from './schemas/account.entity';
+import AccountEntity from '@entities/account.entity';
 import { UpdateAccountDto } from './dto';
 import SignUpDto from '../auth/dto/sign-up.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -96,5 +96,9 @@ export default class AccountsService {
 
   async updateComponyProfile(id: string, data: UpdateCompanyProfileDto) {
     const item = this.accountsRepository.updateComponyProfile(id, data);
+  }
+
+  async banOrUnbanAccount(id: string, banned: boolean) {
+    await this.accountsRepository.banOrUnbanAccount(id, banned);
   }
 }

@@ -1,7 +1,7 @@
 import { Entity, Column, Index, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseEntity } from '@entities/base.entity';
-import CompanyEntity from 'src/modules/company/schemas/company.entity';
+import CompanyEntity from '@entities/company.entity';
 
 @Entity('admin')
 export default class AdminEntity extends BaseEntity {

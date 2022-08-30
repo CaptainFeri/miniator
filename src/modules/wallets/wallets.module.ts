@@ -3,12 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import WalletsController from './wallets.controller';
 import WalletsService from './wallets.service';
-import WalletEntity from './schemas/wallet.entity';
+import WalletEntity from '@entities/wallet.entity';
 import WalletsRepository from './wallets.repository';
+import WalletsGrpcController from './wallets-grpc.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([WalletEntity])],
-  controllers: [WalletsController],
+  controllers: [WalletsGrpcController],
   providers: [WalletsService, WalletsRepository],
   exports: [WalletsService, WalletsRepository],
 })

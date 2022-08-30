@@ -21,7 +21,7 @@ import ResponseUtils from 'src/shared/utils/response.utils';
 import PaginationUtils from 'src/shared/utils/pagination.utils';
 import RolesService from './roles.service';
 import User from 'src/shared/decorators/user.decorator';
-import AccountEntity from 'src/modules/account/schemas/account.entity';
+import AccountEntity from '@entities/account.entity';
 import { Types, TypesEnum } from 'src/shared/decorators/types.decorator';
 import { Public } from 'src/shared/decorators/public.decorator';
 import CreateRoleDto from './dto/create-role.dto';

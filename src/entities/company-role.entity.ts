@@ -7,11 +7,11 @@ import {
   OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import AccountEntity from 'src/modules/account/schemas/account.entity';
+import AccountEntity from '@entities/account.entity';
 import CompanyEntity from './company.entity';
 
 import { BaseEntity } from '@entities/base.entity';
-import CompanyRoleRequestEntity from './company-role-request.entity';
+import CompanyRoleRequestEntity from '@entities/company-role-request.entity';
 
 @Entity('companyRole')
 export default class CompanyRoleEntity extends BaseEntity {

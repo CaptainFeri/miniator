@@ -22,7 +22,7 @@ import { Types, TypesEnum } from 'src/shared/decorators/types.decorator';
 import Serialize from 'src/shared/decorators/serialization.decorator';
 import CreateAdminDto from './dto/create-admin.dto';
 import { AllAdminsResponseEntity } from './entities/admin-response.entity';
-import AdminEntity from './schemas/admin.entity';
+import AdminEntity from '@entities/admin.entity';
 import UpdateAdminDto from './dto/update-admin.dto';
 
 @UseInterceptors(WrapResponseInterceptor)

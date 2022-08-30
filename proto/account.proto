@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package auth;
+
+service AccountService {
+     rpc Delete(DeleteRequestAccount) returns () { }
+     rpc Get(GetRequestAccount) returns () { }
+     rpc GetItem(GetItemRequestAccount) returns (GetProfileResponse) { }
+     rpc GetProfile(GetProfileRequestAccount) returns (GetProfileResponse) { }
+     rpc Update(UpdateRequestAccount) returns () { }
+     rpc UpdateProfile(UpdateProfileRequestAccount) returns () { }
+     rpc UpdateComponyProfile(UpdateComponyProfileRequestAccount) returns () { }
+     rpc Ban(BanRequestAccount) returns () { }
+
+}
+
+/*
+    * request
+*/
+message DeleteRequestAccount {
+    string token=1;
+    string password=2;
+}
+
+
+message GetRequestAccount {
+
+}
+
+message GetItemRequestAccount {
+
+}
+
+message GetProfileRequestAccount {
+
+}
+
+message UpdateRequestAccount {
+
+}
+
+message UpdateProfileRequestAccount {
+
+}
+
+message UpdateComponyProfileRequestAccount {
+
+}
+
+message BanRequestAccount {
+
+}

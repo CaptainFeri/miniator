@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package auth;
+
+service ComponyService {
+    rpc Create(CreateRequestCompony) returns (OtherResponseCompony) { }
+    rpc GetAll(GetAllRequestCompony) returns (GetAllResponseCompony) { }
+    rpc GetById(GetItemRequesCompony) returns (GetAllResponseCompony) { }
+    rpc Update(UpdateRequestCompony) returns (OtherResponseCompony) { }   
+}
+
+/*
+    *  Request
+*/
+
+message CreateRequestCompony {
+    string token = 1;
+    string name = 2;
+    int32 minDeposit=3;
+    int32 maxDeposit=4;
+    int32 minWithdrawal=5;
+    int32 maxWithdrawal=6;
+    int32 maxCapacity=7;
+}
+
+message GetAllRequestCompony {
+    int32 page = 2;
+}
+
+message GetItemRequesCompony {
+    string id=1;
+}
+
+message UpdateRequestCompony {
+    string token=1;
+    string id=2;
+    string name = 3;
+    int32 minDeposit=4;
+    int32 maxDeposit=5;
+    int32 minWithdrawal=6;
+    int32 maxWithdrawal=7;
+    int32 maxCapacity=8;
+}
+
+/*
+    * response
+*/
+message OtherResponseCompony {
+    DataCompony data = 1;
+}
+
+message GetAllResponseCompony {
+    LinksCompony  links = 1;
+    MetaCompony  meta = 2;
+    repeated DataCompony  data = 3;
+}
+
+message LinksCompony {
+    string self=1;
+    string next=2;
+    string prev=3;
+    string first=4;
+    string last=5;
+}
+
+message MetaCompony {
+    int32 totalCount=1;
+}
+message DataCompony {
+    string type=1;
+    AttributesCompony attributes=2;
+}
+
+message AttributesCompony {
+    string message=1;
+    Compony securityquestion =2;
+}
+
+message Compony {
+    bool deleted=1;
+    string id=2;
+    string name=3;
+    int32 minDeposit=4;
+    int32 maxDeposit=5;
+    int32 minWithdrawal=6;
+    int32 maxWithdrawal=7;
+    int32 maxCapacity=8;
+}

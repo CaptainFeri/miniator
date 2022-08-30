@@ -4,10 +4,10 @@ import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-para
 import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
 import RolesRepository from './roles.repository';
 import RoleRequestsRepository from './role-request.repository';
-import CompanyRoleEntity from '../company/schemas/company-role.entity';
+import CompanyRoleEntity from '@entities/company-role.entity';
 import CreateRoleDto from './dto/create-role.dto';
 import UpdateRoleDto from './dto/update-role.dto';
-import CompanyRoleRequestEntity from '../company/schemas/company-role-request.entity';
+import CompanyRoleRequestEntity from '../../entities/company-role-request.entity';
 
 
 

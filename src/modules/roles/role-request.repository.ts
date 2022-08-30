@@ -4,7 +4,7 @@ import { Repository, UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
 import PaginationUtils from 'src/shared/utils/pagination.utils';
-import CompanyRoleRequestEntity from '../company/schemas/company-role-request.entity';
+import CompanyRoleRequestEntity from '@entities/company-role-request.entity';
 
 
 @Injectable()

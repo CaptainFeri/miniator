@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package auth;
+
+
+service WalletService {
+    rpc Create(CreateRequest) returns (OtherResponse) { }
+    rpc GetAll(GetAllRequest) returns (GetAllResponse) { }
+    rpc Update(UpdateRequest) returns (OtherResponse) { }
+}
+
+
+
+message GetAllRequest {
+    int32 page = 1;
+}
+
+message GetAllResponse {
+    Links links = 1;
+    Meta meta = 2;
+    repeated Data data = 3;
+}
+
+message OtherResponse {
+    Data data = 3;
+}
+
+message CreateRequest {
+    string token=1;
+    string name=2;
+}
+
+message UpdateRequest {
+    string token=1;
+    string id=2;
+    string name=3;
+}
+
+/// RESPONSE 
+message Links {
+    string self=1;
+    string next=2;
+    string prev=3;
+    string first=4;
+    string last=5;
+}
+
+message Meta {
+    int32 totalCount=1;
+}
+message Data {
+    string type=1;
+    Attributes attributes=2;
+}
+
+message Attributes {
+    string message=1;
+    Wallet wallet =2;
+}
+
+message Wallet {
+    bool deleted=1;
+    string id=2;
+    string name=3;
+}

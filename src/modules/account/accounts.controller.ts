@@ -36,7 +36,7 @@ import { AllAccountsResponseModel } from 'src/modules/account/models/account-res
 import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
 import { SuccessResponseInterface } from 'src/shared/interfaces/success-response.interface';
-import AccountEntity from './schemas/account.entity';
+import AccountEntity from '@entities/account.entity';
 import AccountsService from './accounts.service';
 import { User } from 'src/shared/decorators/user.decorator';
 import { Types, TypesEnum } from 'src/shared/decorators/types.decorator';
@@ -49,6 +49,7 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 
 import { Public } from 'src/shared/decorators/public.decorator';
 import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
+import { BanAccountDto } from './dto/ban-account.dto';
 
 @ApiTags('Accounts')
 @ApiBearerAuth()
@@ -59,11 +60,7 @@ export default class AccountsController {
 
   constructor(private readonly accountsService: AccountsService) { }
 
-  @ApiOkResponse(DELETE_ACCOUNT)
-  @ApiNotFoundResponse(API_NOT_FOUND)
-  @ApiBadRequestResponse(DELETE_ACCOUNT_BAD)
-  @ApiUnauthorizedResponse(API_UNAUTHORIZED)
-  @ApiParam(API_PARAM_CONSTANTS)
+ 
   @Delete()
   @UseGuards(JwtAccessGuard)
   async deleteAccount(@Body() data: DeleteAccountDto, @User() account: AccountEntity): Promise<any> {
@@ -74,13 +71,8 @@ export default class AccountsController {
     return ResponseUtils.success('accounts', { message: 'Success!' });
   }
 
-  @ApiOkResponse(GET_PROFILE)
-  @ApiNotFoundResponse(API_NOT_FOUND)
-  @ApiUnauthorizedResponse(API_UNAUTHORIZED)
-  @ApiParam(API_PARAM_CONSTANTS)
   @Get(':id')
   @UseGuards(JwtAccessGuard)
-  @Serialize(AllAccountsResponseModel)
   async getById(@Param('id', ParseUUIDPipe) id: string): Promise<SuccessResponseInterface> {
     const foundAccount = await this.accountsService.getVerifiedAccountById(id);
     if (!foundAccount) {
@@ -89,8 +81,6 @@ export default class AccountsController {
     return ResponseUtils.success('accounts', foundAccount);
   }
 
-  @ApiOkResponse(GET_PROFILE)
-  @ApiUnauthorizedResponse(API_UNAUTHORIZED)
   @Get()
   @Types(TypesEnum.superAdmin)
   @Serialize(AllAccountsResponseModel)
@@ -115,12 +105,8 @@ export default class AccountsController {
     );
   }
 
-  @ApiOkResponse(GET_PROFILE)
-  @ApiNotFoundResponse(API_NOT_FOUND)
-  @ApiUnauthorizedResponse(API_UNAUTHORIZED)
   @Get('profile')
   @UseGuards(JwtAccessGuard)
-  @Serialize(AllAccountsResponseModel)
   async getProfile(@User() account: AccountEntity) {
     const foundAccount = await this.accountsService.getVerifiedAccountById(account.id);
     if (!foundAccount) {
@@ -129,12 +115,6 @@ export default class AccountsController {
     return ResponseUtils.success('accounts', foundAccount);
   }
 
-  @ApiBody({ type: SignUpDto })
-  @ApiOkResponse(UPDATE_ACCOUNT)
-  @ApiBadRequestResponse(UPDATE_ACCOUNT_BAD)
-  @ApiConflictResponse(API_CONFLICT)
-  @ApiInternalServerErrorResponse(API_INTERNAL_SERVER_ERROR)
-  @HttpCode(HttpStatus.OK)
   @Put()
   @UseGuards(JwtAccessGuard)
   async update(@User() account: AccountEntity, @Body() dto: SignUpDto): Promise<any> {
@@ -167,6 +147,15 @@ export default class AccountsController {
   @Put('compony/profile')
   async updateComponyProfile(@Body() body: UpdateCompanyProfileDto, @User() account: AccountEntity): Promise<any> {
     await this.accountsService.updateComponyProfile(account.id, body);
+    return ResponseUtils.success('accounts', {
+      message: 'Success!',
+    });
+  }
+
+  @UseGuards(JwtAccessGuard)
+  @Put('ban')
+  async banOrUnban(@Body() body: BanAccountDto,@User() account: AccountEntity): Promise<any> {
+    await this.accountsService.banOrUnbanAccount(account.id,body.ban);
     return ResponseUtils.success('accounts', {
       message: 'Success!',
     });

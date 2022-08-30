@@ -1,7 +1,7 @@
 import { Entity, Column, Index, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import SecurityQuestionAnswerEntity from 'src/modules/account/schemas/securityQuestionAnswer.entity';
 import { BaseEntity } from '@entities/base.entity';
+import SecurityQuestionAnswerEntity from '@entities/securityQuestionAnswer.entity';
 
 @Entity('securityQuestion')
 export default class SecurityQuestionEntity extends BaseEntity {

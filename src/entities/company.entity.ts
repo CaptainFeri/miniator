@@ -1,9 +1,8 @@
 import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import CompanyRoleEntity from './company-role.entity';
-
+import CompanyRoleEntity from '@entities/company-role.entity';
 import { BaseEntity } from '@entities/base.entity';
-import AdminEntity from 'src/modules/admin/schemas/admin.entity';
+import AdminEntity from '@entities/admin.entity';
 
 @Entity('company')
 export default class CompanyEntity extends BaseEntity {

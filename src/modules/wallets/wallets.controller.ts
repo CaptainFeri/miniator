@@ -17,6 +17,7 @@ import PaginationUtils from 'src/shared/utils/pagination.utils';
 import { Types, TypesEnum } from 'src/shared/decorators/types.decorator';
 import CreateWalletDto from './dto/create-wallet.dto';
 import UpdateWalletDto from './dto/update-wallet.dto';
+import { GrpcMethod } from '@nestjs/microservices';
 
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
@@ -27,7 +28,6 @@ export default class WalletsController {
   @Types(TypesEnum.superAdmin)
   async create(@Body() walletDto: CreateWalletDto): Promise<any> {
     const wallet = await this.walletsService.create(walletDto);
-
     return ResponseUtils.success('wallets', {
       message: 'Success',
       wallet,
@@ -41,7 +41,7 @@ export default class WalletsController {
     if (!paginationParams) {
       throw new BadRequestException('Invalid pagination parameters');
     }
-
+    console.log(paginationParams);
     const paginatedWallets = await this.walletsService.getAllWithPagination(
       paginationParams,
     );
@@ -59,10 +59,6 @@ export default class WalletsController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() wallet: UpdateWalletDto,
   ): Promise<any> {
-    await this.walletsService.update(id, wallet);
-
-    return ResponseUtils.success('wallets', {
-      message: 'Success!',
-    });
+    return "";
   }
 }

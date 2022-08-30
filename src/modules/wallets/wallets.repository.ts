@@ -5,7 +5,7 @@ import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-para
 import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
 import PaginationUtils from 'src/shared/utils/pagination.utils';
 import UpdateWalletDto from './dto/update-wallet.dto';
-import WalletEntity from './schemas/wallet.entity';
+import WalletEntity from '@entities/wallet.entity';
 import CreateWalletDto from './dto/create-wallet.dto';
 
 @Injectable()
@@ -26,7 +26,10 @@ export default class WalletsRepository {
   }
 
   public updateById(id: string, data: UpdateWalletDto): Promise<UpdateResult> {
-    return this.walletsModel.update(id, data);
+    console.log(data.name);
+    return this.walletsModel.update(id, {
+      name: data.name,
+    });
   }
 
   public async getAllWithPagination(

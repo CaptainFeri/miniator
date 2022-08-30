@@ -3,7 +3,7 @@ import { UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
 import CompaniesRepository from './companies.repository';
-import CompanyEntity from './schemas/company.entity';
+import CompanyEntity from '@entities/company.entity';
 import UpdateCompanyDto from './dto/update-company.dto';
 import CreateCompanyDto from './dto/create-company.dto';
 

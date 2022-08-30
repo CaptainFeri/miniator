@@ -3,11 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import AccountsController from './accounts.controller';
 import AccountsService from './accounts.service';
-import AccountEntity from './schemas/account.entity';
+import AccountEntity from '../../entities/account.entity';
 import AccountsRepository from './accounts.repository';
-import ProfileEntity from './schemas/profile.entity';
-import CompanyProfileEntity from './schemas/companyProfile.entity';
-import SecurityQuestionAnswerEntity from './schemas/securityQuestionAnswer.entity';
+import ProfileEntity from '@entities/profile.entity';
+import CompanyProfileEntity from '@entities/companyProfile.entity';
+import SecurityQuestionAnswerEntity from '@entities/securityQuestionAnswer.entity';
+
 
 @Module({
   imports: [TypeOrmModule.forFeature([AccountEntity,ProfileEntity,CompanyProfileEntity,SecurityQuestionAnswerEntity])],

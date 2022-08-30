@@ -5,7 +5,7 @@ import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-para
 import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
 import PaginationUtils from 'src/shared/utils/pagination.utils';
 import UpdateAdminDto from './dto/update-admin.dto';
-import AdminEntity from './schemas/admin.entity';
+import AdminEntity from '@entities/admin.entity';
 import CreateAdminDto from './dto/create-admin.dto';
 import { TypesEnum } from '@decorators/types.decorator';
 import * as bcrypt from 'bcryptjs';

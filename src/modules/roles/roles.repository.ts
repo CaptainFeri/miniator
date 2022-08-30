@@ -5,7 +5,7 @@ import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-para
 import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
 import PaginationUtils from 'src/shared/utils/pagination.utils';
 import UpdateRoleDto from './dto/update-role.dto';
-import CompanyRoleEntity from '../company/schemas/company-role.entity';
+import CompanyRoleEntity from '@entities/company-role.entity';
 import CreateRoleDto from './dto/create-role.dto';
 
 

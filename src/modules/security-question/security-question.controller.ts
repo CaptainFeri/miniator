@@ -19,12 +19,12 @@ import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.
 import SecurityQuestionsService from './security-question.service';
 import ResponseUtils from 'src/shared/utils/response.utils';
 import PaginationUtils from 'src/shared/utils/pagination.utils';
-import AccountEntity from 'src/modules/account/schemas/account.entity';
+import AccountEntity from '@entities/account.entity';
 import User from 'src/shared/decorators/user.decorator';
 import { Types, TypesEnum } from 'src/shared/decorators/types.decorator';
 import { Public } from 'src/shared/decorators/public.decorator';
 import CreateSecurityQuestionDto from './dto/create-security-question.dto';
-import SecurityQuestionEntity from './schemas/security-question.entity';
+import SecurityQuestionEntity from '@entities/security-question.entity';
 import UpdateSecurityQuestionDto from './dto/update-security-question.dto';
 
 @UseInterceptors(WrapResponseInterceptor)

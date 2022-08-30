@@ -1,5 +1,5 @@
 import { getSchemaPath } from "@nestjs/swagger";
-import AccountEntity from "../schemas/account.entity";
+import AccountEntity from "@entities/account.entity";
 
 export const GET_PROFILE = {
     schema: {
