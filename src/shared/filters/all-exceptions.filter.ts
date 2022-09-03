@@ -5,7 +5,7 @@ import {
   ArgumentsHost,
 } from '@nestjs/common';
 import { Response as ExpressResponse } from 'express';
-import { ExceptionResponse } from 'src/shared/interfaces/exception-response.interface';
+import { ExceptionResponse } from '@interfaces/exception-response.interface';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 
 @Catch()

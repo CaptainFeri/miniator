@@ -1,8 +1,8 @@
 // eslint-disable-next-line max-classes-per-file
 import { Exclude, Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
-import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
-import { TypesEnum } from 'src/shared/decorators/types.decorator';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
+import { TypesEnum } from '@decorators/types.decorator';
 
 export class AccountResponseModel {
   id = 0;

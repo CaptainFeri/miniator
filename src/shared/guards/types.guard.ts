@@ -1,8 +1,8 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { JwtDecodeResponse } from 'src/shared/interfaces/jwt-decode-response.interface';
-import { TypesEnum } from 'src/shared/decorators/types.decorator';
+import { JwtDecodeResponse } from '@interfaces/jwt-decode-response.interface';
+import { TypesEnum } from '@decorators/types.decorator';
 
 @Injectable()
 export default class TypesGuard implements CanActivate {

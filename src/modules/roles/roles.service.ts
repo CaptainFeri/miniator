@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { UpdateResult } from 'typeorm';
-import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
-import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
+import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import RolesRepository from './roles.repository';
 import RoleRequestsRepository from './role-request.repository';
 import CompanyRoleEntity from '@entities/company-role.entity';
 import CreateRoleDto from './dto/create-role.dto';
 import UpdateRoleDto from './dto/update-role.dto';
-import CompanyRoleRequestEntity from '../../entities/company-role-request.entity';
+import CompanyRoleRequestEntity from '@entities/company-role-request.entity';
 
 
 

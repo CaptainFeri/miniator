@@ -11,15 +11,15 @@ import {
     Body,
     Put,
   } from '@nestjs/common';
-  import JwtAccessGuard from 'src/shared/guards/jwt-access.guard';
-  import WrapResponseInterceptor from 'src/shared/interceptors/wrap-response.interceptor';
-  import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
-  import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
+  import JwtAccessGuard from '@guards/jwt-access.guard';
+  import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
+  import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
+  import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
   import AdminsService from './admins.service';
-  import ResponseUtils from 'src/shared/utils/response.utils';
-  import PaginationUtils from 'src/shared/utils/pagination.utils';
-  import { Types, TypesEnum } from 'src/shared/decorators/types.decorator';
-  import Serialize from 'src/shared/decorators/serialization.decorator';
+  import ResponseUtils from '@utils/response.utils';
+  import PaginationUtils from '@utils/pagination.utils';
+  import { Types, TypesEnum } from '@decorators/types.decorator';
+  import Serialize from '@decorators/serialization.decorator';
   import CreateAdminDto from './dto/create-admin.dto';
   import { AllAdminsResponseEntity } from './entities/admin-response.entity';
   import AdminEntity from '@entities/admin.entity';
@@ -73,4 +73,3 @@ import { Metadata, ServerUnaryCall } from '@grpc/grpc-js';
       });
     }
   }
-  

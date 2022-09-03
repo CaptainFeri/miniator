@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import AdminsService from './admins.service';
-import AdminsRepository from '@v1/admin/admins.repository';
-import { MockType } from '@v1/types';
+import AdminsRepository from './admins.repository';
+import { MockType } from '../types';
 
 describe('AdminsService', () => {
   let service: AdminsService;

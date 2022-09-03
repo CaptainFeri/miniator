@@ -12,17 +12,17 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import JwtAccessGuard from 'src/shared/guards/jwt-access.guard';
-import WrapResponseInterceptor from 'src/shared/interceptors/wrap-response.interceptor';
-import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
-import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
+import JwtAccessGuard from '@guards/jwt-access.guard';
+import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
+import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import SecurityQuestionsService from './security-question.service';
-import ResponseUtils from 'src/shared/utils/response.utils';
-import PaginationUtils from 'src/shared/utils/pagination.utils';
+import ResponseUtils from '@utils/response.utils';
+import PaginationUtils from '@utils/pagination.utils';
 import AccountEntity from '@entities/account.entity';
-import User from 'src/shared/decorators/user.decorator';
-import { Types, TypesEnum } from 'src/shared/decorators/types.decorator';
-import { Public } from 'src/shared/decorators/public.decorator';
+import User from '@decorators/user.decorator';
+import { Types, TypesEnum } from '@decorators/types.decorator';
+import { Public } from '@decorators/public.decorator';
 import CreateSecurityQuestionDto from './dto/create-security-question.dto';
 import SecurityQuestionEntity from '@entities/security-question.entity';
 import UpdateSecurityQuestionDto from './dto/update-security-question.dto';

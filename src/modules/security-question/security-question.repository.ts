@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
-import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
-import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
-import PaginationUtils from 'src/shared/utils/pagination.utils';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
+import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
+import PaginationUtils from '@utils/pagination.utils';
 import UpdateSecurityQuestionDto from './dto/update-security-question.dto';
 import SecurityQuestionEntity from '@entities/security-question.entity';
 import SecurityQuestionAnswerEntity from '@entities/securityQuestionAnswer.entity';

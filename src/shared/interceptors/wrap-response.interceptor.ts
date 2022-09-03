@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Serializer } from 'jsonapi-serializer';
 import * as _ from 'lodash';
-import PaginationUtils from '../utils/pagination.utils';
+import PaginationUtils from '@utils/pagination.utils';
 
 @Injectable()
 export default class WrapResponseInterceptor implements NestInterceptor {

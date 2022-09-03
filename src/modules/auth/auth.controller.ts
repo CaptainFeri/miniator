@@ -29,14 +29,14 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
-import { SuccessResponseInterface } from 'src/shared/interfaces/success-response.interface';
-import AccountsService from 'src/modules/account/accounts.service';
-import JwtAccessGuard from 'src/shared/guards/jwt-access.guard';
-import TypesGuard from 'src/shared/guards/types.guard';
+import { SuccessResponseInterface } from '@interfaces/success-response.interface';
+import AccountsService from '@modules/account/accounts.service';
+import JwtAccessGuard from '@guards/jwt-access.guard';
+import TypesGuard from '@guards/types.guard';
 import AccountEntity from '@entities/account.entity';
-import WrapResponseInterceptor from 'src/shared/interceptors/wrap-response.interceptor';
-import AuthBearer from 'src/shared/decorators/auth-bearer.decorator';
-import { Types, TypesEnum } from 'src/shared/decorators/types.decorator';
+import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
+import AuthBearer from '@decorators/auth-bearer.decorator';
+import { Types, TypesEnum } from '@decorators/types.decorator';
 import { DecodedAccount } from './interfaces/decoded-account.interface';
 import LocalAuthGuard from './guards/local-auth.guard';
 import AuthService from './auth.service';
@@ -44,10 +44,10 @@ import RefreshTokenDto from './dto/refresh-token.dto';
 import SignInDto from './dto/sign-in.dto';
 import SignUpDto from './dto/sign-up.dto';
 import JwtTokensDto from './dto/jwt-tokens.dto';
-import ResponseUtils from 'src/shared/utils/response.utils';
-import { User } from 'src/shared/decorators/user.decorator';
-import { Public } from 'src/shared/decorators/public.decorator';
-import JwtRefreshGuard from 'src/shared/guards/jwt-refresh.guard';
+import ResponseUtils from '@utils/response.utils';
+import { User } from '@decorators/user.decorator';
+import { Public } from '@decorators/public.decorator';
+import JwtRefreshGuard from '@guards/jwt-refresh.guard';
 import AdminLocalAuthGuard from './guards/admin-local-auth.guard';
 import AdminEntity from '@entities/admin.entity';
 import authConstants from './constants/auth-constants';
@@ -161,7 +161,7 @@ export default class AuthController {
       await this.accountsService.update(foundAccount.id, { verified: true }),
     );
   }
-  
+
   @Public()
   @Post('sign-in')
   async signInApi(@User() accountEntity: any): Promise<SuccessResponseInterface | never> {
@@ -207,7 +207,7 @@ export default class AuthController {
     });
   }
 
- 
+
   @Post('refresh-token')
   @Public()
   @UseGuards(JwtRefreshGuard)
@@ -268,7 +268,7 @@ export default class AuthController {
     );
   }
 
- 
+
   @Get('verify')
   @Public()
   async verifyAccount(
@@ -324,7 +324,7 @@ export default class AuthController {
     }
   }
 
-  
+
   @ApiBearerAuth()
   @Delete('logout-all')
   @UseGuards(TypesGuard)
@@ -334,7 +334,7 @@ export default class AuthController {
     return this.authService.deleteAllTokens();
   }
 
-  
+
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
   @Get('token')

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
-import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
-import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
-import PaginationUtils from 'src/shared/utils/pagination.utils';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
+import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
+import PaginationUtils from '@utils/pagination.utils';
 import UpdateCompanyDto from './dto/update-company.dto';
 import CompanyEntity from '@entities/company.entity';
 import CreateCompanyDto from './dto/create-company.dto';

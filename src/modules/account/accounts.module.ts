@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import AccountsController from './accounts.controller';
 import AccountsService from './accounts.service';
-import AccountEntity from '../../entities/account.entity';
+import AccountEntity from '@entities/account.entity';
 import AccountsRepository from './accounts.repository';
 import ProfileEntity from '@entities/profile.entity';
 import CompanyProfileEntity from '@entities/companyProfile.entity';

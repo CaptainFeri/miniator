@@ -1,4 +1,4 @@
-import { TypesEnum } from 'src/shared/decorators/types.decorator';
+import { TypesEnum } from '@decorators/types.decorator';
 
 export interface LoginPayload {
   readonly id?: string;

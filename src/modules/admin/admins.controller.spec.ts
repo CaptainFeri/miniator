@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import AdminsController from './admins.controller';
 import AdminsService from './admins.service';
-import { MockType } from '@v1/types';
+import { MockType } from '../types';
 
 describe('Admins Controller', () => {
   let controller: AdminsController;

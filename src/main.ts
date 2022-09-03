@@ -1,5 +1,3 @@
-// registers aliases, DON'T REMOVE THIS LINE!
-import 'module-alias/register';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,

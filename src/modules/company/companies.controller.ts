@@ -11,13 +11,13 @@ import {
   ParseUUIDPipe,
   Put,
 } from '@nestjs/common';
-import WrapResponseInterceptor from 'src/shared/interceptors/wrap-response.interceptor';
-import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
-import { SuccessResponseInterface } from 'src/shared/interfaces/success-response.interface';
-import ResponseUtils from 'src/shared/utils/response.utils';
-import PaginationUtils from 'src/shared/utils/pagination.utils';
+import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
+import { SuccessResponseInterface } from '@interfaces/success-response.interface';
+import ResponseUtils from '@utils/response.utils';
+import PaginationUtils from '@utils/pagination.utils';
 import CompaniesService from './companies.service';
-import { Types, TypesEnum } from 'src/shared/decorators/types.decorator';
+import { Types, TypesEnum } from '@decorators/types.decorator';
 import CreateCompanyDto from './dto/create-company.dto';
 import UpdateCompanyDto from './dto/update-company.dto';
 

@@ -29,25 +29,25 @@ import {
   ApiConflictResponse,
   ApiInternalServerErrorResponse,
 } from '@nestjs/swagger';
-import JwtAccessGuard from 'src/shared/guards/jwt-access.guard';
-import WrapResponseInterceptor from 'src/shared/interceptors/wrap-response.interceptor';
-import Serialize from 'src/shared/decorators/serialization.decorator';
-import { AllAccountsResponseModel } from 'src/modules/account/models/account-response.model';
-import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
-import { PaginatedEntityInterface } from 'src/shared/interfaces/paginatedEntity.interface';
-import { SuccessResponseInterface } from 'src/shared/interfaces/success-response.interface';
+import JwtAccessGuard from '@guards/jwt-access.guard';
+import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
+import Serialize from '@decorators/serialization.decorator';
+import { AllAccountsResponseModel } from '@modules/account/models/account-response.model';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
+import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
+import { SuccessResponseInterface } from '@interfaces/success-response.interface';
 import AccountEntity from '@entities/account.entity';
 import AccountsService from './accounts.service';
-import { User } from 'src/shared/decorators/user.decorator';
-import { Types, TypesEnum } from 'src/shared/decorators/types.decorator';
+import { User } from '@decorators/user.decorator';
+import { Types, TypesEnum } from '@decorators/types.decorator';
 import { API_CONFLICT, API_INTERNAL_SERVER_ERROR, API_UNAUTHORIZED, DELETE_ACCOUNT_BAD, GET_PROFILE, UPDATE_ACCOUNT_BAD, DELETE_ACCOUNT, API_NOT_FOUND, UPDATE_ACCOUNT, API_PARAM_CONSTANTS } from './constants';
 import { DeleteAccountDto } from './dto';
-import ResponseUtils from 'src/shared/utils/response.utils';
-import PaginationUtils from 'src/shared/utils/pagination.utils';
-import SignUpDto from '../auth/dto/sign-up.dto';
+import ResponseUtils from '@utils/response.utils';
+import PaginationUtils from '@utils/pagination.utils';
+import SignUpDto from '@modules/auth/dto/sign-up.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
-import { Public } from 'src/shared/decorators/public.decorator';
+import { Public } from '@decorators/public.decorator';
 import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
 import { BanAccountDto } from './dto/ban-account.dto';
 
@@ -60,7 +60,7 @@ export default class AccountsController {
 
   constructor(private readonly accountsService: AccountsService) { }
 
- 
+
   @Delete()
   @UseGuards(JwtAccessGuard)
   async deleteAccount(@Body() data: DeleteAccountDto, @User() account: AccountEntity): Promise<any> {

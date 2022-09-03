@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import CompaniesService from './companies.service';
-import CompaniesRepository from '@v1/company/companies.repository';
-import { MockType } from '@v1/types';
+import CompaniesRepository from './companies.repository';
+import { MockType } from '../types';
 
 describe('CompaniesService', () => {
   let service: CompaniesService;

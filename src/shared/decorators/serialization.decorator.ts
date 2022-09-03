@@ -1,5 +1,5 @@
 import { ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
-import SerializeInterceptor from 'src/shared/interceptors/serialization.interceptor';
+import SerializeInterceptor from '@interceptors/serialization.interceptor';
 
 const SERIALIZE_TYPE_KEY = 'SerializeTypeKey';
 export function getSerializeType(target: any): any {

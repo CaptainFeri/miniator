@@ -20,20 +20,15 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@filters/*": ["src/shared/filters/*"],
       "@entities/*": ["./src/entities/*"],
-      "@guards/*": ["src/shared/guards/*"],
-      "@interfaces/*": ["src/shared/interfaces/*"],
-      "@shared/*": ["./src/components/shared/*"],
-      "@components/*": ["./src/components/*"],
-      "@pipes/*": ["./src/pipes/*"],
-      "@dto/*": ["./src/dto/*"],
-      "@responses/*": ["./src/responses/*"],
-      "@interceptors/*": ["src/shared/interceptors/*"],
-      "@decorators/*": ["src/shared/decorators/*"],
       "@modules/*": ["src/modules/*"],
-      "@exceptions/*": ["./src/exceptions/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@constants/*": ["src/shared/constants/*"],
+      "@decorators/*": ["src/shared/decorators/*"],
+      "@filters/*": ["src/shared/filters/*"],
+      "@guards/*": ["src/shared/guards/*"],
+      "@interceptors/*": ["src/shared/interceptors/*"],
+      "@interfaces/*": ["src/shared/interfaces/*"],
+      "@utils/*": ["src/shared/utils/*"]
     }
   }
 }

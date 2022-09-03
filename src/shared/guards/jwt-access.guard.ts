@@ -2,8 +2,8 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
-import { PUBLIC_KEY } from 'src/shared/decorators/public.decorator';
-import { TypesEnum } from 'src/shared/decorators/types.decorator';
+import { PUBLIC_KEY } from '@decorators/public.decorator';
+import { TypesEnum } from '@decorators/types.decorator';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()

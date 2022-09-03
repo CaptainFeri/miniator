@@ -13,17 +13,17 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import JwtAccessGuard from 'src/shared/guards/jwt-access.guard';
-import WrapResponseInterceptor from 'src/shared/interceptors/wrap-response.interceptor';
-import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
-import { SuccessResponseInterface } from 'src/shared/interfaces/success-response.interface';
-import ResponseUtils from 'src/shared/utils/response.utils';
-import PaginationUtils from 'src/shared/utils/pagination.utils';
+import JwtAccessGuard from '@guards/jwt-access.guard';
+import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
+import { SuccessResponseInterface } from '@interfaces/success-response.interface';
+import ResponseUtils from '@utils/response.utils';
+import PaginationUtils from '@utils/pagination.utils';
 import RolesService from './roles.service';
-import User from 'src/shared/decorators/user.decorator';
+import User from '@decorators/user.decorator';
 import AccountEntity from '@entities/account.entity';
-import { Types, TypesEnum } from 'src/shared/decorators/types.decorator';
-import { Public } from 'src/shared/decorators/public.decorator';
+import { Types, TypesEnum } from '@decorators/types.decorator';
+import { Public } from '@decorators/public.decorator';
 import CreateRoleDto from './dto/create-role.dto';
 import UpdateRoleDto from './dto/update-role.dto';
 

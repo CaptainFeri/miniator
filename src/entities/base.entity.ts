@@ -5,10 +5,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
 
 export abstract class BaseEntity {
-  @ApiProperty({ type: String })
   @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 

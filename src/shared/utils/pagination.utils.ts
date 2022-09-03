@@ -1,4 +1,4 @@
-import { PaginationParamsInterface } from 'src/shared/interfaces/pagination-params.interface';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import commonConstants from '../constants/common.constants';
 
 export default new class PaginationUtils {

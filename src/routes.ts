@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
-import AccountsModule from 'src/modules/account/accounts.module';
+import AccountsModule from '@modules/account/accounts.module';
 import AdminsModule from './modules/admin/admins.module';
 import AuthModule from './modules/auth/auth.module';
 import CompaniesModule from './modules/company/companies.module';

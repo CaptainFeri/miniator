@@ -1,5 +1,5 @@
 {
-  "name": "my-project",
+  "name": "auth",
   "version": "2.12.2",
   "description": "",
   "author": "",
@@ -46,7 +46,6 @@
     "ioredis": "^4.27.7",
     "jsonapi-serializer": "3.6.7",
     "lodash": "4.17.21",
-    "module-alias": "2.2.2",
     "nestjs-redis": "git+https://github.com/GyanendroKh/nestjs-redis.git#nest8-fix",
     "nodemailer": "^6.6.3",
     "open": "8.4.0",
@@ -94,20 +93,15 @@
   },
   "jest": {
     "moduleNameMapper": {
-      "^@shared(.*)$": "<rootDir>/components/shared$1",
-      "^@components(.*)$": "<rootDir>/components$1",
-      "^@filters(.*)$": "<rootDir>/filters$1",
-      "^@entities(.*)$": "<rootDir>/entities$1",
-      "^@guards(.*)$": "<rootDir>/guards$1",
-      "^@interfaces(.*)$": "<rootDir>/interfaces$1",
-      "^@pipes(.*)$": "<rootDir>/pipes$1",
-      "^@dto(.*)$": "<rootDir>/dto$1",
-      "^@utils(.*)$": "<rootDir>/utils$1",
-      "^@responses(.*)$": "<rootDir>/responses$1",
-      "^@interceptors(.*)$": "<rootDir>/interceptors$1",
-      "^@decorators(.*)$": "<rootDir>/decorators$1",
-      "^@modules(.*)$": "<rootDir>/modules$1",
-      "^@exceptions(.*)$": "<rootDir>/exceptions/v1$1"
+      "^@entities/(.*)$": "<rootDir>/entities/$1",
+      "^@modules/(.*)$": "<rootDir>/modules/$1",
+      "^@constants/(.*)$": "<rootDir>/shared/constants/$1",
+      "^@decorators/(.*)$": "<rootDir>/shared/decorators/$1",
+      "^@filters/(.*)$": "<rootDir>/shared/filters/$1",
+      "^@guards/(.*)$": "<rootDir>/shared/guards/$1",
+      "^@interceptors/(.*)$": "<rootDir>/shared/interceptors/$1",
+      "^@interfaces/(.*)$": "<rootDir>/shared/interfaces/$1",
+      "^@utils/(.*)$": "<rootDir>/shared/utils/$1"
     },
     "moduleFileExtensions": [
       "js",
@@ -126,20 +120,6 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
-  },
-  "_moduleAliases": {
-    "@shared": "./dist/components/shared",
-    "@components": "./dist/components",
-    "@filters": "./dist/filters",
-    "@entities": "./dist/entities",
-    "@guards": "./dist/guards",
-    "@interfaces": "./dist/interfaces",
-    "@pipes": "./dist/pipes",
-    "@dto": "./dist/dto",
-    "@responses": "./dist/responses",
-    "@interceptors": "./dist/interceptors",
-    "@decorators": "./dist/decorators",
-    "@utils": "./dist/utils"
   },
   "husky": {
     "hooks": {
