@@ -4,34 +4,34 @@ package auth;
 
 
 service QuestionService {
-    rpc Create(CreateRequestQuestion) returns (OtherResponseQuestion) { }
-    rpc GetAll(GetAllRequestQuestion) returns (GetAllResponseQuestion) { }
-    rpc Update(UpdateRequestQuestion) returns (OtherResponseQuestion) { }
-    rpc Set(SetRequestQuestion) returns (OtherResponseQuestion) { }
+  rpc Create(CreateRequestQuestion) returns (OtherResponseQuestion) {}
+  rpc GetAll(GetAllRequestQuestion) returns (GetAllResponseQuestion) {}
+  rpc Update(UpdateRequestQuestion) returns (OtherResponseQuestion) {}
+  rpc Set(SetRequestQuestion) returns (OtherResponseQuestion) {}
 }
 
 /*
     * Request
 */
 message SetRequestQuestion {
-    string token=1;
-    string id=2;
-    string answer=3;
+  string token = 1;
+  string id = 2;
+  string answer = 3;
 }
 
 message GetAllRequestQuestion {
-    string token=1;
-    int32 page = 2;
+  string token = 1;
+  int32 page = 2;
 }
 
 message CreateRequestQuestion {
-    string token=1;
-    string question=2;
+  string token = 1;
+  string question = 2;
 }
 message UpdateRequestQuestion {
-    string token=1;
-    string id=2;
-    string question=3;
+  string token = 1;
+  string id = 2;
+  string question = 3;
 }
 
 
@@ -40,42 +40,42 @@ message UpdateRequestQuestion {
 */
 
 message OtherResponseQuestion {
-    DataQuestion data = 1;
+  DataQuestion data = 1;
 }
 
 message GetAllResponseQuestion {
-    LinksQuestion links = 1;
-    MetaQuestion meta = 2;
-    repeated DataQuestion data = 3;
+  LinksQuestion links = 1;
+  MetaQuestion meta = 2;
+  repeated DataQuestion data = 3;
 }
 
 
 
 //
 message LinksQuestion {
-    string self=1;
-    string next=2;
-    string prev=3;
-    string first=4;
-    string last=5;
+  string self = 1;
+  string next = 2;
+  string prev = 3;
+  string first = 4;
+  string last = 5;
 }
 
 message MetaQuestion {
-    int32 totalCount=1;
+  int32 totalCount = 1;
 }
 message DataQuestion {
-    string type=1;
-    AttributesQuestion attributes=2;
+  string type = 1;
+  AttributesQuestion attributes = 2;
 
 }
 
 message AttributesQuestion {
-    string message=1;
-    SecurityQuestion securityquestion =2;
+  string message = 1;
+  SecurityQuestion securityquestion = 2;
 }
 
 message SecurityQuestion {
-    bool deleted=1;
-    string id=2;
-    string question=3;
+  bool deleted = 1;
+  string id = 2;
+  string question = 3;
 }

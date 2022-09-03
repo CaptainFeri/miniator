@@ -19,7 +19,7 @@ export default class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
   @Types(TypesEnum.superAdmin)
-  @GrpcMethod('ComponyService', 'Create')
+  @GrpcMethod('CompanyService', 'Create')
   async create(body: CreateCompanyDto): Promise<any> {
     const company = await this.companiesService.create(body);
 
@@ -29,7 +29,7 @@ export default class CompaniesController {
     });
   }
 
-  @GrpcMethod('ComponyService', 'GetAll')
+  @GrpcMethod('CompanyService', 'GetAll')
   async getAll(query: any): Promise<any> {
     const paginationParams: PaginationParamsInterface | false =
       PaginationUtils.normalizeParams(query.page);
@@ -52,7 +52,7 @@ export default class CompaniesController {
     );
   }
 
-  @GrpcMethod('ComponyService', 'GetItem')
+  @GrpcMethod('CompanyService', 'GetItem')
   async getById(body: any): Promise<any> {
     const foundCompany = await this.companiesService.getById(body.id);
 

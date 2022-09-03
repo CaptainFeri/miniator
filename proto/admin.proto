@@ -3,75 +3,71 @@ syntax = "proto3";
 package auth;
 
 service AdminService {
-    rpc Create(CreateRequestAdmin) returns (OtherResponseAdmin) { }
-    rpc GetAll(GetAllRequestAdmin) returns (GetAllResponseAdmin) { }
-    rpc Update(UpdateRequestAdmin) returns (OtherResponseAdmin) { }
+  rpc Create(CreateRequestAdmin) returns (OtherResponseAdmin) {}
+  rpc GetAll(GetAllRequestAdmin) returns (GetAllResponseAdmin) {}
+  rpc Update(UpdateRequestAdmin) returns (OtherResponseAdmin) {}
 }
 
 /*
-    * Request
+* Request
 */
 
 message CreateRequestAdmin {
-    string token=1;
-    string username=2;
-    string password=3;
-    string email=4;
+  string username = 1;
+  string password = 2;
+  string email = 3;
 }
 
-
 message GetAllRequestAdmin {
-    string token=1;
 }
 
 message UpdateRequestAdmin {
-    string token=1;
-    string id=2;
-    string username=3;
-    string password=4;
-    string email=5;
+  string id = 1;
+  string username = 2;
+  string password = 3;
+  string email = 4;
 }
 /*
-    * response
+* response
 */
 message OtherResponseAdmin {
-    DataAdmin data = 1;
+  DataAdmin data = 1;
 }
 
 message GetAllResponseAdmin {
-    LinksAdmin  links = 1;
-    MetaAdmin  meta = 2;
-    repeated DataAdmin  data = 3;
+  LinksAdmin  links = 1;
+  MetaAdmin  meta = 2;
+  repeated DataAdmin  data = 3;
 }
 
 message LinksAdmin {
-    string self=1;
-    string next=2;
-    string prev=3;
-    string first=4;
-    string last=5;
+  string self = 1;
+  string next = 2;
+  string prev = 3;
+  string first = 4;
+  string last = 5;
 }
 
 message MetaAdmin {
-    int32 totalCount=1;
+  int32 totalCount = 1;
 }
 message DataAdmin {
-    string type=1;
-    AttributesAdmin attributes=2;
+  string type = 1;
+  AttributesAdmin attributes = 2;
 }
 
 message AttributesAdmin {
-    string message=1;
+  string message = 1;
 }
 
 message Admin {
-    bool deleted=1;
-    string id=2;
-    string name=3;
-    int32 minDeposit=4;
-    int32 maxDeposit=5;
-    int32 minWithdrawal=6;
-    int32 maxWithdrawal=7;
-    int32 maxCapacity=8;
+  bool deleted = 1;
+  string id = 2;
+  string name = 3;
+  int32 minDeposit = 4;
+  int32 maxDeposit = 5;
+  int32 minWithdrawal = 6;
+  int32 maxWithdrawal = 7;
+  int32 maxCapacity = 8;
 }
 

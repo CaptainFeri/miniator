@@ -140,7 +140,7 @@ export default class AccountsController {
 
   @UseGuards(JwtAccessGuard)
   @Put('compony/profile')
-  async updateComponyProfile(
+  async updateCompanyProfile(
     @Body() body: UpdateCompanyProfileDto,
     @User() account: AccountEntity,
   ): Promise<any> {

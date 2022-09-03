@@ -3,23 +3,22 @@ syntax = "proto3";
 package auth;
 
 service AccountService {
-     rpc Delete(DeleteRequestAccount) returns () { }
-     rpc Get(GetRequestAccount) returns () { }
-     rpc GetItem(GetItemRequestAccount) returns (GetProfileResponse) { }
-     rpc GetProfile(GetProfileRequestAccount) returns (GetProfileResponse) { }
-     rpc Update(UpdateRequestAccount) returns () { }
-     rpc UpdateProfile(UpdateProfileRequestAccount) returns () { }
-     rpc UpdateComponyProfile(UpdateComponyProfileRequestAccount) returns () { }
-     rpc Ban(BanRequestAccount) returns () { }
-
+  rpc Delete(DeleteRequestAccount) returns (DeleteAccountResponse) {}
+  rpc Get(GetRequestAccount) returns (GetAccountResponse) {}
+  rpc GetItem(GetItemRequestAccount) returns (GetProfileResponse) {}
+  rpc GetProfile(GetProfileRequestAccount) returns (GetProfileResponse) {}
+  rpc Update(UpdateRequestAccount) returns (UpdateAccountResponse) {}
+  rpc UpdateProfile(UpdateProfileRequestAccount) returns (UpdateProfileResponse) {}
+  rpc UpdateCompanyProfile(UpdateCompanyProfileRequestAccount) returns (UpdateCompanyProfileResponse) {}
+  rpc Ban(BanRequestAccount) returns (BanAccountResponse) {}
 }
 
 /*
-    * request
+* request
 */
 message DeleteRequestAccount {
-    string token=1;
-    string password=2;
+  string token = 1;
+  string password = 2;
 }
 
 
@@ -43,10 +42,22 @@ message UpdateProfileRequestAccount {
 
 }
 
-message UpdateComponyProfileRequestAccount {
+message UpdateCompanyProfileRequestAccount {
 
 }
 
 message BanRequestAccount {
 
 }
+
+/*
+* response
+*/
+
+message DeleteAccountResponse {}
+message GetAccountResponse {}
+message GetProfileResponse {}
+message UpdateAccountResponse {}
+message UpdateProfileResponse {}
+message UpdateCompanyProfileResponse {}
+message BanAccountResponse {}

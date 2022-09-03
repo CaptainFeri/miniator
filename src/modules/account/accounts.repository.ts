@@ -185,7 +185,7 @@ export default class AccountsRepository {
     return account.profileEntity;
   }
 
-  async updateComponyProfile(id: string, data: UpdateCompanyProfileDto) {
+  async updateCompanyProfile(id: string, data: UpdateCompanyProfileDto) {
     const account = await this.accountsModel.findOne(id);
     await this.accountsModel.save({
       ...account,

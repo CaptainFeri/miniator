@@ -43,7 +43,7 @@ async function bootstrap() {
           'proto/company.proto',
           'proto/question.proto',
           'proto/roles.proto',
-          'proto/wallet.proto',
+          'proto/wallet-type.proto',
         ],
         loader: {
           keepCase: true,

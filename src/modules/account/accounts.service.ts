@@ -107,7 +107,7 @@ export default class AccountsService {
   }
 
   async updateCompanyProfile(id: string, data: UpdateCompanyProfileDto) {
-    await this.accountsRepository.updateComponyProfile(id, data);
+    await this.accountsRepository.updateCompanyProfile(id, data);
   }
 
   async banOrUnbanAccount(id: string, banned: boolean) {
