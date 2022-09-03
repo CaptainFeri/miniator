@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import WalletsController from './wallets.controller';
 import WalletsService from './wallets.service';
 import WalletEntity from '@entities/wallet.entity';
 import WalletsRepository from './wallets.repository';

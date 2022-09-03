@@ -1,8 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
 
-export default class CreateWalletDto {
-  @ApiProperty({ type: String })
+export default class CreateWalletTypeDto {
   @IsNotEmpty()
   @IsString()
   readonly name: string = '';

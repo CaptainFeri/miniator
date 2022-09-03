@@ -1,14 +1,17 @@
-import { Entity, Column, Index } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
+import { Entity, ManyToOne } from 'typeorm';
 import { BaseEntity } from '@entities/base.entity';
+import WalletTypeEntity from '@entities/wallet-type.entity';
+import AccountEntity from '@entities/account.entity';
+import CompanyRoleEntity from '@entities/company-role.entity';
 
 @Entity('wallet')
 export default class WalletEntity extends BaseEntity {
-  @ApiProperty({
-    type: String,
-    maxLength: 64,
-  })
-  @Column({ length: 64 })
-  @Index({ unique: true })
-  readonly name: string = '';
+  @ManyToOne(() => AccountEntity)
+  account: AccountEntity;
+
+  @ManyToOne(() => WalletTypeEntity)
+  type: WalletTypeEntity;
+
+  @ManyToOne(() => CompanyRoleEntity)
+  role: CompanyRoleEntity;
 }

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import WalletsController from './wallets.controller';
 import WalletsService from './wallets.service';
-import { MockType } from '@v1/types';
+import { MockType } from '@interfaces/types';
 
 describe('Wallet Controller', () => {
   let controller: WalletsController;
@@ -29,18 +29,6 @@ describe('Wallet Controller', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
-  });
-
-  it('should create', async () => {
-    expect(controller.create).toBeDefined();
-    await controller.create({} as any);
-    expect(service.create).toBeCalled();
-  });
-
-  it('should update', async () => {
-    expect(controller.update).toBeDefined();
-    await controller.update('', {} as any);
-    expect(service.update).toBeCalled();
   });
 
   it('should getAllWithPagination', async () => {

@@ -1,40 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import PaginationUtils from '@utils/pagination.utils';
-import WalletEntity from '@entities/wallet.entity';
-import AccountEntity from '@entities/account.entity';
+import UpdateWalletTypeDto from './dto/update-wallet-type.dto';
+import CreateWalletTypeDto from './dto/create-wallet-type.dto';
 import WalletTypeEntity from '@entities/wallet-type.entity';
-import CompanyRoleEntity from '@entities/company-role.entity';
 
 @Injectable()
-export default class WalletsRepository {
+export default class WalletTypesRepository {
   constructor(
-    @InjectRepository(WalletEntity)
-    private readonly walletsModel: Repository<WalletEntity>,
+    @InjectRepository(WalletTypeEntity)
+    private readonly walletsModel: Repository<WalletTypeEntity>,
   ) {}
 
-  public create(
-    account: AccountEntity,
-    type: WalletTypeEntity,
-    role: CompanyRoleEntity,
-  ): Promise<WalletEntity> {
+  public create(wallet: CreateWalletTypeDto): Promise<WalletTypeEntity> {
     return this.walletsModel.save({
-      account,
-      type,
-      role,
+      ...wallet,
     });
   }
 
-  public async getById(id: string): Promise<WalletEntity | undefined> {
+  public async getById(id: string): Promise<WalletTypeEntity | undefined> {
     return this.walletsModel.findOne(id);
+  }
+
+  public updateById(
+    id: string,
+    data: UpdateWalletTypeDto,
+  ): Promise<UpdateResult> {
+    console.log(data.name);
+    return this.walletsModel.update(id, {
+      name: data.name,
+    });
   }
 
   public async getAllWithPagination(
     options: PaginationParamsInterface,
-  ): Promise<PaginatedEntityInterface<WalletEntity>> {
+  ): Promise<PaginatedEntityInterface<WalletTypeEntity>> {
     const [wallets, totalCount] = await Promise.all([
       this.walletsModel.find({
         skip: PaginationUtils.getSkipCount(options.page, options.limit),
