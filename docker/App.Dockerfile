@@ -1,16 +1,30 @@
-FROM node:16-slim
+FROM node:14-alpine AS development
 
-WORKDIR /var/www/app
+WORKDIR /usr/src/app
 
-# OS TOOLS
-RUN apt-get update
+COPY package*.json ./
+
+RUN npm i -g npm
+
+RUN npm install --only=development
 
 COPY . .
 
-RUN apt-get install -y git
+RUN npm run build
 
-RUN npm ci --quiet
+FROM node:14-alpine as production
 
-EXPOSE 3000
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 
-CMD [ "npm", "run", "start:prod" ]
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install --only=production
+
+COPY . .
+
+COPY --from=development /usr/src/app/dist ./dist
+
+CMD ["npm", "start"]

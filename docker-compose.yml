@@ -1,17 +1,22 @@
-version: "3"
+version: "3.8"
 services:
   app:
+    container_name: app
+    restart: always
     build:
       context: .
       dockerfile: ./docker/App.Dockerfile
-    container_name: app
-    command: npm run start:dev
+      target: development
     volumes:
-      - ./:/var/www/app:cached
-      - /var/www/app/node_modules # anonymous volume for node_modules only
-    restart: always
+      - .:/usr/src/app
     ports:
-      - "3000:3000"
+      - "9229:9229"
+      - ${PORT}:3000
+    expose:
+      - ${PORT}
+    command: npm run start:dev
+    env_file:
+      - .env
     depends_on:
       - postgres
       - redis
@@ -21,7 +26,7 @@ services:
 
   postgres:
     container_name: postgres
-    image: postgres:latest
+    image: postgres:alpine
     restart: always
     env_file:
       - .env
@@ -30,13 +35,12 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
-    ports:
-      - "5432:5432"
+    expose:
+      - 5432
     volumes:
       - pgdata:/var/lib/postgresql/data
-
   redis:
-    image: redis:6
+    image: redis:alpine
     restart: always
     ports:
       - "6379:6379"
