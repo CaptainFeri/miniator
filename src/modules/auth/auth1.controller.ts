@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import AccountsService from '@modules/account/accounts.service';
+import AccountsService from '@/account/accounts.service';
 import { TypesEnum } from '@decorators/types.decorator';
 import AuthService from './auth.service';
 import RefreshTokenDto from './dto/refresh-token.dto';
@@ -16,7 +16,7 @@ import { User } from '@decorators/user.decorator';
 import JwtRefreshGuard from '@guards/jwt-refresh.guard';
 import authConstants from './constants/auth-constants';
 import { GrpcMethod } from '@nestjs/microservices';
-import AdminsService from '@modules/admin/admins.service';
+import AdminsService from '@/admin/admins.service';
 import VerifyAccountTokenDto from './dto/verify-account.dto';
 
 // @ApiTags('Auth')

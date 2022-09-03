@@ -16,7 +16,7 @@ import { ApiTags, ApiBearerAuth, ApiExtraModels } from '@nestjs/swagger';
 import JwtAccessGuard from '@guards/jwt-access.guard';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import Serialize from '@decorators/serialization.decorator';
-import { AllAccountsResponseModel } from '@modules/account/models/account-response.model';
+import { AllAccountsResponseModel } from '@/account/models/account-response.model';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import { SuccessResponseInterface } from '@interfaces/success-response.interface';
@@ -27,7 +27,7 @@ import { Types, TypesEnum } from '@decorators/types.decorator';
 import { DeleteAccountDto } from './dto';
 import ResponseUtils from '@utils/response.utils';
 import PaginationUtils from '@utils/pagination.utils';
-import SignUpDto from '@modules/auth/dto/sign-up.dto';
+import SignUpDto from '@/auth/dto/sign-up.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
 import { BanAccountDto } from './dto';
@@ -36,7 +36,7 @@ import { BanAccountDto } from './dto';
 @ApiBearerAuth()
 @UseInterceptors(WrapResponseInterceptor)
 @ApiExtraModels(AccountEntity)
-@Controller()
+@Controller('accounts')
 export default class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
 

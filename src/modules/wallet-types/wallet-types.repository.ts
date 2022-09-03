@@ -51,4 +51,8 @@ export default class WalletTypesRepository {
       totalCount,
     };
   }
+
+  public async getAll(): Promise<WalletTypeEntity[]> {
+    return this.walletsModel.find();
+  }
 }

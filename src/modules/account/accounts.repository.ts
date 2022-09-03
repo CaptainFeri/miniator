@@ -6,7 +6,7 @@ import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface'
 import AccountEntity from '@entities/account.entity';
 import PaginationUtils from '@utils/pagination.utils';
 import { UpdateAccountDto } from './dto';
-import SignUpDto from '@modules/auth/dto/sign-up.dto';
+import SignUpDto from '@/auth/dto/sign-up.dto';
 import { LoginModel } from './models/login.model';
 import { TypesEnum } from '@decorators/types.decorator';
 import { UpdateProfileDto } from './dto/update-profile.dto';

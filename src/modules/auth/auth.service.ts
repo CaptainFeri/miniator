@@ -3,7 +3,7 @@ import * as bcrypt from 'bcryptjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import AccountsService from '@modules/account/accounts.service';
+import AccountsService from '@/account/accounts.service';
 import JwtTokensDto from './dto/jwt-tokens.dto';
 import { ValidateAccountOutput } from './interfaces/validate-account-output.interface';
 import { LoginPayload } from './interfaces/login-payload.interface';

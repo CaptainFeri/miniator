@@ -8,6 +8,7 @@ import AccountsRepository from './accounts.repository';
 import ProfileEntity from '@entities/profile.entity';
 import CompanyProfileEntity from '@entities/companyProfile.entity';
 import SecurityQuestionAnswerEntity from '@entities/securityQuestionAnswer.entity';
+import WalletsModule from '@/wallets/wallets.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import SecurityQuestionAnswerEntity from '@entities/securityQuestionAnswer.entit
       CompanyProfileEntity,
       SecurityQuestionAnswerEntity,
     ]),
+    WalletsModule,
   ],
   controllers: [AccountsController],
   providers: [AccountsService, AccountsRepository],

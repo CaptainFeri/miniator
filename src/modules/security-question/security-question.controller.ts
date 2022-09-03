@@ -28,7 +28,7 @@ import SecurityQuestionEntity from '@entities/security-question.entity';
 import UpdateSecurityQuestionDto from './dto/update-security-question.dto';
 
 @UseInterceptors(WrapResponseInterceptor)
-@Controller()
+@Controller('security-questions')
 export default class SecurityQuestionsController {
   constructor(
     private readonly securityQuestionsService: SecurityQuestionsService,

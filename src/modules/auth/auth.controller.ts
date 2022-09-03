@@ -16,7 +16,7 @@ import {
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { SuccessResponseInterface } from '@interfaces/success-response.interface';
-import AccountsService from '@modules/account/accounts.service';
+import AccountsService from '@/account/accounts.service';
 import JwtAccessGuard from '@guards/jwt-access.guard';
 import TypesGuard from '@guards/types.guard';
 import AccountEntity from '@entities/account.entity';
@@ -34,7 +34,7 @@ import JwtRefreshGuard from '@guards/jwt-refresh.guard';
 import AdminEntity from '@entities/admin.entity';
 import authConstants from './constants/auth-constants';
 import { GrpcMethod } from '@nestjs/microservices';
-import AdminsService from '@modules/admin/admins.service';
+import AdminsService from '@/admin/admins.service';
 import VerifyAccountTokenDto from './dto/verify-account.dto';
 
 // @ApiTags('Auth')

@@ -28,7 +28,7 @@ import CreateRoleDto from './dto/create-role.dto';
 import UpdateRoleDto from './dto/update-role.dto';
 
 @UseInterceptors(WrapResponseInterceptor)
-@Controller()
+@Controller('roles')
 export default class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 

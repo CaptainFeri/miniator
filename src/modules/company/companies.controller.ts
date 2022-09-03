@@ -22,7 +22,7 @@ import CreateCompanyDto from './dto/create-company.dto';
 import UpdateCompanyDto from './dto/update-company.dto';
 
 @UseInterceptors(WrapResponseInterceptor)
-@Controller()
+@Controller('companies')
 export default class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 

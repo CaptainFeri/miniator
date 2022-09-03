@@ -10,21 +10,27 @@ import { UpdateResult } from 'typeorm';
 import AccountsRepository from './accounts.repository';
 import AccountEntity from '@entities/account.entity';
 import { UpdateAccountDto } from './dto';
-import SignUpDto from '@modules/auth/dto/sign-up.dto';
+import SignUpDto from '@/auth/dto/sign-up.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
+import WalletsService from '@/wallets/wallets.service';
 
 @Injectable()
 export default class AccountsService {
-  constructor(private readonly accountsRepository: AccountsRepository) {}
+  constructor(
+    private readonly accountsRepository: AccountsRepository,
+    private readonly walletsService: WalletsService,
+  ) {}
 
-  public async create(account: SignUpDto): Promise<AccountEntity> {
-    const hashedPassword = await bcrypt.hash(account.password, 10);
+  public async create(signUp: SignUpDto): Promise<AccountEntity> {
+    const hashedPassword = await bcrypt.hash(signUp.password, 10);
 
-    return this.accountsRepository.create({
-      ...account,
+    const account = await this.accountsRepository.create({
+      ...signUp,
       password: hashedPassword,
     });
+    await this.walletsService.createCommonWallets(account);
+    return account;
   }
 
   public async getByEmail(email: string): Promise<AccountEntity | undefined> {

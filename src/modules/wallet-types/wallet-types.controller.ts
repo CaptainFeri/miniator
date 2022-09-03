@@ -19,7 +19,7 @@ import CreateWalletTypeDto from './dto/create-wallet-type.dto';
 import UpdateWalletTypeDto from './dto/update-wallet-type.dto';
 
 @UseInterceptors(WrapResponseInterceptor)
-@Controller()
+@Controller('wallet-types')
 export default class WalletTypesController {
   constructor(private readonly walletsService: WalletTypesService) {}
 

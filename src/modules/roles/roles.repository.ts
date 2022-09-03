@@ -45,4 +45,8 @@ export default class RolesRepository {
       totalCount,
     };
   }
+
+  public async getAllCommon(): Promise<CompanyRoleEntity[]> {
+    return this.rolesModel.find({ requestable: false });
+  }
 }

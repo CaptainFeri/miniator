@@ -12,7 +12,7 @@ import ResponseUtils from '@utils/response.utils';
 import PaginationUtils from '@utils/pagination.utils';
 
 @UseInterceptors(WrapResponseInterceptor)
-@Controller()
+@Controller('wallets')
 export default class WalletsController {
   constructor(private readonly walletsService: WalletsService) {}
 

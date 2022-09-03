@@ -26,7 +26,7 @@ import AdminEntity from '@entities/admin.entity';
 import UpdateAdminDto from './dto/update-admin.dto';
 
 @UseInterceptors(WrapResponseInterceptor)
-@Controller()
+@Controller('admins')
 export default class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
