@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import SecurityQuestionController from './security-question.controller';
 import SecurityQuestionsService from './security-question.service';
 import SecurityQuestionEntity from '@entities/security-question.entity';
 import SecurityQuestionAnswerEntity from '@entities/securityQuestionAnswer.entity';

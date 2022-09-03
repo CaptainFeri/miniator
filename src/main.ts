@@ -34,7 +34,6 @@ async function bootstrap() {
       );
     });
   } else {
-    console.log('MODE: ', process.env.PORT);
     const app = await NestFactory.createMicroservice(AppModule, {
       name: 'auth',
       transport: Transport.GRPC,
@@ -42,9 +41,13 @@ async function bootstrap() {
         url: '0.0.0.0:3000',
         package: 'auth',
         protoPath: [
+          // join(__dirname, '../proto/account.proto'),
+          join(__dirname, '../proto/admin.proto'),
           join(__dirname, '../proto/auth.proto'),
-          join(__dirname, '../proto/wallet.proto'),
+          join(__dirname, '../proto/company.proto'),
           join(__dirname, '../proto/question.proto'),
+          join(__dirname, '../proto/roles.proto'),
+          join(__dirname, '../proto/wallet.proto'),
         ],
         loader: {
           keepCase: true,
