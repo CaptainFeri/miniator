@@ -1,12 +1,15 @@
 import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ServerUnaryCall } from '@grpc/grpc-js';
 
 export class BasicAuthGuard implements CanActivate {
   constructor(private readonly config: ConfigService) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest();
-    const authBasic = request.headers.auth_basic;
+    const { metadata }: ServerUnaryCall<any, any> = context.getArgByIndex(2);
+
+    const authBasic = metadata.getMap().auth_basic?.toString();
+
     if (!authBasic || !authBasic.startsWith('Basic ')) {
       return false;
     }

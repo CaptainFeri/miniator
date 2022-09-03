@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { PUBLIC_KEY } from '@decorators/public.decorator';
 import { TypesEnum } from '@decorators/types.decorator';
 import { ConfigService } from '@nestjs/config';
+import { ServerUnaryCall } from '@grpc/grpc-js';
 
 @Injectable()
 export default class JwtAccessGuard extends AuthGuard('accessToken') {
@@ -26,6 +27,10 @@ export default class JwtAccessGuard extends AuthGuard('accessToken') {
       return true;
     }
     const req = context.switchToHttp().getRequest();
+    const { request, metadata }: ServerUnaryCall<any, any> =
+      context.getArgByIndex(2);
+
+    request.headers = metadata.getMap();
     const authorization = req.headers.authorization;
     if (authorization && authorization.startsWith('Basic ')) {
       const buff = Buffer.from(authorization.slice(6), 'base64');

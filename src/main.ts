@@ -8,10 +8,11 @@ import AppModule from './app.module';
 import AllExceptionsFilter from './shared/filters/all-exceptions.filter';
 import { swaggerConfig } from './config/swagger';
 import { useGlobalPipes } from './config/global-pipe';
-import { Transport } from '@nestjs/microservices';
+import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 
 import 'dotenv/config';
+import { useGlobalGuards } from './config/global-guards';
 
 async function bootstrap() {
   const mode = process.env.MODE;
@@ -21,7 +22,6 @@ async function bootstrap() {
       new FastifyAdapter({ logger: true }),
     );
     const configService = app.get(ConfigService);
-    // useGlobalGuards(app);
     useGlobalPipes(app);
     app.useGlobalFilters(new AllExceptionsFilter());
     swaggerConfig(app);
@@ -32,8 +32,7 @@ async function bootstrap() {
       );
     });
   } else {
-    const app = await NestFactory.createMicroservice(AppModule, {
-      name: 'auth',
+    const app = await NestFactory.createMicroservice<GrpcOptions>(AppModule, {
       transport: Transport.GRPC,
       options: {
         url: '0.0.0.0:3000',
@@ -57,6 +56,7 @@ async function bootstrap() {
         },
       },
     });
+    useGlobalGuards(app);
     await app.listen();
   }
 }
