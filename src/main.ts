@@ -9,10 +9,9 @@ import AllExceptionsFilter from './shared/filters/all-exceptions.filter';
 import { swaggerConfig } from './config/swagger';
 import { useGlobalPipes } from './config/global-pipe';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
-import { join } from 'path';
-
 import 'dotenv/config';
 import { useGlobalGuards } from './config/global-guards';
+import { useGlobalFilters } from './config/global-filters';
 
 async function bootstrap() {
   const mode = process.env.MODE;
@@ -38,13 +37,13 @@ async function bootstrap() {
         url: '0.0.0.0:3000',
         package: 'auth',
         protoPath: [
-          // join(__dirname, '../proto/account.proto'),
-          join(__dirname, '../proto/admin.proto'),
-          join(__dirname, '../proto/auth.proto'),
-          join(__dirname, '../proto/company.proto'),
-          join(__dirname, '../proto/question.proto'),
-          join(__dirname, '../proto/roles.proto'),
-          join(__dirname, '../proto/wallet.proto'),
+          // 'proto/account.proto',
+          'proto/admin.proto',
+          'proto/auth.proto',
+          'proto/company.proto',
+          'proto/question.proto',
+          'proto/roles.proto',
+          'proto/wallet.proto',
         ],
         loader: {
           keepCase: true,
@@ -57,6 +56,7 @@ async function bootstrap() {
       },
     });
     useGlobalGuards(app);
+    useGlobalFilters(app);
     await app.listen();
   }
 }
