@@ -28,7 +28,7 @@ import UpdateAdminDto from './dto/update-admin.dto';
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
 export default class AdminsController {
-  constructor(private readonly adminsService: AdminsService) { }
+  constructor(private readonly adminsService: AdminsService) {}
 
   @Post()
   @Types(TypesEnum.superAdmin)
@@ -64,7 +64,10 @@ export default class AdminsController {
   @Put(':id')
   @UseGuards(JwtAccessGuard)
   @Types(TypesEnum.superAdmin)
-  async update(@Param('id', ParseUUIDPipe) id: string, @Body() admin: UpdateAdminDto): Promise<any> {
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() admin: UpdateAdminDto,
+  ): Promise<any> {
     await this.adminsService.update(id, admin);
 
     return ResponseUtils.success('admins', {

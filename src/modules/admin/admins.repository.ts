@@ -10,7 +10,6 @@ import CreateAdminDto from './dto/create-admin.dto';
 import { TypesEnum } from '@decorators/types.decorator';
 import * as bcrypt from 'bcryptjs';
 
-
 @Injectable()
 export default class AdminsRepository {
   constructor(
@@ -32,7 +31,9 @@ export default class AdminsRepository {
     return this.adminsModel.update(id, data);
   }
 
-  public async getAllWithPagination(options: PaginationParamsInterface): Promise<PaginatedEntityInterface<AdminEntity>> {
+  public async getAllWithPagination(
+    options: PaginationParamsInterface,
+  ): Promise<PaginatedEntityInterface<AdminEntity>> {
     const [questions, totalCount] = await Promise.all([
       this.adminsModel.find({
         skip: PaginationUtils.getSkipCount(options.page, options.limit),
@@ -52,14 +53,19 @@ export default class AdminsRepository {
     const user = await this.adminsModel.findOne({
       where: {
         username,
-      }
+      },
     });
     if (user) {
       if (bcrypt.compare(password, user.password)) {
-        return { status: true, username: user.username, id: user.id, type: TypesEnum.admin };
+        return {
+          status: true,
+          username: user.username,
+          id: user.id,
+          type: TypesEnum.admin,
+        };
       }
       return { status: false, message: 'Wrong password' };
     }
-    return { status: false, message: 'User not found' }
+    return { status: false, message: 'User not found' };
   }
 }

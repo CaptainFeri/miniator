@@ -11,9 +11,11 @@ import CreateSecurityQuestionDto from './dto/create-security-question.dto';
 export default class SecurityQuestionsService {
   constructor(
     private readonly securityQuestionsRepository: SecurityQuestionsRepository,
-  ) { }
+  ) {}
 
-  create(securityQuestion: CreateSecurityQuestionDto): Promise<SecurityQuestionEntity> {
+  create(
+    securityQuestion: CreateSecurityQuestionDto,
+  ): Promise<SecurityQuestionEntity> {
     return this.securityQuestionsRepository.create(securityQuestion);
   }
 
@@ -29,7 +31,9 @@ export default class SecurityQuestionsService {
     return this.securityQuestionsRepository.set(id, userId, answer);
   }
 
-  getAllWithPagination(options: PaginationParamsInterface): Promise<PaginatedEntityInterface<SecurityQuestionEntity>> {
+  getAllWithPagination(
+    options: PaginationParamsInterface,
+  ): Promise<PaginatedEntityInterface<SecurityQuestionEntity>> {
     return this.securityQuestionsRepository.getAllWithPagination(options);
   }
 }

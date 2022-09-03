@@ -13,21 +13,17 @@ export default class TypesGuard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = this.getRequest(context);
-    // console.log(request.refreshToken);
+    // const request = this.getRequest(context);
     const type = context.getType();
-    const prefix = 'Bearer ';
-
-    let header: any;
     if (type === 'rpc') {
-        const token = context.getArgByIndex(0)['auth'];
-        const tokenData = (await this.jwtService.decode(
-          token?.split('Bearer')[1].trim() as string,
-        )) as JwtDecodeResponse | null;
-        if (tokenData?.type === TypesEnum.superAdmin) {
-          return true;
-        }
+      const token = context.getArgByIndex(0)['auth'];
+      const tokenData = (await this.jwtService.decode(
+        token?.split('Bearer')[1].trim() as string,
+      )) as JwtDecodeResponse | null;
+      if (tokenData?.type === TypesEnum.superAdmin) {
         return true;
+      }
+      return true;
     }
     return true;
   }

@@ -6,7 +6,6 @@ import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface'
 import PaginationUtils from '@utils/pagination.utils';
 import CompanyRoleRequestEntity from '@entities/company-role-request.entity';
 
-
 @Injectable()
 export default class RoleRequestsRepository {
   constructor(

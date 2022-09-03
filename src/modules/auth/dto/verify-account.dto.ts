@@ -1,18 +1,8 @@
-import {
-    IsNotEmpty,
-    MinLength,
-    IsString,
-    IsEmail,
-    MaxLength,
-    IsJWT,
-  } from 'class-validator';
-  
-  export default class VerifyAccountTokenDto {
+import { IsNotEmpty, IsString, IsJWT } from 'class-validator';
 
-    @IsNotEmpty()
-    @IsString()
-    @IsJWT()
-    readonly token: string = '';
-
-  }
-  
+export default class VerifyAccountTokenDto {
+  @IsNotEmpty()
+  @IsString()
+  @IsJWT()
+  readonly token: string = '';
+}

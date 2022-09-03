@@ -10,7 +10,10 @@ export default class CompanyEntity extends BaseEntity {
     type: String,
     maxLength: 64,
   })
-  @Column({ length: 64, unique: true })
+  @Column({
+    length: 64,
+    unique: true,
+  })
   readonly name: string;
 
   @ApiProperty({ type: Number })

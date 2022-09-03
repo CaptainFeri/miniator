@@ -3,7 +3,6 @@ import { MockType } from '../types';
 import SecurityQuestionsController from './security-question.controller';
 import SecurityQuestionsService from './security-question.service';
 
-
 describe('SecurityQuestion Controller', () => {
   let controller: SecurityQuestionsController;
   let service: MockType<SecurityQuestionsService>;

@@ -1,7 +1,11 @@
 import { Strategy } from 'passport-local';
 import { validate } from 'class-validator';
 import { PassportStrategy } from '@nestjs/passport';
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import SignInDto from '../dto/sign-in.dto';
 import { ValidateAccountOutput } from '../interfaces/validate-account-output.interface';
 

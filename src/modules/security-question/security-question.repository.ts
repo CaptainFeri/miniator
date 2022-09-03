@@ -16,25 +16,34 @@ export default class SecurityQuestionsRepository {
     private readonly securityQuestionsModel: Repository<SecurityQuestionEntity>,
     @InjectRepository(SecurityQuestionAnswerEntity)
     private readonly securityQuestionAnswersModel: Repository<SecurityQuestionAnswerEntity>,
-  ) { }
+  ) {}
 
-  create(securityQuestion: CreateSecurityQuestionDto): Promise<SecurityQuestionEntity> {
+  create(
+    securityQuestion: CreateSecurityQuestionDto,
+  ): Promise<SecurityQuestionEntity> {
     return this.securityQuestionsModel.save(securityQuestion);
   }
 
   async getById(id: string): Promise<SecurityQuestionEntity> {
     const item = await this.securityQuestionsModel.findOne(id);
-    if(!item) {
+    if (!item) {
       throw new NotFoundException('Security question not found');
     }
     return item;
   }
 
-  updateById(id: string,data: UpdateSecurityQuestionDto): Promise<UpdateResult> {
+  updateById(
+    id: string,
+    data: UpdateSecurityQuestionDto,
+  ): Promise<UpdateResult> {
     return this.securityQuestionsModel.update(id, data);
   }
 
-  set(id: string,userId: string,answer: string): Promise<SecurityQuestionAnswerEntity> {
+  set(
+    id: string,
+    userId: string,
+    answer: string,
+  ): Promise<SecurityQuestionAnswerEntity> {
     return this.securityQuestionAnswersModel.save({
       accountEntity: {
         id: userId,
@@ -46,7 +55,9 @@ export default class SecurityQuestionsRepository {
     });
   }
 
-  public async getAllWithPagination(options: PaginationParamsInterface): Promise<PaginatedEntityInterface<SecurityQuestionEntity>> {
+  public async getAllWithPagination(
+    options: PaginationParamsInterface,
+  ): Promise<PaginatedEntityInterface<SecurityQuestionEntity>> {
     const [questions, totalCount] = await Promise.all([
       this.securityQuestionsModel.find({
         skip: PaginationUtils.getSkipCount(options.page, options.limit),

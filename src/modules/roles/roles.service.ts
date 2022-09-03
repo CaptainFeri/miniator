@@ -9,8 +9,6 @@ import CreateRoleDto from './dto/create-role.dto';
 import UpdateRoleDto from './dto/update-role.dto';
 import CompanyRoleRequestEntity from '@entities/company-role-request.entity';
 
-
-
 @Injectable()
 export default class RolesService {
   constructor(

@@ -37,6 +37,6 @@ export default class AdminsService {
 
   async login(username: string, password: string) {
     password = await bcrypt.hash(password, 10);
-    return await this.adminsRepository.login(username,password);
+    return await this.adminsRepository.login(username, password);
   }
 }

@@ -20,16 +20,12 @@ export default class WrapResponseInterceptor implements NestInterceptor {
 
         if (data && collectionName) {
           if (data.length) {
-            console.log("1");
-            serializeOptions.attributes = Object.keys(
-              _.omit(data[0]),
-            );
+            console.log('1');
+            serializeOptions.attributes = Object.keys(_.omit(data[0]));
           } else {
-            console.log("2");
+            console.log('2');
             console.log(data);
-            serializeOptions.attributes = Object.keys(
-              _.omit(data),
-            );
+            serializeOptions.attributes = Object.keys(_.omit(data));
           }
           if (options) {
             serializeOptions.topLevelLinks = PaginationUtils.getPaginationLinks(
@@ -40,7 +36,7 @@ export default class WrapResponseInterceptor implements NestInterceptor {
             serializeOptions.meta = { totalCount: options.totalCount };
           }
 
-          const d =  new Serializer(collectionName, serializeOptions).serialize(
+          const d = new Serializer(collectionName, serializeOptions).serialize(
             data,
           );
           // console.log(d.data[0]['attributes']);
@@ -48,7 +44,7 @@ export default class WrapResponseInterceptor implements NestInterceptor {
           return d;
         }
 
-        const d =  {
+        const d = {
           data: args[0].data ?? args[0],
         };
         console.log(d);

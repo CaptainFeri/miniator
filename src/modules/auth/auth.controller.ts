@@ -11,51 +11,30 @@ import {
   NotFoundException,
   ForbiddenException,
   HttpStatus,
-  UseInterceptors,
   Query,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiBody,
-  ApiOkResponse,
-  ApiInternalServerErrorResponse,
-  ApiUnauthorizedResponse,
-  ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiBadRequestResponse,
-  ApiConflictResponse,
-  ApiNoContentResponse,
-  ApiExtraModels,
-  getSchemaPath,
-} from '@nestjs/swagger';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { SuccessResponseInterface } from '@interfaces/success-response.interface';
 import AccountsService from '@modules/account/accounts.service';
 import JwtAccessGuard from '@guards/jwt-access.guard';
 import TypesGuard from '@guards/types.guard';
 import AccountEntity from '@entities/account.entity';
-import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import AuthBearer from '@decorators/auth-bearer.decorator';
 import { Types, TypesEnum } from '@decorators/types.decorator';
 import { DecodedAccount } from './interfaces/decoded-account.interface';
-import LocalAuthGuard from './guards/local-auth.guard';
 import AuthService from './auth.service';
 import RefreshTokenDto from './dto/refresh-token.dto';
 import SignInDto from './dto/sign-in.dto';
 import SignUpDto from './dto/sign-up.dto';
-import JwtTokensDto from './dto/jwt-tokens.dto';
 import ResponseUtils from '@utils/response.utils';
 import { User } from '@decorators/user.decorator';
 import { Public } from '@decorators/public.decorator';
 import JwtRefreshGuard from '@guards/jwt-refresh.guard';
-import AdminLocalAuthGuard from './guards/admin-local-auth.guard';
 import AdminEntity from '@entities/admin.entity';
 import authConstants from './constants/auth-constants';
 import { GrpcMethod } from '@nestjs/microservices';
-import { Metadata, ServerUnaryCall } from '@grpc/grpc-js';
-import JwtRefreshToken from '@decorators/jwt-refresh-token-grpc.decorator';
 import AdminsService from '@modules/admin/admins.service';
-import VerifyAccountDto from './dto/verify-user.dto';
 import VerifyAccountTokenDto from './dto/verify-account.dto';
 
 // @ApiTags('Auth')
@@ -68,24 +47,41 @@ export default class AuthController {
     private readonly accountsService: AccountsService,
     private readonly adminService: AdminsService,
     private readonly configService: ConfigService,
-  ) { }
+  ) {}
 
-  @GrpcMethod('AuthService','Login')
-  async Login(data: SignInDto, metadata: Metadata, call: ServerUnaryCall<SignInDto, any>) {
-    const login = await this.accountsService.login(data.username, data.password);
+  @GrpcMethod('AuthService', 'Login')
+  async Login(data: SignInDto) {
+    const login = await this.accountsService.login(
+      data.username,
+      data.password,
+    );
     if (login.status) {
-      const user = { username: login.username, id: login.id, type: login.type };
-      return ResponseUtils.success('tokens', await this.authService.login(user));
+      const user = {
+        username: login.username,
+        id: login.id,
+        type: login.type,
+      };
+      return ResponseUtils.success(
+        'tokens',
+        await this.authService.login(user),
+      );
     }
     return ResponseUtils.error(login.message);
   }
 
-  @GrpcMethod('AuthService','LoginAdmin')
-  async LoginAdmin(data: SignInDto, metadata: Metadata, call: ServerUnaryCall<SignInDto, any>) {
+  @GrpcMethod('AuthService', 'LoginAdmin')
+  async LoginAdmin(data: SignInDto) {
     const login = await this.adminService.login(data.username, data.password);
     if (login.status) {
-      const user = { username: login.username, id: login.id, type: login.type };
-      const data =  ResponseUtils.success('tokens', await this.authService.login(user));
+      const user = {
+        username: login.username,
+        id: login.id,
+        type: login.type,
+      };
+      const data = ResponseUtils.success(
+        'tokens',
+        await this.authService.login(user),
+      );
       console.log(data);
       return data;
     }
@@ -93,10 +89,10 @@ export default class AuthController {
   }
 
   @UseGuards(JwtRefreshGuard)
-  @GrpcMethod('AuthService','refreshToken1')
-  async refreshToken1( data: RefreshTokenDto, metadata: Metadata, call: ServerUnaryCall<SignInDto, any>, @User('authorization') account) {
+  @GrpcMethod('AuthService', 'refreshToken1')
+  async refreshToken1(data: RefreshTokenDto, @User('authorization') account) {
     console.log(data);
-    console.log("fdsf");
+    console.log('fdsf');
     const oldRefreshToken: string | null =
       await this.authService.getRefreshTokenByUsername(account.username);
     // if the old refresh token is not equal to request refresh token then this user is unauthorized
@@ -116,9 +112,9 @@ export default class AuthController {
     );
   }
 
-  @GrpcMethod('AuthService','SignUp')
-  async SignUp(data: SignUpDto, metadata: Metadata, call: ServerUnaryCall<SignUpDto, any>) {
-    const { id, email } = await this.accountsService.create(data);
+  @GrpcMethod('AuthService', 'SignUp')
+  async SignUp(data: SignUpDto) {
+    const { id } = await this.accountsService.create(data);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const token = this.authService.createVerifyToken(id);
 
@@ -140,8 +136,8 @@ export default class AuthController {
     });
   }
 
-  @GrpcMethod('AuthService','Verify')
-  async Verify(data: VerifyAccountTokenDto, metadata: Metadata, call: ServerUnaryCall<SignUpDto, any>) {
+  @GrpcMethod('AuthService', 'Verify')
+  async Verify(data: VerifyAccountTokenDto) {
     const { id } = await this.authService.verifyEmailVerToken(
       data.token,
       this.configService.get<string>(
@@ -164,7 +160,9 @@ export default class AuthController {
 
   @Public()
   @Post('sign-in')
-  async signInApi(@User() accountEntity: any): Promise<SuccessResponseInterface | never> {
+  async signInApi(
+    @User() accountEntity: any,
+  ): Promise<SuccessResponseInterface | never> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = accountEntity;
 
@@ -173,7 +171,9 @@ export default class AuthController {
 
   @Public()
   @Post('admins/sign-in')
-  async adminSignIn(@User() adminEntity: any): Promise<SuccessResponseInterface | never> {
+  async adminSignIn(
+    @User() adminEntity: any,
+  ): Promise<SuccessResponseInterface | never> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...admin } = adminEntity;
 
@@ -183,8 +183,7 @@ export default class AuthController {
   @Post('sign-up')
   @Public()
   async signUp(@Body() account: SignUpDto): Promise<any> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, email } = await this.accountsService.create(account);
+    const { id } = await this.accountsService.create(account);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const token = this.authService.createVerifyToken(id);
 
@@ -206,7 +205,6 @@ export default class AuthController {
       url: `${this.configService.get('HOST')}/auth/verify?token=${token}`,
     });
   }
-
 
   @Post('refresh-token')
   @Public()
@@ -268,7 +266,6 @@ export default class AuthController {
     );
   }
 
-
   @Get('verify')
   @Public()
   async verifyAccount(
@@ -295,7 +292,6 @@ export default class AuthController {
     );
   }
 
-
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
   @Delete('logout/:token')
@@ -316,14 +312,13 @@ export default class AuthController {
 
     const deletedAccountsCount = await this.authService.deleteTokenByUsername(
       (decodedAccount.type === TypesEnum.admin ? 'admin:' : '') +
-      decodedAccount.username,
+        decodedAccount.username,
     );
 
     if (deletedAccountsCount === 0) {
       throw new NotFoundException();
     }
   }
-
 
   @ApiBearerAuth()
   @Delete('logout-all')
@@ -333,7 +328,6 @@ export default class AuthController {
   async logoutAll(): Promise<string> {
     return this.authService.deleteAllTokens();
   }
-
 
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)

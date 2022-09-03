@@ -30,7 +30,7 @@ import UpdateRoleDto from './dto/update-role.dto';
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
 export default class RolesController {
-  constructor(private readonly rolesService: RolesService) { }
+  constructor(private readonly rolesService: RolesService) {}
 
   @Post()
   @Types(TypesEnum.superAdmin)
@@ -80,7 +80,10 @@ export default class RolesController {
   @Put(':id')
   @UseGuards(JwtAccessGuard)
   @Types(TypesEnum.superAdmin)
-  async update(@Param('id', ParseUUIDPipe) id: string, @Body() role: UpdateRoleDto,): Promise<any> {
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() role: UpdateRoleDto,
+  ): Promise<any> {
     await this.rolesService.update(id, role);
 
     return ResponseUtils.success('roles', {

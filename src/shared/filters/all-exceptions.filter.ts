@@ -24,9 +24,10 @@ export default class AllExceptionsFilter implements ExceptionFilter {
     };
 
     if (exception.code === mysqlCodes.duplicateError) {
-      return res
-        .status(HttpStatus.CONFLICT)
-        .send({ message: exceptionMessage, error: exceptionResponse });
+      return res.status(HttpStatus.CONFLICT).send({
+        message: exceptionMessage,
+        error: exceptionResponse,
+      });
     }
 
     return res.status(status).send({

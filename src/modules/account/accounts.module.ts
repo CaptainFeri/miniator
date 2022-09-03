@@ -9,9 +9,15 @@ import ProfileEntity from '@entities/profile.entity';
 import CompanyProfileEntity from '@entities/companyProfile.entity';
 import SecurityQuestionAnswerEntity from '@entities/securityQuestionAnswer.entity';
 
-
 @Module({
-  imports: [TypeOrmModule.forFeature([AccountEntity,ProfileEntity,CompanyProfileEntity,SecurityQuestionAnswerEntity])],
+  imports: [
+    TypeOrmModule.forFeature([
+      AccountEntity,
+      ProfileEntity,
+      CompanyProfileEntity,
+      SecurityQuestionAnswerEntity,
+    ]),
+  ],
   controllers: [AccountsController],
   providers: [AccountsService, AccountsRepository],
   exports: [AccountsService, AccountsRepository],

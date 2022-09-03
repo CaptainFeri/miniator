@@ -51,7 +51,6 @@ export default class ProfileEntity extends BaseEntity {
   @Column({ length: 64 })
   readonly phone: string = '';
 
-
   @Column('jsonb', { nullable: true })
   readonly socilaMedia: object[];
 

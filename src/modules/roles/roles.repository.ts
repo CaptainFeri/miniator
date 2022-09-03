@@ -8,7 +8,6 @@ import UpdateRoleDto from './dto/update-role.dto';
 import CompanyRoleEntity from '@entities/company-role.entity';
 import CreateRoleDto from './dto/create-role.dto';
 
-
 @Injectable()
 export default class RolesRepository {
   constructor(

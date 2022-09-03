@@ -15,7 +15,10 @@ import CompanyRoleRequestEntity from '@entities/company-role-request.entity';
 
 @Entity('companyRole')
 export default class CompanyRoleEntity extends BaseEntity {
-  @ApiProperty({ type: String, maxLength: 64 })
+  @ApiProperty({
+    type: String,
+    maxLength: 64,
+  })
   @Column({ length: 64 })
   @Index({ unique: true })
   readonly name: string = '';

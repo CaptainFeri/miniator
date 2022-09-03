@@ -24,7 +24,7 @@ import UpdateCompanyDto from './dto/update-company.dto';
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
 export default class CompaniesController {
-  constructor(private readonly companiesService: CompaniesService) { }
+  constructor(private readonly companiesService: CompaniesService) {}
 
   @Post()
   @Types(TypesEnum.superAdmin)
@@ -61,7 +61,9 @@ export default class CompaniesController {
   }
 
   @Get(':id')
-  async getById(@Param('id', ParseUUIDPipe) id: string): Promise<SuccessResponseInterface> {
+  async getById(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<SuccessResponseInterface> {
     const foundCompany = await this.companiesService.getById(id);
 
     if (!foundCompany) {
@@ -73,7 +75,10 @@ export default class CompaniesController {
 
   @Put(':id')
   @Types(TypesEnum.superAdmin)
-  async update(@Param('id', ParseUUIDPipe) id: string, @Body() company: UpdateCompanyDto): Promise<any> {
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() company: UpdateCompanyDto,
+  ): Promise<any> {
     await this.companiesService.update(id, company);
 
     return ResponseUtils.success('companies', {

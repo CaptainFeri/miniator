@@ -1,6 +1,6 @@
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 
-export default new class ResponseUtils {
+export default new (class ResponseUtils {
   public success(
     collectionName: string,
     data: any,
@@ -19,8 +19,8 @@ export default new class ResponseUtils {
 
   public error(message: string) {
     return {
-      status:false,
+      status: false,
       message,
-    }
+    };
   }
-}
+})();

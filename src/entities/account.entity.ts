@@ -18,29 +18,47 @@ import CompanyRoleEntity from '@entities/company-role.entity';
 
 @Entity('account')
 export default class AccountEntity extends BaseEntity {
-  @ApiProperty({ type: String, maxLength: 64 })
+  @ApiProperty({
+    type: String,
+    maxLength: 64,
+  })
   @Column({ length: 64 })
   @Index({ unique: true })
   readonly username: string = '';
 
-  @ApiProperty({ type: String, maxLength: 64 })
+  @ApiProperty({
+    type: String,
+    maxLength: 64,
+  })
   @Column({ length: 64 })
   @Index({ unique: true })
   readonly email: string = '';
 
-  @ApiProperty({ type: String, maxLength: 64 })
+  @ApiProperty({
+    type: String,
+    maxLength: 64,
+  })
   @Column({ length: 64 })
   readonly password: string = '';
 
-  @ApiProperty({ type: Boolean, default: false })
+  @ApiProperty({
+    type: Boolean,
+    default: false,
+  })
   @Column()
   readonly banned: boolean = false;
 
-  @ApiProperty({ type: Boolean, default: false })
+  @ApiProperty({
+    type: Boolean,
+    default: false,
+  })
   @Column()
   readonly blocked: boolean = false;
 
-  @ApiProperty({ type: Boolean, default: false })
+  @ApiProperty({
+    type: Boolean,
+    default: false,
+  })
   @Column()
   readonly verified: boolean = false;
 

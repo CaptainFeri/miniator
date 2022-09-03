@@ -1,7 +1,7 @@
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import commonConstants from '../constants/common.constants';
 
-export default new class PaginationUtils {
+export default new (class PaginationUtils {
   private static buildLink(
     location: string,
     paginationParams?: PaginationParamsInterface,
@@ -130,6 +130,4 @@ export default new class PaginationUtils {
     }
     return limitPerPage;
   }
-}
-
-
+})();

@@ -3,7 +3,6 @@ import { MockType } from '../types';
 import SecurityQuestionsRepository from './security-question.repository';
 import SecurityQuestionsService from './security-question.service';
 
-
 describe('SecurityQuestionsService', () => {
   let service: SecurityQuestionsService;
   let repository: MockType<SecurityQuestionsRepository>;

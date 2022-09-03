@@ -23,7 +23,7 @@ export default class AccountsRepository {
     private readonly profileModel: Repository<ProfileEntity>,
     @InjectRepository(CompanyProfileEntity)
     private readonly companyProfileModel: Repository<CompanyProfileEntity>,
-  ) { }
+  ) {}
 
   public create(user: SignUpDto): Promise<AccountEntity> {
     return this.accountsModel.save({
@@ -45,7 +45,9 @@ export default class AccountsRepository {
     });
   }
 
-  public async getVerifiedAccountByEmail(email: string): Promise<AccountEntity | undefined> {
+  public async getVerifiedAccountByEmail(
+    email: string,
+  ): Promise<AccountEntity | undefined> {
     return this.accountsModel.findOne({
       where: [
         {
@@ -57,7 +59,9 @@ export default class AccountsRepository {
     });
   }
 
-  public async getVerifiedAccountByUsername(username: string): Promise<AccountEntity | undefined> {
+  public async getVerifiedAccountByUsername(
+    username: string,
+  ): Promise<AccountEntity | undefined> {
     return this.accountsModel.findOne({
       where: [
         {
@@ -69,13 +73,13 @@ export default class AccountsRepository {
     });
   }
 
-  public async getUnverifiedAccountByEmail(email: string): Promise<AccountEntity | undefined> {
+  public async getUnverifiedAccountByEmail(
+    email: string,
+  ): Promise<AccountEntity | undefined> {
     return this.accountsModel.findOne({
-
       email,
       verified: false,
       deleted: false,
-
     });
   }
 
@@ -86,7 +90,9 @@ export default class AccountsRepository {
     });
   }
 
-  public async getVerifiedAccountById(id: string): Promise<AccountEntity | undefined> {
+  public async getVerifiedAccountById(
+    id: string,
+  ): Promise<AccountEntity | undefined> {
     return this.accountsModel.findOne({
       id,
       verified: true,
@@ -94,7 +100,9 @@ export default class AccountsRepository {
     });
   }
 
-  public async getUnverifiedAccountById(id: string): Promise<AccountEntity | undefined> {
+  public async getUnverifiedAccountById(
+    id: string,
+  ): Promise<AccountEntity | undefined> {
     return this.accountsModel.findOne({
       id,
       verified: false,
@@ -103,13 +111,18 @@ export default class AccountsRepository {
   }
 
   public updateById(id: string, data: UpdateAccountDto): Promise<UpdateResult> {
-    return this.accountsModel.update({
-      id,
-      deleted: false,
-    }, data);
+    return this.accountsModel.update(
+      {
+        id,
+        deleted: false,
+      },
+      data,
+    );
   }
 
-  public async getAllVerifiedWithPagination(options: PaginationParamsInterface): Promise<PaginatedEntityInterface<AccountEntity>> {
+  public async getAllVerifiedWithPagination(
+    options: PaginationParamsInterface,
+  ): Promise<PaginatedEntityInterface<AccountEntity>> {
     const verified = true;
     const [users, totalCount] = await Promise.all([
       this.accountsModel.find({
@@ -136,7 +149,6 @@ export default class AccountsRepository {
       deleted: true,
     });
     return await this.accountsModel.findOne(account.id);
-
   }
 
   async login(username: string, password: string): Promise<LoginModel> {
@@ -144,15 +156,20 @@ export default class AccountsRepository {
       where: {
         username: username,
         deleted: false,
-      }
+      },
     });
     if (user) {
       if (user.password === password) {
-        return { status: true, username: user.username, id: user.id, type: TypesEnum.user };
+        return {
+          status: true,
+          username: user.username,
+          id: user.id,
+          type: TypesEnum.user,
+        };
       }
       return { status: false, message: 'Wrong password' };
     }
-    return { status: false, message: 'User not found' }
+    return { status: false, message: 'User not found' };
   }
 
   async updateProfile(id: string, data: UpdateProfileDto) {
@@ -177,11 +194,14 @@ export default class AccountsRepository {
   }
 
   async banOrUnbanAccount(id: string, banned: boolean) {
-    await this.accountsModel.update({
-      id,
-      deleted: false,
-    }, {
-      banned,
-    });
+    await this.accountsModel.update(
+      {
+        id,
+        deleted: false,
+      },
+      {
+        banned,
+      },
+    );
   }
 }

@@ -1,5 +1,9 @@
 import * as bcrypt from 'bcryptjs';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import { UpdateResult } from 'typeorm';
@@ -10,10 +14,9 @@ import SignUpDto from '@modules/auth/dto/sign-up.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
 
-
 @Injectable()
 export default class AccountsService {
-  constructor(private readonly accountsRepository: AccountsRepository) { }
+  constructor(private readonly accountsRepository: AccountsRepository) {}
 
   public async create(account: SignUpDto): Promise<AccountEntity> {
     const hashedPassword = await bcrypt.hash(account.password, 10);
@@ -50,7 +53,7 @@ export default class AccountsService {
     return this.accountsRepository.getById(id);
   }
 
-  public async getVerifiedAccountById(id: string,): Promise<AccountEntity> {
+  public async getVerifiedAccountById(id: string): Promise<AccountEntity> {
     return this.accountsRepository.getVerifiedAccountById(id);
   }
 
@@ -70,7 +73,10 @@ export default class AccountsService {
     return this.accountsRepository.getAllVerifiedWithPagination(options);
   }
 
-  public async deleteAccount(id: string, password: string): Promise<AccountEntity> {
+  public async deleteAccount(
+    id: string,
+    password: string,
+  ): Promise<AccountEntity> {
     const account = await this.accountsRepository.getById(id);
     if (!account) throw new NotFoundException('The item does not exist');
 
@@ -87,15 +93,15 @@ export default class AccountsService {
   }
 
   async updateProfile(id: string, data: UpdateProfileDto) {
-    const item = this.accountsRepository.updateProfile(id, data);
+    await this.accountsRepository.updateProfile(id, data);
   }
 
   async getProfile(id: string) {
     return await this.accountsRepository.getProfile(id);
   }
 
-  async updateComponyProfile(id: string, data: UpdateCompanyProfileDto) {
-    const item = this.accountsRepository.updateComponyProfile(id, data);
+  async updateCompanyProfile(id: string, data: UpdateCompanyProfileDto) {
+    await this.accountsRepository.updateComponyProfile(id, data);
   }
 
   async banOrUnbanAccount(id: string, banned: boolean) {

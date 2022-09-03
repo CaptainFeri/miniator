@@ -8,27 +8,11 @@ import {
   UseInterceptors,
   BadRequestException,
   Query,
-  Post,
   Body,
-  HttpCode,
-  HttpStatus,
   Delete,
   Put,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOkResponse,
-  ApiNotFoundResponse,
-  ApiBearerAuth,
-  ApiUnauthorizedResponse,
-  ApiParam,
-  ApiExtraModels,
-  getSchemaPath,
-  ApiBadRequestResponse,
-  ApiBody,
-  ApiConflictResponse,
-  ApiInternalServerErrorResponse,
-} from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiExtraModels } from '@nestjs/swagger';
 import JwtAccessGuard from '@guards/jwt-access.guard';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import Serialize from '@decorators/serialization.decorator';
@@ -40,16 +24,13 @@ import AccountEntity from '@entities/account.entity';
 import AccountsService from './accounts.service';
 import { User } from '@decorators/user.decorator';
 import { Types, TypesEnum } from '@decorators/types.decorator';
-import { API_CONFLICT, API_INTERNAL_SERVER_ERROR, API_UNAUTHORIZED, DELETE_ACCOUNT_BAD, GET_PROFILE, UPDATE_ACCOUNT_BAD, DELETE_ACCOUNT, API_NOT_FOUND, UPDATE_ACCOUNT, API_PARAM_CONSTANTS } from './constants';
 import { DeleteAccountDto } from './dto';
 import ResponseUtils from '@utils/response.utils';
 import PaginationUtils from '@utils/pagination.utils';
 import SignUpDto from '@modules/auth/dto/sign-up.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-
-import { Public } from '@decorators/public.decorator';
 import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
-import { BanAccountDto } from './dto/ban-account.dto';
+import { BanAccountDto } from './dto';
 
 @ApiTags('Accounts')
 @ApiBearerAuth()
@@ -57,14 +38,18 @@ import { BanAccountDto } from './dto/ban-account.dto';
 @ApiExtraModels(AccountEntity)
 @Controller()
 export default class AccountsController {
-
-  constructor(private readonly accountsService: AccountsService) { }
-
+  constructor(private readonly accountsService: AccountsService) {}
 
   @Delete()
   @UseGuards(JwtAccessGuard)
-  async deleteAccount(@Body() data: DeleteAccountDto, @User() account: AccountEntity): Promise<any> {
-    const deletedAccount = await this.accountsService.deleteAccount(account.id, data.password);
+  async deleteAccount(
+    @Body() data: DeleteAccountDto,
+    @User() account: AccountEntity,
+  ): Promise<any> {
+    const deletedAccount = await this.accountsService.deleteAccount(
+      account.id,
+      data.password,
+    );
     if (!deletedAccount) {
       throw new NotFoundException('The account does not exist');
     }
@@ -73,7 +58,9 @@ export default class AccountsController {
 
   @Get(':id')
   @UseGuards(JwtAccessGuard)
-  async getById(@Param('id', ParseUUIDPipe) id: string): Promise<SuccessResponseInterface> {
+  async getById(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<SuccessResponseInterface> {
     const foundAccount = await this.accountsService.getVerifiedAccountById(id);
     if (!foundAccount) {
       throw new NotFoundException('The account does not exist');
@@ -108,7 +95,9 @@ export default class AccountsController {
   @Get('profile')
   @UseGuards(JwtAccessGuard)
   async getProfile(@User() account: AccountEntity) {
-    const foundAccount = await this.accountsService.getVerifiedAccountById(account.id);
+    const foundAccount = await this.accountsService.getVerifiedAccountById(
+      account.id,
+    );
     if (!foundAccount) {
       throw new NotFoundException('The account does not exist');
     }
@@ -117,7 +106,10 @@ export default class AccountsController {
 
   @Put()
   @UseGuards(JwtAccessGuard)
-  async update(@User() account: AccountEntity, @Body() dto: SignUpDto): Promise<any> {
+  async update(
+    @User() account: AccountEntity,
+    @Body() dto: SignUpDto,
+  ): Promise<any> {
     await this.accountsService.update(account.id, dto);
     return ResponseUtils.success('accounts', {
       message: 'Success!',
@@ -126,7 +118,10 @@ export default class AccountsController {
 
   @UseGuards(JwtAccessGuard)
   @Put('profile')
-  async updateProfile(@Body() body: UpdateProfileDto, @User() account: AccountEntity): Promise<any> {
+  async updateProfile(
+    @Body() body: UpdateProfileDto,
+    @User() account: AccountEntity,
+  ): Promise<any> {
     await this.accountsService.updateProfile(account.id, body);
     return ResponseUtils.success('accounts', {
       message: 'Success!',
@@ -145,8 +140,11 @@ export default class AccountsController {
 
   @UseGuards(JwtAccessGuard)
   @Put('compony/profile')
-  async updateComponyProfile(@Body() body: UpdateCompanyProfileDto, @User() account: AccountEntity): Promise<any> {
-    await this.accountsService.updateComponyProfile(account.id, body);
+  async updateComponyProfile(
+    @Body() body: UpdateCompanyProfileDto,
+    @User() account: AccountEntity,
+  ): Promise<any> {
+    await this.accountsService.updateCompanyProfile(account.id, body);
     return ResponseUtils.success('accounts', {
       message: 'Success!',
     });
@@ -154,8 +152,11 @@ export default class AccountsController {
 
   @UseGuards(JwtAccessGuard)
   @Put('ban')
-  async banOrUnban(@Body() body: BanAccountDto,@User() account: AccountEntity): Promise<any> {
-    await this.accountsService.banOrUnbanAccount(account.id,body.ban);
+  async banOrUnban(
+    @Body() body: BanAccountDto,
+    @User() account: AccountEntity,
+  ): Promise<any> {
+    await this.accountsService.banOrUnbanAccount(account.id, body.ban);
     return ResponseUtils.success('accounts', {
       message: 'Success!',
     });

@@ -7,13 +7,12 @@ import {
 } from 'class-validator';
 
 export default class SignUpDto {
-  
   @IsNotEmpty()
   @IsString()
   @MinLength(4)
   @MaxLength(64)
   readonly username: string = '';
-  
+
   @IsNotEmpty()
   @IsString()
   @MinLength(8)
