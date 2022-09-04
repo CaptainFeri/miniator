@@ -30,7 +30,7 @@ export class UpdateProfileDto {
 
   @IsArray()
   @IsNotEmpty()
-  readonly socilaMedia: any[];
+  readonly socialMedia: any[];
 
   @IsString()
   @IsNotEmpty()

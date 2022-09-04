@@ -14,29 +14,25 @@ service QuestionService {
     * Request
 */
 message SetRequestQuestion {
-  string token = 1;
-  string id = 2;
-  string answer = 3;
+  string id = 1;
+  string answer = 2;
 }
 
 message GetAllRequestQuestion {
-  string token = 1;
-  int32 page = 2;
+  int32 page = 1;
 }
 
 message CreateRequestQuestion {
-  string token = 1;
-  string question = 2;
+  string question = 1;
 }
 message UpdateRequestQuestion {
-  string token = 1;
-  string id = 2;
-  string question = 3;
+  string id = 1;
+  string question = 2;
 }
 
 
 /*
-    * Response
+* Response
 */
 
 message OtherResponseQuestion {

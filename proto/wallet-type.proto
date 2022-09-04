@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package auth;
 
-service WalletService {
+service WalletTypeService {
   rpc Create(CreateRequest) returns (OtherResponse) {}
   rpc GetAll(GetAllRequest) returns (GetAllResponse) {}
   rpc Update(UpdateRequest) returns (OtherResponse) {}
@@ -50,10 +50,10 @@ message Data {
 
 message Attributes {
   string message = 1;
-  Wallet wallet = 2;
+  WalletType wallet = 2;
 }
 
-message Wallet {
+message WalletType {
   string id = 1;
   string name = 2;
 }

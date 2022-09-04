@@ -4,10 +4,10 @@ package auth;
 
 service AccountService {
   rpc Delete(DeleteRequestAccount) returns (DeleteAccountResponse) {}
-  rpc Get(GetRequestAccount) returns (GetAccountResponse) {}
-  rpc GetItem(GetItemRequestAccount) returns (GetProfileResponse) {}
+  rpc GetAll(GetAllRequestAccount) returns (GetAllAccountResponse) {}
+  rpc GetItem(GetItemRequestAccount) returns (GetAccountResponse) {}
   rpc GetProfile(GetProfileRequestAccount) returns (GetProfileResponse) {}
-  rpc GetCompanyProfile(GetProfileRequestAccount) returns (GetProfileResponse) {}
+  rpc GetCompanyProfile(GetCompanyProfileRequestAccount) returns (GetCompanyProfileResponse) {}
   rpc Update(UpdateRequestAccount) returns (UpdateAccountResponse) {}
   rpc UpdateProfile(UpdateProfileRequestAccount) returns (UpdateProfileResponse) {}
   rpc UpdateCompanyProfile(UpdateCompanyProfileRequestAccount) returns (UpdateCompanyProfileResponse) {}
@@ -21,32 +21,56 @@ message DeleteRequestAccount {
   string password = 1;
 }
 
-message GetRequestAccount {
-
+message GetAllRequestAccount {
+  int32 page = 1;
 }
 
 message GetItemRequestAccount {
+  string id = 1;
+}
 
+message GetCompanyProfileRequestAccount {
+  string id = 1;
 }
 
 message GetProfileRequestAccount {
-
+  string id = 1;
 }
 
 message UpdateRequestAccount {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+}
 
+enum Gender {
+  Male = 0;
+  Female = 1;
 }
 
 message UpdateProfileRequestAccount {
-
+  string id = 1;
+  string nationalCode = 2;
+  string firstName = 3;
+  string lastName = 4;
+  string phone = 5;
+  string city = 6;
+  string job = 7;
+  Gender gender = 8;
+  string birthday = 9;
+//  repeated any socialMedia = 8;
 }
 
 message UpdateCompanyProfileRequestAccount {
-
+  string id = 1;
+  string economicCode = 2;
+  string registrationId = 3;
+  string phone = 4;
+  string activityField = 5;
 }
 
 message BanRequestAccount {
-
+  string id = 1;
 }
 
 /*
@@ -55,6 +79,8 @@ message BanRequestAccount {
 
 message DeleteAccountResponse {}
 message GetAccountResponse {}
+message GetAllAccountResponse {}
+message GetCompanyProfileResponse {}
 message GetProfileResponse {}
 message UpdateAccountResponse {}
 message UpdateProfileResponse {}
