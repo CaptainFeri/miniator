@@ -2,18 +2,19 @@ syntax = "proto3";
 
 package auth;
 
-service RolesService {
-  rpc Create(CreateRequestRoles) returns (OtherResponseRole) {}
-  rpc GetAll(GetAllRequestRoles) returns (GetAllResponseRoles) {}
-  rpc GetItem(GetItemRequestRoles) returns (OtherResponseRole) {}
-  rpc Update(UpdateRequestRoles) returns (OtherResponseRole) {}
-  rpc Request(SetRequestRoles) returns (OtherResponseRole) {}
-  rpc Accept(SetRequestRoles) returns (OtherResponseRole) {}
+import "common.proto";
 
+service RolesService {
+  rpc Create(CreateRequestRoles) returns (Role) {}
+  rpc GetAll(PaginationRequest) returns (GetAllRolesResponse) {}
+  rpc GetById(ID) returns (Role) {}
+  rpc Update(UpdateRequestRoles) returns (SuccessResponse) {}
+  rpc Request(ID) returns (SuccessResponse) {}
+  rpc Accept(ID) returns (SuccessResponse) {}
 }
 
 /*
-    * request
+* request
 */
 message CreateRequestRoles {
   string name = 1;
@@ -37,37 +38,12 @@ message SetRequestRoles {
 }
 
 /*
-    * response
+* response
 */
-message OtherResponseRole {
-  DataRoles data = 1;
-}
 
-message GetAllResponseRoles {
-  LinksRoles  links = 1;
-  MetaRoles  meta = 2;
-  repeated DataRoles  data = 3;
-}
-
-message LinksRoles {
-  string self = 1;
-  string next = 2;
-  string prev = 3;
-  string first = 4;
-  string last = 5;
-}
-
-message MetaRoles {
+message GetAllRolesResponse {
   int32 totalCount = 1;
-}
-message DataRoles {
-  string type = 1;
-  AttributesRoles attributes = 2;
-}
-
-message AttributesRoles {
-  string message = 1;
-  Role role = 2;
+  repeated Role roles = 2;
 }
 
 message Role {
