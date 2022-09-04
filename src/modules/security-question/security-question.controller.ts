@@ -1,15 +1,7 @@
-import {
-  BadRequestException,
-  Controller,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
-import JwtAccessGuard from '@guards/jwt-access.guard';
-import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
+import { BadRequestException, Controller } from '@nestjs/common';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import SecurityQuestionsService from './security-question.service';
-import ResponseUtils from '@utils/response.utils';
 import PaginationUtils from '@utils/pagination.utils';
 import AccountEntity from '@entities/account.entity';
 import User from '@decorators/user.decorator';
@@ -21,7 +13,6 @@ import UpdateSecurityQuestionDto from './dto/update-security-question.dto';
 import { GrpcMethod } from '@nestjs/microservices';
 import { SetSecurityQuestionDto } from './dto/set-security-question.dto';
 
-@UseInterceptors(WrapResponseInterceptor)
 @Controller()
 export default class SecurityQuestionsGrpcController {
   constructor(
@@ -31,13 +22,7 @@ export default class SecurityQuestionsGrpcController {
   @Types(TypesEnum.superAdmin)
   @GrpcMethod('QuestionService', 'Create')
   async Create(data: CreateSecurityQuestionDto) {
-    const securityQuestion = await this.securityQuestionsService.create(data);
-
-    console.log(securityQuestion);
-    return ResponseUtils.success('securityQuestions', {
-      message: 'Success',
-      securityQuestion,
-    });
+    return await this.securityQuestionsService.create(data);
   }
 
   @Public()
@@ -54,33 +39,29 @@ export default class SecurityQuestionsGrpcController {
         paginationParams,
       );
 
-    return ResponseUtils.success(
-      'securityQuestions',
-      paginatedQuestions.paginatedResult,
-      {
-        location: 'securityQuestions',
-        paginationParams,
-        totalCount: paginatedQuestions.totalCount,
-      },
-    );
+    return {
+      securityQuestions: paginatedQuestions.paginatedResult,
+      totalCount: paginatedQuestions.totalCount,
+    };
   }
 
   @Types(TypesEnum.superAdmin)
   @GrpcMethod('QuestionService', 'Update')
   async update(body: UpdateSecurityQuestionDto) {
     await this.securityQuestionsService.update(body.id, body);
-    return ResponseUtils.success('securityQuestions', {
-      message: 'Success!',
-    });
+
+    return {
+      success: true,
+    };
   }
 
   //TODO later
   @GrpcMethod('QuestionService', 'Set')
-  @UseGuards(JwtAccessGuard)
   async set(body: SetSecurityQuestionDto, @User() account: AccountEntity) {
     await this.securityQuestionsService.set(body.id, account.id, body.answer);
-    return ResponseUtils.success('securityQuestions', {
-      message: 'Success!',
-    });
+
+    return {
+      success: true,
+    };
   }
 }

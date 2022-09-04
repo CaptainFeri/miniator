@@ -2,72 +2,39 @@ syntax = "proto3";
 
 package auth;
 
+import "common.proto";
 
 service QuestionService {
-  rpc Create(CreateRequestQuestion) returns (OtherResponseQuestion) {}
-  rpc GetAll(GetAllRequestQuestion) returns (GetAllResponseQuestion) {}
-  rpc Update(UpdateRequestQuestion) returns (OtherResponseQuestion) {}
-  rpc Set(SetRequestQuestion) returns (OtherResponseQuestion) {}
+  rpc Create(CreateRequestQuestion) returns (SecurityQuestion) {}
+  rpc GetAll(PaginationRequest) returns (GetAllQuestionsResponse) {}
+  rpc Update(UpdateQuestionRequest) returns (SuccessResponse) {}
+  rpc Set(SetQuestionRequest) returns (SuccessResponse) {}
 }
 
 /*
-    * Request
+* Request
 */
-message SetRequestQuestion {
+message SetQuestionRequest {
   string id = 1;
   string answer = 2;
-}
-
-message GetAllRequestQuestion {
-  int32 page = 1;
 }
 
 message CreateRequestQuestion {
   string question = 1;
 }
-message UpdateRequestQuestion {
+
+message UpdateQuestionRequest {
   string id = 1;
   string question = 2;
 }
-
 
 /*
 * Response
 */
 
-message OtherResponseQuestion {
-  DataQuestion data = 1;
-}
-
-message GetAllResponseQuestion {
-  LinksQuestion links = 1;
-  MetaQuestion meta = 2;
-  repeated DataQuestion data = 3;
-}
-
-
-
-//
-message LinksQuestion {
-  string self = 1;
-  string next = 2;
-  string prev = 3;
-  string first = 4;
-  string last = 5;
-}
-
-message MetaQuestion {
+message GetAllQuestionsResponse {
   int32 totalCount = 1;
-}
-message DataQuestion {
-  string type = 1;
-  AttributesQuestion attributes = 2;
-
-}
-
-message AttributesQuestion {
-  string message = 1;
-  SecurityQuestion securityQuestion = 2;
+  repeated SecurityQuestion securityQuestions = 2;
 }
 
 message SecurityQuestion {
