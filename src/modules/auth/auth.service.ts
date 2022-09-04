@@ -12,6 +12,7 @@ import AuthRepository from './auth.repository';
 import { TypesEnum } from '@decorators/types.decorator';
 import { DecodedAccount } from './interfaces/decoded-account.interface';
 import AccountEntity from '@entities/account.entity';
+import SignInDto from '@/auth/dto/sign-in.dto';
 
 @Injectable()
 export default class AuthService {
@@ -26,20 +27,20 @@ export default class AuthService {
     username: string,
     password: string,
   ): Promise<null | ValidateAccountOutput> {
-    const account = await this.usersService.getVerifiedAccountByUsername(
-      username,
-    );
+    const pwd = await this.authRepository.getPassword(username);
 
-    if (!account) {
+    if (!pwd) {
       throw new NotFoundException('The item does not exist');
     }
 
-    const passwordCompared = await bcrypt.compare(password, account.password);
+    const passwordCompared = await bcrypt.compare(password, pwd);
+
+    const id = await this.authRepository.getId(username);
 
     if (passwordCompared) {
       return {
-        id: account.id,
-        username: account.username,
+        id: id,
+        username,
         type: TypesEnum.user,
       };
     }
@@ -100,8 +101,10 @@ export default class AuthService {
     };
   }
 
-  getRefreshTokenByUsername(username: string): Promise<string | null> {
-    return this.authRepository.getToken(username);
+  getRefreshTokenByUsername(_username: string): string {
+    // TODO: change this
+    return '';
+    // return this.authRepository.getToken(username);
   }
 
   deleteTokenByUsername(username: string): Promise<number> {
@@ -120,6 +123,21 @@ export default class AuthService {
         secret: this.configService.get<string>('ACCESS_SECRET'),
       },
     );
+  }
+
+  async createPayload(id: string, signIn: SignInDto) {
+    return {
+      userId: id,
+      services: [
+        {
+          id: signIn.companyId,
+          roles: {
+            id: signIn.roleId,
+            wallets: await this.authRepository.getWallets(id, signIn.roleId),
+          },
+        },
+      ],
+    };
   }
 
   public verifyEmailVerToken(token: string, secret: string) {

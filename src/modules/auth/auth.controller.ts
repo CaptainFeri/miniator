@@ -90,8 +90,6 @@ export default class AuthController {
   @UseGuards(JwtRefreshGuard)
   @GrpcMethod('AuthService', 'refreshToken1')
   async refreshToken1(data: RefreshTokenDto, @User('authorization') account) {
-    console.log(data);
-    console.log('fdsf');
     const oldRefreshToken: string | null =
       await this.authService.getRefreshTokenByUsername(account.username);
     // if the old refresh token is not equal to request refresh token then this user is unauthorized

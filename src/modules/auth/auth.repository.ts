@@ -45,7 +45,30 @@ export default class AuthRepository {
     );
   }
 
-  public getToken(key: string): Promise<string | null> {
+  public getPassword(username: string): Promise<string | null> {
+    return this.redisClient.get(`password:${username}`);
+  }
+
+  public getId(username: string): Promise<string | null> {
+    return this.redisClient.get(`id:${username}`);
+  }
+
+  private getKeys(accountId: string, roleId: string): Promise<string[] | null> {
+    return this.redisClient.keys(`wallet:${accountId}:${roleId}:*`);
+  }
+
+  getWallets(accountId: string, roleId: string) {
+    return this.getKeys(accountId, roleId).then((keys) =>
+      Promise.all(
+        keys.map(async (key) => ({
+          type: key.split(':')[3],
+          walletId: await this.get(key),
+        })),
+      ),
+    );
+  }
+
+  private get(key: string): Promise<string | null> {
     return this.redisClient.get(key);
   }
 

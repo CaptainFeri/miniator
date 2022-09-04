@@ -19,4 +19,12 @@ export default class SignInDto {
   @MinLength(8)
   @MaxLength(64)
   readonly password: string = '';
+
+  @IsNotEmpty()
+  @IsString()
+  readonly companyId: string = '';
+
+  @IsNotEmpty()
+  @IsString()
+  readonly roleId: string = '';
 }
