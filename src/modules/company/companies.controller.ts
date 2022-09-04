@@ -1,35 +1,27 @@
 import {
   Controller,
-  Get,
-  Param,
   UseInterceptors,
   BadRequestException,
-  Query,
-  Post,
-  Body,
   NotFoundException,
-  ParseUUIDPipe,
-  Put,
 } from '@nestjs/common';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
-import { SuccessResponseInterface } from '@interfaces/success-response.interface';
 import ResponseUtils from '@utils/response.utils';
 import PaginationUtils from '@utils/pagination.utils';
 import CompaniesService from './companies.service';
 import { Types, TypesEnum } from '@decorators/types.decorator';
 import CreateCompanyDto from './dto/create-company.dto';
-import UpdateCompanyDto from './dto/update-company.dto';
+import { GrpcMethod } from '@nestjs/microservices';
 
 @UseInterceptors(WrapResponseInterceptor)
-@Controller('companies')
+@Controller()
 export default class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
-  @Post()
   @Types(TypesEnum.superAdmin)
-  async create(@Body() createCompanyDto: CreateCompanyDto): Promise<any> {
-    const company = await this.companiesService.create(createCompanyDto);
+  @GrpcMethod('CompanyService', 'Create')
+  async create(body: CreateCompanyDto): Promise<any> {
+    const company = await this.companiesService.create(body);
 
     return ResponseUtils.success('companies', {
       message: 'Success',
@@ -37,8 +29,8 @@ export default class CompaniesController {
     });
   }
 
-  @Get()
-  async getAll(@Query() query: any) {
+  @GrpcMethod('CompanyService', 'GetAll')
+  async getAll(query: any): Promise<any> {
     const paginationParams: PaginationParamsInterface | false =
       PaginationUtils.normalizeParams(query.page);
     if (!paginationParams) {
@@ -60,11 +52,9 @@ export default class CompaniesController {
     );
   }
 
-  @Get(':id')
-  async getById(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<SuccessResponseInterface> {
-    const foundCompany = await this.companiesService.getById(id);
+  @GrpcMethod('CompanyService', 'GetItem')
+  async getById(body: any): Promise<any> {
+    const foundCompany = await this.companiesService.getById(body.id);
 
     if (!foundCompany) {
       throw new NotFoundException('The company does not exist');
@@ -73,13 +63,10 @@ export default class CompaniesController {
     return ResponseUtils.success('companies', foundCompany);
   }
 
-  @Put(':id')
   @Types(TypesEnum.superAdmin)
-  async update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() company: UpdateCompanyDto,
-  ): Promise<any> {
-    await this.companiesService.update(id, company);
+  @GrpcMethod('CompaniesService', 'Update')
+  async update(body: any): Promise<any> {
+    await this.companiesService.update(body.id, body);
 
     return ResponseUtils.success('companies', {
       message: 'Success!',

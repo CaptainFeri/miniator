@@ -1,14 +1,6 @@
 import {
   BadRequestException,
-  Body,
   Controller,
-  Get,
-  Param,
-  ParseUUIDPipe,
-  Patch,
-  Post,
-  Put,
-  Query,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -26,32 +18,31 @@ import { Public } from '@decorators/public.decorator';
 import CreateSecurityQuestionDto from './dto/create-security-question.dto';
 import SecurityQuestionEntity from '@entities/security-question.entity';
 import UpdateSecurityQuestionDto from './dto/update-security-question.dto';
+import { GrpcMethod } from '@nestjs/microservices';
+import { SetSecurityQuestionDto } from './dto/set-security-question.dto';
 
 @UseInterceptors(WrapResponseInterceptor)
-@Controller('security-questions')
-export default class SecurityQuestionsController {
+@Controller()
+export default class SecurityQuestionsGrpcController {
   constructor(
     private readonly securityQuestionsService: SecurityQuestionsService,
   ) {}
 
-  @Post()
   @Types(TypesEnum.superAdmin)
-  async create(
-    @Body() securityQuestionDto: CreateSecurityQuestionDto,
-  ): Promise<any> {
-    const securityQuestion = await this.securityQuestionsService.create(
-      securityQuestionDto,
-    );
+  @GrpcMethod('QuestionService', 'Create')
+  async Create(data: CreateSecurityQuestionDto) {
+    const securityquestion = await this.securityQuestionsService.create(data);
 
+    console.log(securityquestion);
     return ResponseUtils.success('securityQuestions', {
       message: 'Success',
-      securityQuestion,
+      securityquestion,
     });
   }
 
   @Public()
-  @Get()
-  async getAll(@Query() query: any) {
+  @GrpcMethod('QuestionService', 'GetAll')
+  async getAll(query: any) {
     const paginationParams: PaginationParamsInterface | false =
       PaginationUtils.normalizeParams(query.page);
     if (!paginationParams) {
@@ -74,28 +65,20 @@ export default class SecurityQuestionsController {
     );
   }
 
-  @Put(':id')
   @Types(TypesEnum.superAdmin)
-  async update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() securityQuestion: UpdateSecurityQuestionDto,
-  ): Promise<any> {
-    await this.securityQuestionsService.update(id, securityQuestion);
-
+  @GrpcMethod('QuestionService', 'Update')
+  async update(body: UpdateSecurityQuestionDto) {
+    await this.securityQuestionsService.update(body.id, body);
     return ResponseUtils.success('securityQuestions', {
       message: 'Success!',
     });
   }
 
-  @Patch(':id/set')
+  //TODO later
+  @GrpcMethod('QuestionService', 'Set')
   @UseGuards(JwtAccessGuard)
-  async set(
-    @Param('id', ParseUUIDPipe) id: string,
-    @User() account: AccountEntity,
-    @Body('answer') answer: string,
-  ): Promise<any> {
-    await this.securityQuestionsService.set(id, account.id, answer);
-
+  async set(body: SetSecurityQuestionDto, @User() account: AccountEntity) {
+    await this.securityQuestionsService.set(body.id, account.id, body.answer);
     return ResponseUtils.success('securityQuestions', {
       message: 'Success!',
     });

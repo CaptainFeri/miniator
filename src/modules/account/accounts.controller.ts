@@ -1,16 +1,9 @@
 import {
   Controller,
-  Get,
   NotFoundException,
-  Param,
-  ParseUUIDPipe,
   UseGuards,
   UseInterceptors,
   BadRequestException,
-  Query,
-  Body,
-  Delete,
-  Put,
 } from '@nestjs/common';
 import JwtAccessGuard from '@guards/jwt-access.guard';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
@@ -30,16 +23,17 @@ import SignUpDto from '@/auth/dto/sign-up.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
 import { BanAccountDto } from './dto';
+import { GrpcMethod } from '@nestjs/microservices';
 
 @UseInterceptors(WrapResponseInterceptor)
-@Controller('accounts')
+@Controller()
 export default class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
 
-  @Delete()
+  @GrpcMethod('AccountService', 'Delete')
   @UseGuards(JwtAccessGuard)
   async deleteAccount(
-    @Body() data: DeleteAccountDto,
+    data: DeleteAccountDto,
     @User() account: AccountEntity,
   ): Promise<any> {
     const deletedAccount = await this.accountsService.deleteAccount(
@@ -52,22 +46,22 @@ export default class AccountsController {
     return ResponseUtils.success('accounts', { message: 'Success!' });
   }
 
-  @Get(':id')
+  @GrpcMethod('AccountService', 'GetItem')
   @UseGuards(JwtAccessGuard)
-  async getById(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<SuccessResponseInterface> {
-    const foundAccount = await this.accountsService.getVerifiedAccountById(id);
+  async getById(body: any): Promise<SuccessResponseInterface> {
+    const foundAccount = await this.accountsService.getVerifiedAccountById(
+      body.id,
+    );
     if (!foundAccount) {
       throw new NotFoundException('The account does not exist');
     }
     return ResponseUtils.success('accounts', foundAccount);
   }
 
-  @Get()
+  @GrpcMethod('AccountService', 'Get')
   @Types(TypesEnum.superAdmin)
   @Serialize(AllAccountsResponseModel)
-  async getAllVerifiedAccounts(@Query() query: any) {
+  async getAllVerifiedAccounts(query: any) {
     const paginationParams: PaginationParamsInterface | false =
       PaginationUtils.normalizeParams(query.page);
     if (!paginationParams) {
@@ -88,24 +82,9 @@ export default class AccountsController {
     );
   }
 
-  @Get('profile')
+  @GrpcMethod('AccountService', 'Update')
   @UseGuards(JwtAccessGuard)
-  async getProfile(@User() account: AccountEntity) {
-    const foundAccount = await this.accountsService.getVerifiedAccountById(
-      account.id,
-    );
-    if (!foundAccount) {
-      throw new NotFoundException('The account does not exist');
-    }
-    return ResponseUtils.success('accounts', foundAccount);
-  }
-
-  @Put()
-  @UseGuards(JwtAccessGuard)
-  async update(
-    @User() account: AccountEntity,
-    @Body() dto: SignUpDto,
-  ): Promise<any> {
+  async update(dto: SignUpDto, @User() account: AccountEntity): Promise<any> {
     await this.accountsService.update(account.id, dto);
     return ResponseUtils.success('accounts', {
       message: 'Success!',
@@ -113,9 +92,9 @@ export default class AccountsController {
   }
 
   @UseGuards(JwtAccessGuard)
-  @Put('profile')
+  @GrpcMethod('AccountService', 'UpdateProfile')
   async updateProfile(
-    @Body() body: UpdateProfileDto,
+    body: UpdateProfileDto,
     @User() account: AccountEntity,
   ): Promise<any> {
     await this.accountsService.updateProfile(account.id, body);
@@ -124,20 +103,20 @@ export default class AccountsController {
     });
   }
 
-  // @UseGuards(JwtAccessGuard)
-  // @Get('profile')
-  // async getProfile(@User() account: AccountEntity): Promise<any> {
-  //   const profile = await this.accountsService.getProfile(account.id);
-  //   return ResponseUtils.success('accounts', {
-  //     message: 'Success!',
-  //     profile,
-  //   });
-  // }
+  @UseGuards(JwtAccessGuard)
+  @GrpcMethod('AccountService', 'GetProfile')
+  async getProfile(@User() account: AccountEntity): Promise<any> {
+    const profile = await this.accountsService.getProfile(account.id);
+    return ResponseUtils.success('accounts', {
+      message: 'Success!',
+      profile,
+    });
+  }
 
   @UseGuards(JwtAccessGuard)
-  @Put('compony/profile')
+  @GrpcMethod('AccountService', 'GetCompanyProfile')
   async updateCompanyProfile(
-    @Body() body: UpdateCompanyProfileDto,
+    body: UpdateCompanyProfileDto,
     @User() account: AccountEntity,
   ): Promise<any> {
     await this.accountsService.updateCompanyProfile(account.id, body);
@@ -147,9 +126,9 @@ export default class AccountsController {
   }
 
   @UseGuards(JwtAccessGuard)
-  @Put('ban')
+  @GrpcMethod('AccountService', 'Ban')
   async banOrUnban(
-    @Body() body: BanAccountDto,
+    body: BanAccountDto,
     @User() account: AccountEntity,
   ): Promise<any> {
     await this.accountsService.banOrUnbanAccount(account.id, body.ban);

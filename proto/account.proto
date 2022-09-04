@@ -7,6 +7,7 @@ service AccountService {
   rpc Get(GetRequestAccount) returns (GetAccountResponse) {}
   rpc GetItem(GetItemRequestAccount) returns (GetProfileResponse) {}
   rpc GetProfile(GetProfileRequestAccount) returns (GetProfileResponse) {}
+  rpc GetCompanyProfile(GetProfileRequestAccount) returns (GetProfileResponse) {}
   rpc Update(UpdateRequestAccount) returns (UpdateAccountResponse) {}
   rpc UpdateProfile(UpdateProfileRequestAccount) returns (UpdateProfileResponse) {}
   rpc UpdateCompanyProfile(UpdateCompanyProfileRequestAccount) returns (UpdateCompanyProfileResponse) {}

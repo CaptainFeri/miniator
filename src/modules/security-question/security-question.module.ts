@@ -5,7 +5,7 @@ import SecurityQuestionsService from './security-question.service';
 import SecurityQuestionEntity from '@entities/security-question.entity';
 import SecurityQuestionAnswerEntity from '@entities/securityQuestionAnswer.entity';
 import SecurityQuestionsRepository from './security-question.repository';
-import SecurityQuestionsGrpcController from './security-question-grpc.controller';
+import SecurityQuestionsController from './security-question.controller';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import SecurityQuestionsGrpcController from './security-question-grpc.controller
       SecurityQuestionAnswerEntity,
     ]),
   ],
-  controllers: [SecurityQuestionsGrpcController],
+  controllers: [SecurityQuestionsController],
   providers: [SecurityQuestionsService, SecurityQuestionsRepository],
   exports: [SecurityQuestionsService, SecurityQuestionsRepository],
 })

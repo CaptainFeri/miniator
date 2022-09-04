@@ -182,32 +182,6 @@ export default class AuthController {
     return ResponseUtils.success('tokens', await this.authService.login(admin));
   }
 
-  @Post('sign-up')
-  @Public()
-  async signUp(@Body() account: SignUpDto): Promise<any> {
-    const { id } = await this.accountsService.create(account);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const token = this.authService.createVerifyToken(id);
-
-    // await this.mailerService.sendMail({
-    //   to: email,
-    //   from: this.configService.get<string>('MAILER_FROM_EMAIL'),
-    //   subject: authConstants.mailer.verifyEmail.subject,
-    //   template: `${process.cwd()}/src/templates/verify-password`,
-    //   context: {
-    //     token,
-    //     email,
-    //     host: this.configService.get('HOST'),
-    //   },
-    // });
-
-    return ResponseUtils.success('auth', {
-      message: 'Success! please verify your email',
-      // TODO: remove this for production
-      url: `${this.configService.get('HOST')}/auth/verify?token=${token}`,
-    });
-  }
-
   @Post('refresh-token')
   @Public()
   @UseGuards(JwtRefreshGuard)

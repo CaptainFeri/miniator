@@ -1,12 +1,6 @@
 import {
   BadRequestException,
-  Body,
   Controller,
-  Get,
-  Param,
-  ParseUUIDPipe,
-  Post,
-  Query,
   UseInterceptors,
 } from '@nestjs/common';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
@@ -17,34 +11,34 @@ import PaginationUtils from '@utils/pagination.utils';
 import { Types, TypesEnum } from '@decorators/types.decorator';
 import CreateWalletTypeDto from './dto/create-wallet-type.dto';
 import UpdateWalletTypeDto from './dto/update-wallet-type.dto';
+import { GrpcMethod } from '@nestjs/microservices';
 
 @UseInterceptors(WrapResponseInterceptor)
-@Controller('wallet-types')
-export default class WalletTypesController {
+@Controller()
+export default class WalletTypesGrpcController {
   constructor(private readonly walletsService: WalletTypesService) {}
 
-  @Post()
   @Types(TypesEnum.superAdmin)
-  async create(@Body() walletDto: CreateWalletTypeDto): Promise<any> {
-    const wallet = await this.walletsService.create(walletDto);
+  @GrpcMethod('WalletService', 'Create')
+  async Create(data: CreateWalletTypeDto) {
+    const wallet = await this.walletsService.create(data);
     return ResponseUtils.success('wallets', {
       message: 'Success',
       wallet,
     });
   }
 
-  @Get()
-  async getAll(@Query() query: any) {
+  @GrpcMethod('WalletService', 'GetAll')
+  async getAll(query: any) {
     const paginationParams: PaginationParamsInterface | false =
       PaginationUtils.normalizeParams(query.page);
     if (!paginationParams) {
       throw new BadRequestException('Invalid pagination parameters');
     }
-    console.log(paginationParams);
     const paginatedWallets = await this.walletsService.getAllWithPagination(
       paginationParams,
     );
-
+    console.log(paginatedWallets.paginatedResult);
     return ResponseUtils.success('wallets', paginatedWallets.paginatedResult, {
       location: 'wallets',
       paginationParams,
@@ -52,12 +46,12 @@ export default class WalletTypesController {
     });
   }
 
-  @Post(':id')
   @Types(TypesEnum.superAdmin)
-  async update(
-    @Param('id', ParseUUIDPipe) _id: string,
-    @Body() _wallet: UpdateWalletTypeDto,
-  ): Promise<any> {
-    return '';
+  @GrpcMethod('WalletService', 'Update')
+  async Update(body: UpdateWalletTypeDto) {
+    await this.walletsService.update(body);
+    return ResponseUtils.success('wallets', {
+      message: 'Success!',
+    });
   }
 }
