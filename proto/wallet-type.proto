@@ -2,24 +2,12 @@ syntax = "proto3";
 
 package auth;
 
+import "common.proto";
+
 service WalletTypeService {
-  rpc Create(CreateRequest) returns (OtherResponse) {}
-  rpc GetAll(GetAllRequest) returns (GetAllResponse) {}
-  rpc Update(UpdateRequest) returns (OtherResponse) {}
-}
-
-message GetAllRequest {
-  int32 page = 1;
-}
-
-message GetAllResponse {
-  Links links = 1;
-  Meta meta = 2;
-  repeated Data data = 3;
-}
-
-message OtherResponse {
-  Data data = 3;
+  rpc Create(CreateRequest) returns (WalletType) {}
+  rpc GetAll(PaginationRequest) returns (GetAllResponse) {}
+  rpc Update(UpdateRequest) returns (SuccessResponse) {}
 }
 
 message CreateRequest {
@@ -32,25 +20,9 @@ message UpdateRequest {
 }
 
 /// RESPONSE
-message Links {
-  string self = 1;
-  string next = 2;
-  string prev = 3;
-  string first = 4;
-  string last = 5;
-}
-
-message Meta {
+message GetAllResponse {
   int32 totalCount = 1;
-}
-message Data {
-  string type = 1;
-  Attributes attributes = 2;
-}
-
-message Attributes {
-  string message = 1;
-  WalletType wallet = 2;
+  repeated WalletType walletTypes = 2;
 }
 
 message WalletType {
