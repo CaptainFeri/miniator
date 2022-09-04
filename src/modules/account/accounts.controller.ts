@@ -21,7 +21,7 @@ import ResponseUtils from '@utils/response.utils';
 import PaginationUtils from '@utils/pagination.utils';
 import SignUpDto from '@/auth/dto/sign-up.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
+import { UpdateCompanyProfileDto } from './dto/update-company-profile.dto';
 import { BanAccountDto } from './dto';
 import { GrpcMethod } from '@nestjs/microservices';
 

@@ -1,19 +1,16 @@
 import {
-  Controller,
-  UseInterceptors,
   BadRequestException,
+  Controller,
   NotFoundException,
 } from '@nestjs/common';
-import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
-import ResponseUtils from '@utils/response.utils';
 import PaginationUtils from '@utils/pagination.utils';
 import CompaniesService from './companies.service';
 import { Types, TypesEnum } from '@decorators/types.decorator';
 import CreateCompanyDto from './dto/create-company.dto';
 import { GrpcMethod } from '@nestjs/microservices';
+import UpdateCompanyDto from './dto/update-company.dto';
 
-@UseInterceptors(WrapResponseInterceptor)
 @Controller()
 export default class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
@@ -21,12 +18,7 @@ export default class CompaniesController {
   @Types(TypesEnum.superAdmin)
   @GrpcMethod('CompanyService', 'Create')
   async create(body: CreateCompanyDto): Promise<any> {
-    const company = await this.companiesService.create(body);
-
-    return ResponseUtils.success('companies', {
-      message: 'Success',
-      company,
-    });
+    return await this.companiesService.create(body);
   }
 
   @GrpcMethod('CompanyService', 'GetAll')
@@ -41,18 +33,13 @@ export default class CompaniesController {
       paginationParams,
     );
 
-    return ResponseUtils.success(
-      'companies',
-      paginatedCompanies.paginatedResult,
-      {
-        location: 'companies',
-        paginationParams,
-        totalCount: paginatedCompanies.totalCount,
-      },
-    );
+    return {
+      companies: paginatedCompanies.paginatedResult,
+      totalCount: paginatedCompanies.totalCount,
+    };
   }
 
-  @GrpcMethod('CompanyService', 'GetItem')
+  @GrpcMethod('CompanyService', 'GetById')
   async getById(body: any): Promise<any> {
     const foundCompany = await this.companiesService.getById(body.id);
 
@@ -60,16 +47,16 @@ export default class CompaniesController {
       throw new NotFoundException('The company does not exist');
     }
 
-    return ResponseUtils.success('companies', foundCompany);
+    return foundCompany;
   }
 
   @Types(TypesEnum.superAdmin)
-  @GrpcMethod('CompaniesService', 'Update')
-  async update(body: any): Promise<any> {
+  @GrpcMethod('CompanyService', 'Update')
+  async update(body: UpdateCompanyDto): Promise<any> {
     await this.companiesService.update(body.id, body);
 
-    return ResponseUtils.success('companies', {
-      message: 'Success!',
-    });
+    return {
+      success: true,
+    };
   }
 }

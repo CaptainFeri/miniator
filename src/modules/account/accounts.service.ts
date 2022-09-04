@@ -11,7 +11,7 @@ import AccountEntity from '@entities/account.entity';
 import { UpdateAccountDto } from './dto';
 import SignUpDto from '@/auth/dto/sign-up.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
+import { UpdateCompanyProfileDto } from './dto/update-company-profile.dto';
 import RolesRepository from '@/roles/roles.repository';
 
 @Injectable()

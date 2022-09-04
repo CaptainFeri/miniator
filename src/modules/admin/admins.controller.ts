@@ -32,8 +32,6 @@ export default class AdminsController {
     const paginatedAdmins: PaginatedEntityInterface<AdminEntity> =
       await this.adminsService.getAllWithPagination(paginationParams);
 
-    console.log(paginatedAdmins);
-
     return {
       admins: paginatedAdmins.paginatedResult,
       totalCount: paginatedAdmins.totalCount,

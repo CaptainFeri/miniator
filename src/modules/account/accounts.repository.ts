@@ -12,7 +12,7 @@ import { TypesEnum } from '@decorators/types.decorator';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import ProfileEntity from '@entities/profile.entity';
 import CompanyProfileEntity from '@entities/companyProfile.entity';
-import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
+import { UpdateCompanyProfileDto } from './dto/update-company-profile.dto';
 
 @Injectable()
 export default class AccountsRepository {

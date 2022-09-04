@@ -2,11 +2,13 @@ syntax = "proto3";
 
 package auth;
 
+import "common.proto";
+
 service CompanyService {
-  rpc Create(CreateRequestCompany) returns (OtherResponseCompany) {}
-  rpc GetAll(GetAllRequestCompany) returns (GetAllResponseCompany) {}
-  rpc GetById(GetItemRequesCompany) returns (GetAllResponseCompany) {}
-  rpc Update(UpdateRequestCompany) returns (OtherResponseCompany) {}
+  rpc Create(CreateRequestCompany) returns (Company) {}
+  rpc GetAll(PaginationRequest) returns (GetAllCompaniesResponse) {}
+  rpc GetById(ID) returns (Company) {}
+  rpc Update(UpdateRequestCompany) returns (SuccessResponse) {}
 }
 
 /*
@@ -22,14 +24,6 @@ message CreateRequestCompany {
   int32 maxCapacity = 6;
 }
 
-message GetAllRequestCompany {
-  int32 page = 1;
-}
-
-message GetItemRequesCompany {
-  string id = 1;
-}
-
 message UpdateRequestCompany {
   string id = 1;
   string name = 2;
@@ -43,35 +37,10 @@ message UpdateRequestCompany {
 /*
     * response
 */
-message OtherResponseCompany {
-  DataCompany data = 1;
-}
 
-message GetAllResponseCompany {
-  LinksCompany  links = 1;
-  MetaCompany  meta = 2;
-  repeated DataCompany  data = 3;
-}
-
-message LinksCompany {
-  string self = 1;
-  string next = 2;
-  string prev = 3;
-  string first = 4;
-  string last = 5;
-}
-
-message MetaCompany {
+message GetAllCompaniesResponse {
   int32 totalCount = 1;
-}
-message DataCompany {
-  string type = 1;
-  AttributesCompany attributes = 2;
-}
-
-message AttributesCompany {
-  string message = 1;
-  Company company = 2;
+  repeated Company companies = 2;
 }
 
 message Company {
