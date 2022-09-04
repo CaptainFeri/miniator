@@ -58,16 +58,12 @@ message DataAdmin {
 
 message AttributesAdmin {
   string message = 1;
+  Admin admin = 2;
 }
 
 message Admin {
-  bool deleted = 1;
-  string id = 2;
-  string name = 3;
-  int32 minDeposit = 4;
-  int32 maxDeposit = 5;
-  int32 minWithdrawal = 6;
-  int32 maxWithdrawal = 7;
-  int32 maxCapacity = 8;
+  string id = 1;
+  string username = 2;
+  string email = 3;
 }
 

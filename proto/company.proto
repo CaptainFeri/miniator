@@ -14,17 +14,16 @@ service CompanyService {
 */
 
 message CreateRequestCompany {
-  string token = 1;
-  string name = 2;
-  int32 minDeposit = 3;
-  int32 maxDeposit = 4;
-  int32 minWithdrawal = 5;
-  int32 maxWithdrawal = 6;
-  int32 maxCapacity = 7;
+  string name = 1;
+  int32 minDeposit = 2;
+  int32 maxDeposit = 3;
+  int32 minWithdrawal = 4;
+  int32 maxWithdrawal = 5;
+  int32 maxCapacity = 6;
 }
 
 message GetAllRequestCompany {
-  int32 page = 2;
+  int32 page = 1;
 }
 
 message GetItemRequesCompany {
@@ -32,14 +31,13 @@ message GetItemRequesCompany {
 }
 
 message UpdateRequestCompany {
-  string token = 1;
-  string id = 2;
-  string name = 3;
-  int32 minDeposit = 4;
-  int32 maxDeposit = 5;
-  int32 minWithdrawal = 6;
-  int32 maxWithdrawal = 7;
-  int32 maxCapacity = 8;
+  string id = 1;
+  string name = 2;
+  int32 minDeposit = 3;
+  int32 maxDeposit = 4;
+  int32 minWithdrawal = 5;
+  int32 maxWithdrawal = 6;
+  int32 maxCapacity = 7;
 }
 
 /*
@@ -73,16 +71,15 @@ message DataCompany {
 
 message AttributesCompany {
   string message = 1;
-  Company securityquestion = 2;
+  Company company = 2;
 }
 
 message Company {
-  bool deleted = 1;
-  string id = 2;
-  string name = 3;
-  int32 minDeposit = 4;
-  int32 maxDeposit = 5;
-  int32 minWithdrawal = 6;
-  int32 maxWithdrawal = 7;
-  int32 maxCapacity = 8;
+  string id = 1;
+  string name = 2;
+  int32 minDeposit = 3;
+  int32 maxDeposit = 4;
+  int32 minWithdrawal = 5;
+  int32 maxWithdrawal = 6;
+  int32 maxCapacity = 7;
 }

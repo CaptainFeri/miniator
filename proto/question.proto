@@ -71,11 +71,10 @@ message DataQuestion {
 
 message AttributesQuestion {
   string message = 1;
-  SecurityQuestion securityquestion = 2;
+  SecurityQuestion securityQuestion = 2;
 }
 
 message SecurityQuestion {
-  bool deleted = 1;
-  string id = 2;
-  string question = 3;
+  string id = 1;
+  string question = 2;
 }

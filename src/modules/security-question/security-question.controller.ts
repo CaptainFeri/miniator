@@ -31,12 +31,12 @@ export default class SecurityQuestionsGrpcController {
   @Types(TypesEnum.superAdmin)
   @GrpcMethod('QuestionService', 'Create')
   async Create(data: CreateSecurityQuestionDto) {
-    const securityquestion = await this.securityQuestionsService.create(data);
+    const securityQuestion = await this.securityQuestionsService.create(data);
 
-    console.log(securityquestion);
+    console.log(securityQuestion);
     return ResponseUtils.success('securityQuestions', {
       message: 'Success',
-      securityquestion,
+      securityQuestion,
     });
   }
 

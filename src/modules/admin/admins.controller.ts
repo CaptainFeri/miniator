@@ -24,11 +24,11 @@ export default class AdminsController {
   @Types(TypesEnum.superAdmin)
   @GrpcMethod('AdminService', 'Create')
   async create(body: CreateAdminDto): Promise<any> {
-    // async create(@Body() adminDto: CreateAdminDto): Promise<any> {
-    await this.adminsService.create(body);
+    const admin = await this.adminsService.create(body);
 
     return ResponseUtils.success('admins', {
       message: 'Success',
+      admin,
     });
   }
 

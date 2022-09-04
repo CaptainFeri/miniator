@@ -18,10 +18,8 @@ service AccountService {
 * request
 */
 message DeleteRequestAccount {
-  string token = 1;
-  string password = 2;
+  string password = 1;
 }
-
 
 message GetRequestAccount {
 

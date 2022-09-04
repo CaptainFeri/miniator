@@ -23,14 +23,12 @@ message OtherResponse {
 }
 
 message CreateRequest {
-  string token = 1;
-  string name = 2;
+  string name = 1;
 }
 
 message UpdateRequest {
-  string token = 1;
-  string id = 2;
-  string name = 3;
+  string id = 1;
+  string name = 2;
 }
 
 /// RESPONSE
@@ -56,7 +54,6 @@ message Attributes {
 }
 
 message Wallet {
-  bool deleted = 1;
-  string id = 2;
-  string name = 3;
+  string id = 1;
+  string name = 2;
 }
