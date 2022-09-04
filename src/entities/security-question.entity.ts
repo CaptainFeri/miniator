@@ -15,5 +15,5 @@ export default class SecurityQuestionEntity extends BaseEntity {
       cascade: true,
     },
   )
-  securityQuestionAnswerEntities?: SecurityQuestionAnswerEntity[];
+  securityQuestionAnswers?: SecurityQuestionAnswerEntity[];
 }

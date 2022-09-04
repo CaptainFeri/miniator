@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MockType } from '../types';
+import { MockType } from '@/types';
 import SecurityQuestionsController from './security-question.controller';
 import SecurityQuestionsService from './security-question.service';
 

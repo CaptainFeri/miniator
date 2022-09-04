@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import RolesController from './roles.controller';
 import RolesService from './roles.service';
-import { MockType } from '../types';
+import { MockType } from '@/types';
 
 describe('Roles Controller', () => {
   let controller: RolesController;

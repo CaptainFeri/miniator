@@ -11,21 +11,13 @@ export default class CompanyRoleRequestEntity extends BaseEntity {
   @Column({ type: 'timestamp with time zone' })
   readonly acceptedAt?: Date;
 
-  @ManyToOne(
-    () => CompanyRoleEntity,
-    (object) => object.companyRoleRequestEntities,
-    {
-      onDelete: 'CASCADE',
-    },
-  )
-  companyRoleEntity?: CompanyRoleEntity;
+  @ManyToOne(() => CompanyRoleEntity, (object) => object.companyRoleRequests, {
+    onDelete: 'CASCADE',
+  })
+  companyRole?: CompanyRoleEntity;
 
-  @ManyToOne(
-    () => AccountEntity,
-    (object) => object.companyRoleRequestEntities,
-    {
-      onDelete: 'CASCADE',
-    },
-  )
-  accountEntity?: AccountEntity;
+  @ManyToOne(() => AccountEntity, (object) => object.companyRoleRequests, {
+    onDelete: 'CASCADE',
+  })
+  account?: AccountEntity;
 }

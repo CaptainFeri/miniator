@@ -20,11 +20,12 @@ export default class RoleRequestsRepository {
     const role = await this.roleRequestsModel.findOne(roleId, {
       relations: ['companyRoleEntity'],
     });
-    if (!role.companyRoleEntity?.requestable)
+    if (!role.companyRole?.isSpecial) {
       throw new Error('role is not special');
+    }
     return this.roleRequestsModel.save({
-      accountEntity: { id: userId },
-      companyRoleEntity: { id: roleId },
+      account: { id: userId },
+      companyRole: { id: roleId },
     });
   }
 
@@ -38,7 +39,7 @@ export default class RoleRequestsRepository {
     userId: string,
   ): Promise<CompanyRoleRequestEntity | undefined> {
     return this.roleRequestsModel.findOne({
-      where: { accountEntity: { id: userId } },
+      where: { account: { id: userId } },
     });
   }
 

@@ -9,21 +9,17 @@ export default class SecurityQuestionAnswerEntity extends BaseEntity {
   @Index({ unique: true })
   readonly answer: string = '';
 
-  @ManyToOne(
-    () => AccountEntity,
-    (object) => object.securityQuestionAnswerEntities,
-    {
-      onDelete: 'CASCADE',
-    },
-  )
-  accountEntity?: AccountEntity;
+  @ManyToOne(() => AccountEntity, (object) => object.securityQuestionAnswers, {
+    onDelete: 'CASCADE',
+  })
+  account?: AccountEntity;
 
   @ManyToOne(
     () => SecurityQuestionEntity,
-    (object) => object.securityQuestionAnswerEntities,
+    (object) => object.securityQuestionAnswers,
     {
       onDelete: 'CASCADE',
     },
   )
-  securityQuestionEntity?: SecurityQuestionEntity;
+  securityQuestion?: SecurityQuestionEntity;
 }

@@ -176,20 +176,20 @@ export default class AccountsRepository {
     const account = await this.accountsModel.findOne(id);
     await this.accountsModel.save({
       ...account,
-      profileEntity: data,
+      profile: data,
     });
   }
 
   async getProfile(id: string) {
     const account = await this.accountsModel.findOne(id);
-    return account.profileEntity;
+    return account.profile;
   }
 
   async updateCompanyProfile(id: string, data: UpdateCompanyProfileDto) {
     const account = await this.accountsModel.findOne(id);
     await this.accountsModel.save({
       ...account,
-      profileEntity: data,
+      profile: data,
     });
   }
 

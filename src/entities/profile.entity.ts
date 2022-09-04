@@ -41,8 +41,8 @@ export default class ProfileEntity extends BaseEntity {
   @Column('timestamp with time zone')
   readonly birthday: Date = new Date();
 
-  @OneToOne(() => AccountEntity, (object) => object.profileEntity, {
+  @OneToOne(() => AccountEntity, (object) => object.profile, {
     onDelete: 'CASCADE',
   })
-  accountEntity?: AccountEntity;
+  account?: AccountEntity;
 }

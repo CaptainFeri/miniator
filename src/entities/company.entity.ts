@@ -26,10 +26,10 @@ export default class CompanyEntity extends BaseEntity {
   @Column()
   readonly maxCapacity: number;
 
-  @OneToMany(() => CompanyRoleEntity, (object) => object.companyEntity, {
+  @OneToMany(() => CompanyRoleEntity, (object) => object.company, {
     cascade: true,
   })
-  companyRoleEntities?: CompanyRoleEntity[];
+  companyRoles?: CompanyRoleEntity[];
 
   @ManyToOne(() => AdminEntity, (object) => object.companies, {
     onDelete: 'CASCADE',

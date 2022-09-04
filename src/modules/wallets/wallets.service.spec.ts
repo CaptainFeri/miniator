@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import WalletsService from './wallets.service';
 import WalletsRepository from './wallets.repository';
-import { MockType } from '../types';
+import { MockType } from '@/types';
 
 describe('WalletsService', () => {
   let service: WalletsService;

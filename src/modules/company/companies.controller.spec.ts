@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import CompaniesController from './companies.controller';
 import CompaniesService from './companies.service';
-import { MockType } from '../types';
+import { MockType } from '@/types';
 
 describe('Companies Controller', () => {
   let controller: CompaniesController;

@@ -19,22 +19,18 @@ export default class CompanyRoleEntity extends BaseEntity {
   readonly name: string = '';
 
   @Column()
-  readonly requestable: boolean = false;
+  readonly isSpecial: boolean = false;
 
-  @ManyToOne(() => CompanyEntity, (object) => object.companyRoleEntities, {
+  @ManyToOne(() => CompanyEntity, (object) => object.companyRoles, {
     onDelete: 'CASCADE',
   })
-  companyEntity?: CompanyEntity;
+  company?: CompanyEntity;
 
-  @OneToMany(
-    () => CompanyRoleRequestEntity,
-    (object) => object.companyRoleEntity,
-    {
-      cascade: true,
-    },
-  )
-  companyRoleRequestEntities?: CompanyRoleRequestEntity[];
+  @OneToMany(() => CompanyRoleRequestEntity, (object) => object.companyRole, {
+    cascade: true,
+  })
+  companyRoleRequests?: CompanyRoleRequestEntity[];
 
-  @ManyToMany(() => AccountEntity, (object) => object.companyRoleEntities)
-  accountEntities?: AccountEntity[];
+  @ManyToMany(() => AccountEntity, (object) => object.companyRoles)
+  accounts?: AccountEntity[];
 }

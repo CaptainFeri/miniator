@@ -37,35 +37,31 @@ export default class AccountEntity extends BaseEntity {
   @Column()
   readonly verified: boolean = false;
 
-  @OneToOne(() => ProfileEntity, (object) => object.accountEntity, {
+  @OneToOne(() => ProfileEntity, (object) => object.account, {
     cascade: true,
     nullable: true,
   })
   @JoinColumn({ name: 'profile_fk' })
-  profileEntity?: ProfileEntity;
+  profile?: ProfileEntity;
 
-  @OneToOne(() => CompanyProfileEntity, (object) => object.accountEntity, {
+  @OneToOne(() => CompanyProfileEntity, (object) => object.account, {
     cascade: true,
     nullable: true,
   })
   @JoinColumn({ name: 'company_profile_fk' })
-  companyProfileEntity?: CompanyProfileEntity;
+  companyProfile?: CompanyProfileEntity;
 
-  @OneToMany(
-    () => SecurityQuestionAnswerEntity,
-    (object) => object.accountEntity,
-    {
-      cascade: true,
-    },
-  )
-  securityQuestionAnswerEntities?: SecurityQuestionAnswerEntity[];
-
-  @OneToMany(() => CompanyRoleRequestEntity, (object) => object.accountEntity, {
+  @OneToMany(() => SecurityQuestionAnswerEntity, (object) => object.account, {
     cascade: true,
   })
-  companyRoleRequestEntities?: CompanyRoleRequestEntity[];
+  securityQuestionAnswers?: SecurityQuestionAnswerEntity[];
 
-  @ManyToMany(() => CompanyRoleEntity, (object) => object.accountEntities, {
+  @OneToMany(() => CompanyRoleRequestEntity, (object) => object.account, {
+    cascade: true,
+  })
+  companyRoleRequests?: CompanyRoleRequestEntity[];
+
+  @ManyToMany(() => CompanyRoleEntity, (object) => object.accounts, {
     cascade: true,
   })
   @JoinTable({
@@ -77,5 +73,5 @@ export default class AccountEntity extends BaseEntity {
       name: 'companyRole_fk',
     },
   })
-  companyRoleEntities?: CompanyRoleEntity[];
+  companyRoles?: CompanyRoleEntity[];
 }

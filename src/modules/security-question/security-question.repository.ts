@@ -45,10 +45,10 @@ export default class SecurityQuestionsRepository {
     answer: string,
   ): Promise<SecurityQuestionAnswerEntity> {
     return this.securityQuestionAnswersModel.save({
-      accountEntity: {
+      account: {
         id: userId,
       },
-      securityQuestionEntity: {
+      securityQuestion: {
         id,
       },
       answer,

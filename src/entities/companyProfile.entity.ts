@@ -17,8 +17,8 @@ export default class CompanyProfileEntity extends BaseEntity {
   @Column({ length: 64 })
   readonly activityField: string = '';
 
-  @OneToOne(() => AccountEntity, (object) => object.companyProfileEntity, {
+  @OneToOne(() => AccountEntity, (object) => object.companyProfile, {
     onDelete: 'CASCADE',
   })
-  accountEntity?: AccountEntity;
+  account?: AccountEntity;
 }

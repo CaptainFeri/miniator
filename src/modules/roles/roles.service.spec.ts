@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import RolesService from './roles.service';
 import RolesRepository from './roles.repository';
 import RoleRequestsRepository from './role-request.repository';
-import { MockType } from '../types';
+import { MockType } from '@/types';
 
 describe('RolesService', () => {
   let service: RolesService;

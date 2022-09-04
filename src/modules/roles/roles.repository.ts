@@ -47,6 +47,6 @@ export default class RolesRepository {
   }
 
   public async getAllCommon(): Promise<CompanyRoleEntity[]> {
-    return this.rolesModel.find({ requestable: false });
+    return this.rolesModel.find({ isSpecial: false });
   }
 }

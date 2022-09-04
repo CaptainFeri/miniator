@@ -160,10 +160,10 @@ export default class AuthController {
   @Public()
   @Post('sign-in')
   async signInApi(
-    @User() accountEntity: any,
+    @User() account: any,
   ): Promise<SuccessResponseInterface | never> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...user } = accountEntity;
+    const { password, ...user } = account;
 
     return ResponseUtils.success('tokens', await this.authService.login(user));
   }
