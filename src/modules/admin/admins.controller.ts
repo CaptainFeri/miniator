@@ -1,22 +1,14 @@
-import {
-  Controller,
-  UseGuards,
-  UseInterceptors,
-  BadRequestException,
-} from '@nestjs/common';
-import JwtAccessGuard from '@guards/jwt-access.guard';
-import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
+import { BadRequestException, Controller } from '@nestjs/common';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import AdminsService from './admins.service';
-import ResponseUtils from '@utils/response.utils';
 import PaginationUtils from '@utils/pagination.utils';
 import { Types, TypesEnum } from '@decorators/types.decorator';
 import CreateAdminDto from './dto/create-admin.dto';
 import AdminEntity from '@entities/admin.entity';
 import { GrpcMethod } from '@nestjs/microservices';
+import UpdateAdminDto from '@/admin/dto/update-admin.dto';
 
-@UseInterceptors(WrapResponseInterceptor)
 @Controller()
 export default class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
@@ -24,20 +16,15 @@ export default class AdminsController {
   @Types(TypesEnum.superAdmin)
   @GrpcMethod('AdminService', 'Create')
   async create(body: CreateAdminDto): Promise<any> {
-    const admin = await this.adminsService.create(body);
-
-    return ResponseUtils.success('admins', {
-      message: 'Success',
-      admin,
-    });
+    return await this.adminsService.create(body);
   }
 
-  @UseGuards(JwtAccessGuard)
   @Types(TypesEnum.superAdmin)
   @GrpcMethod('AdminService', 'GetAll')
   async getAll(query: any): Promise<any> {
     const paginationParams: PaginationParamsInterface | false =
       PaginationUtils.normalizeParams(query.page);
+
     if (!paginationParams) {
       throw new BadRequestException('Invalid pagination parameters');
     }
@@ -45,20 +32,20 @@ export default class AdminsController {
     const paginatedAdmins: PaginatedEntityInterface<AdminEntity> =
       await this.adminsService.getAllWithPagination(paginationParams);
 
-    return ResponseUtils.success('admins', paginatedAdmins.paginatedResult, {
-      location: 'admins',
-      paginationParams,
+    console.log(paginatedAdmins);
+
+    return {
+      admins: paginatedAdmins.paginatedResult,
       totalCount: paginatedAdmins.totalCount,
-    });
+    };
   }
 
   @GrpcMethod('AdminService', 'Update')
-  @UseGuards(JwtAccessGuard)
   @Types(TypesEnum.superAdmin)
-  async update(body: any): Promise<any> {
+  async update(body: UpdateAdminDto): Promise<any> {
     await this.adminsService.update(body.id, body);
-    return ResponseUtils.success('admins', {
-      message: 'Success!',
-    });
+    return {
+      success: true,
+    };
   }
 }

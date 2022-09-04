@@ -5,7 +5,6 @@ export function useGlobalPipes(app: INestMicroservice) {
     new ValidationPipe({
       transform: true,
       whitelist: true,
-      forbidNonWhitelisted: true,
     }),
   );
 }

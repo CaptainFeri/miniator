@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
@@ -17,6 +17,7 @@ export default class RolesRepository {
     @InjectRepository(CompanyRoleEntity)
     private readonly rolesModel: Repository<CompanyRoleEntity>,
     private readonly walletsService: WalletsService,
+    @Inject(forwardRef(() => AccountsRepository))
     private readonly accountsRepository: AccountsRepository,
   ) {}
 

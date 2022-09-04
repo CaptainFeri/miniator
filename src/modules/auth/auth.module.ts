@@ -31,6 +31,6 @@ import AdminsModule from '@/admin/admins.module';
     AuthRepository,
   ],
   controllers: [AuthController],
-  exports: [AuthService],
+  exports: [AuthService, AuthRepository],
 })
 export default class AuthModule {}

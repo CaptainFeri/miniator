@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package auth;
+
+message ID {
+  string id = 1;
+}
+
+message SuccessResponse {
+  bool success = 1;
+}
+
+message Empty {
+}
+
+message PaginationRequest {
+  int32 page = 1;
+}

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import RolesService from './roles.service';
@@ -14,7 +14,7 @@ import AccountsModule from '@/account/accounts.module';
   imports: [
     TypeOrmModule.forFeature([CompanyRoleRequestEntity, CompanyRoleEntity]),
     WalletsModule,
-    AccountsModule,
+    forwardRef(() => AccountsModule),
   ],
   controllers: [RolesController],
   providers: [RolesService, RolesRepository, RoleRequestsRepository],

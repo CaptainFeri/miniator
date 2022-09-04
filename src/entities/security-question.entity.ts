@@ -8,12 +8,8 @@ export default class SecurityQuestionEntity extends BaseEntity {
   @Index({ unique: true })
   readonly question: string;
 
-  @OneToMany(
-    () => SecurityQuestionAnswerEntity,
-    (object) => object.accountEntity,
-    {
-      cascade: true,
-    },
-  )
+  @OneToMany(() => SecurityQuestionAnswerEntity, (object) => object.account, {
+    cascade: true,
+  })
   securityQuestionAnswers?: SecurityQuestionAnswerEntity[];
 }
