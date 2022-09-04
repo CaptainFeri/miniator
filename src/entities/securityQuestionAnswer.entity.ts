@@ -1,15 +1,10 @@
 import { Entity, Column, Index, ManyToOne } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
 import AccountEntity from '@entities/account.entity';
 import { BaseEntity } from '@entities/base.entity';
 import SecurityQuestionEntity from '@entities/security-question.entity';
 
 @Entity('securityQuestionAnswer')
 export default class SecurityQuestionAnswerEntity extends BaseEntity {
-  @ApiProperty({
-    type: String,
-    maxLength: 64,
-  })
   @Column({ length: 64 })
   @Index({ unique: true })
   readonly answer: string = '';

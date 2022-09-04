@@ -1,38 +1,28 @@
 import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
 import CompanyRoleEntity from '@entities/company-role.entity';
 import { BaseEntity } from '@entities/base.entity';
 import AdminEntity from '@entities/admin.entity';
 
 @Entity('company')
 export default class CompanyEntity extends BaseEntity {
-  @ApiProperty({
-    type: String,
-    maxLength: 64,
-  })
   @Column({
     length: 64,
     unique: true,
   })
   readonly name: string;
 
-  @ApiProperty({ type: Number })
   @Column()
   readonly minDeposit: number;
 
-  @ApiProperty({ type: Number })
   @Column()
   readonly maxDeposit: number;
 
-  @ApiProperty({ type: Number })
   @Column()
   readonly minWithdrawal: number;
 
-  @ApiProperty({ type: Number })
   @Column()
   readonly maxWithdrawal: number;
 
-  @ApiProperty({ type: Number })
   @Column()
   readonly maxCapacity: number;
 

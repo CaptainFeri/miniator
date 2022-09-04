@@ -14,7 +14,7 @@ export class BasicAuthGuard implements CanActivate {
       return false;
     }
 
-    const buff = new Buffer(authBasic.slice(6), 'base64');
+    const buff = Buffer.from(authBasic.slice(6), 'base64');
     const [username, password] = buff.toString('utf-8').split(':');
 
     return (

@@ -12,7 +12,6 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiExtraModels } from '@nestjs/swagger';
 import JwtAccessGuard from '@guards/jwt-access.guard';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import Serialize from '@decorators/serialization.decorator';
@@ -32,10 +31,7 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
 import { BanAccountDto } from './dto';
 
-@ApiTags('Accounts')
-@ApiBearerAuth()
 @UseInterceptors(WrapResponseInterceptor)
-@ApiExtraModels(AccountEntity)
 @Controller('accounts')
 export default class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}

@@ -1,8 +1,6 @@
 import { IsNotEmpty, MinLength, IsString, MaxLength } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
 
 export class DeleteAccountDto {
-  @ApiProperty({ type: String })
   @IsNotEmpty()
   @IsString()
   @MinLength(8)

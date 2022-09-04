@@ -13,7 +13,6 @@ import {
   HttpStatus,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { SuccessResponseInterface } from '@interfaces/success-response.interface';
 import AccountsService from '@/account/accounts.service';
@@ -292,7 +291,6 @@ export default class AuthController {
     );
   }
 
-  @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
   @Delete('logout/:token')
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -320,7 +318,6 @@ export default class AuthController {
     }
   }
 
-  @ApiBearerAuth()
   @Delete('logout-all')
   @UseGuards(TypesGuard)
   @Types(TypesEnum.admin)
@@ -329,7 +326,6 @@ export default class AuthController {
     return this.authService.deleteAllTokens();
   }
 
-  @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
   @Get('token')
   async getAccountByAccessToken(
