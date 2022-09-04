@@ -6,31 +6,28 @@ import {
 } from '@nestjs/common';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
-import { UpdateResult } from 'typeorm';
 import AccountsRepository from './accounts.repository';
 import AccountEntity from '@entities/account.entity';
 import { UpdateAccountDto } from './dto';
 import SignUpDto from '@/auth/dto/sign-up.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateCompanyProfileDto } from './dto/update-compony-profile.dto';
-import WalletsService from '@/wallets/wallets.service';
+import RolesRepository from '@/roles/roles.repository';
 
 @Injectable()
 export default class AccountsService {
   constructor(
     private readonly accountsRepository: AccountsRepository,
-    private readonly walletsService: WalletsService,
+    private readonly rolesRepository: RolesRepository,
   ) {}
 
   public async create(signUp: SignUpDto): Promise<AccountEntity> {
     const hashedPassword = await bcrypt.hash(signUp.password, 10);
 
-    const account = await this.accountsRepository.create({
+    return await this.accountsRepository.create({
       ...signUp,
       password: hashedPassword,
     });
-    await this.walletsService.createCommonWallets(account);
-    return account;
   }
 
   public async getByEmail(email: string): Promise<AccountEntity | undefined> {
@@ -69,8 +66,12 @@ export default class AccountsService {
     return this.accountsRepository.getUnverifiedAccountById(id);
   }
 
-  update(id: string, data: UpdateAccountDto): Promise<UpdateResult> {
-    return this.accountsRepository.updateById(id, data);
+  async update(id: string, data: UpdateAccountDto) {
+    const account = await this.accountsRepository.getById(id);
+    await this.accountsRepository.updateById(id, data);
+    if (!account.verified && data.verified) {
+      await this.rolesRepository.addCommonRolesToUser(account);
+    }
   }
 
   public async getAllVerifiedWithPagination(

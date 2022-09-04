@@ -120,6 +120,10 @@ export default class AccountsRepository {
     );
   }
 
+  getAllVerified() {
+    return this.accountsModel.find({ verified: true });
+  }
+
   public async getAllVerifiedWithPagination(
     options: PaginationParamsInterface,
   ): Promise<PaginatedEntityInterface<AccountEntity>> {
@@ -167,9 +171,15 @@ export default class AccountsRepository {
           type: TypesEnum.user,
         };
       }
-      return { status: false, message: 'Wrong password' };
+      return {
+        status: false,
+        message: 'Wrong password',
+      };
     }
-    return { status: false, message: 'User not found' };
+    return {
+      status: false,
+      message: 'User not found',
+    };
   }
 
   async updateProfile(id: string, data: UpdateProfileDto) {

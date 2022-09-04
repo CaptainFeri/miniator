@@ -1,15 +1,7 @@
 import {
   BadRequestException,
-  Body,
   Controller,
-  Get,
   NotFoundException,
-  Param,
-  ParseUUIDPipe,
-  Patch,
-  Post,
-  Put,
-  Query,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -25,17 +17,17 @@ import AccountEntity from '@entities/account.entity';
 import { Types, TypesEnum } from '@decorators/types.decorator';
 import { Public } from '@decorators/public.decorator';
 import CreateRoleDto from './dto/create-role.dto';
-import UpdateRoleDto from './dto/update-role.dto';
+import { GrpcMethod } from '@nestjs/microservices';
 
 @UseInterceptors(WrapResponseInterceptor)
-@Controller('roles')
+@Controller()
 export default class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
-  @Post()
   @Types(TypesEnum.superAdmin)
-  async create(@Body() createRoleDto: CreateRoleDto): Promise<any> {
-    const role = await this.rolesService.create(createRoleDto);
+  @GrpcMethod('RolesService', 'Create')
+  async create(data: CreateRoleDto): Promise<any> {
+    const role = await this.rolesService.create(data);
 
     return ResponseUtils.success('roles', {
       message: 'Success',
@@ -44,8 +36,8 @@ export default class RolesController {
   }
 
   @Public()
-  @Get()
-  async getAll(@Query() query: any) {
+  @GrpcMethod('RolesService', 'GetAll')
+  async getAll(query: any) {
     const paginationParams: PaginationParamsInterface | false =
       PaginationUtils.normalizeParams(query.page);
     if (!paginationParams) {
@@ -64,11 +56,9 @@ export default class RolesController {
   }
 
   @Public()
-  @Get(':id')
-  async getById(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<SuccessResponseInterface> {
-    const foundRole = await this.rolesService.getById(id);
+  @GrpcMethod('RolesService', 'GetItem')
+  async getById(query: any): Promise<SuccessResponseInterface> {
+    const foundRole = await this.rolesService.getById(query.id);
 
     if (!foundRole) {
       throw new NotFoundException('The role does not exist');
@@ -77,37 +67,29 @@ export default class RolesController {
     return ResponseUtils.success('roles', foundRole);
   }
 
-  @Put(':id')
   @UseGuards(JwtAccessGuard)
   @Types(TypesEnum.superAdmin)
-  async update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() role: UpdateRoleDto,
-  ): Promise<any> {
-    await this.rolesService.update(id, role);
+  @GrpcMethod('RolesService', 'Update')
+  async update(body: any): Promise<any> {
+    await this.rolesService.update(body.id, body);
 
     return ResponseUtils.success('roles', {
       message: 'Success!',
     });
   }
 
-  @Patch(':id/request')
-  async request(
-    @Param('id', ParseUUIDPipe) id: string,
-    @User() account: AccountEntity,
-  ): Promise<any> {
-    await this.rolesService.request(id, account.id);
-
+  @GrpcMethod('RolesService', 'Request')
+  async request(body: any, @User() account: AccountEntity): Promise<any> {
+    await this.rolesService.request(body.id, account.id);
     return ResponseUtils.success('roleRequests', {
       message: 'Success!',
     });
   }
 
-  @Patch(':id/accept')
+  @GrpcMethod('WalletService', 'Accept')
   @Types(TypesEnum.superAdmin, TypesEnum.admin)
-  async accept(@Param('id', ParseUUIDPipe) id: string): Promise<any> {
-    await this.rolesService.accept(id);
-
+  async accept(body: any, @User() account: AccountEntity): Promise<any> {
+    await this.rolesService.accept(body.id, account);
     return ResponseUtils.success('roleRequests', {
       message: 'Success!',
     });

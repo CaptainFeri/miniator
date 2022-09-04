@@ -5,6 +5,7 @@ import { PaginationParamsInterface } from '@interfaces/pagination-params.interfa
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import PaginationUtils from '@utils/pagination.utils';
 import CompanyRoleRequestEntity from '@entities/company-role-request.entity';
+import CompanyRoleEntity from '@entities/company-role.entity';
 
 @Injectable()
 export default class RoleRequestsRepository {
@@ -33,6 +34,13 @@ export default class RoleRequestsRepository {
     id: string,
   ): Promise<CompanyRoleRequestEntity | undefined> {
     return this.roleRequestsModel.findOne(id);
+  }
+
+  public async getRoleById(id: string): Promise<CompanyRoleEntity | undefined> {
+    const req = await this.roleRequestsModel.findOne(id, {
+      relations: ['companyRole'],
+    });
+    return req.companyRole;
   }
 
   public async getByUserId(

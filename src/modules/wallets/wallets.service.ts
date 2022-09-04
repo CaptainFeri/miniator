@@ -5,14 +5,13 @@ import WalletsRepository from './wallets.repository';
 import WalletEntity from '@entities/wallet.entity';
 import AccountEntity from '@entities/account.entity';
 import WalletTypesRepository from '@/wallet-types/wallet-types.repository';
-import RolesRepository from '@/roles/roles.repository';
+import CompanyRoleEntity from '@entities/company-role.entity';
 
 @Injectable()
 export default class WalletsService {
   constructor(
     private readonly walletsRepository: WalletsRepository,
     private readonly walletTypesRepository: WalletTypesRepository,
-    private readonly rolesRepository: RolesRepository,
   ) {}
 
   async getById(id: string): Promise<WalletEntity> {
@@ -25,14 +24,11 @@ export default class WalletsService {
     return this.walletsRepository.getAllWithPagination(options);
   }
 
-  async createCommonWallets(account: AccountEntity) {
-    const roles = await this.rolesRepository.getAllCommon();
+  async addRoleWallets(account: AccountEntity, role: CompanyRoleEntity) {
     const types = await this.walletTypesRepository.getAll();
     const wallets = [];
-    for (const role of roles) {
-      for (const type of types) {
-        wallets.push(await this.walletsRepository.create(account, type, role));
-      }
+    for (const type of types) {
+      wallets.push(await this.walletsRepository.create(account, type, role));
     }
     return wallets;
   }

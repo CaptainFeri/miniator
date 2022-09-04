@@ -8,6 +8,7 @@ import CompanyRoleEntity from '@entities/company-role.entity';
 import CreateRoleDto from './dto/create-role.dto';
 import UpdateRoleDto from './dto/update-role.dto';
 import CompanyRoleRequestEntity from '@entities/company-role-request.entity';
+import AccountEntity from '@entities/account.entity';
 
 @Injectable()
 export default class RolesService {
@@ -43,7 +44,9 @@ export default class RolesService {
     return this.roleRequestsRepository.create(id, userId);
   }
 
-  accept(id: string): Promise<UpdateResult> {
-    return this.roleRequestsRepository.accept(id);
+  async accept(id: string, account: AccountEntity) {
+    await this.roleRequestsRepository.accept(id);
+    const role = await this.roleRequestsRepository.getRoleById(id);
+    await this.rolesRepository.addRoleToUser(role, account);
   }
 }

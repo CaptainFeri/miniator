@@ -7,18 +7,31 @@ import PaginationUtils from '@utils/pagination.utils';
 import UpdateRoleDto from './dto/update-role.dto';
 import CompanyRoleEntity from '@entities/company-role.entity';
 import CreateRoleDto from './dto/create-role.dto';
+import AccountEntity from '@entities/account.entity';
+import WalletsService from '@/wallets/wallets.service';
+import AccountsRepository from '@/account/accounts.repository';
 
 @Injectable()
 export default class RolesRepository {
   constructor(
     @InjectRepository(CompanyRoleEntity)
     private readonly rolesModel: Repository<CompanyRoleEntity>,
+    private readonly walletsService: WalletsService,
+    private readonly accountsRepository: AccountsRepository,
   ) {}
 
-  public create(role: CreateRoleDto): Promise<CompanyRoleEntity> {
-    return this.rolesModel.save({
-      ...role,
+  public async create(roleDto: CreateRoleDto): Promise<CompanyRoleEntity> {
+    const role = await this.rolesModel.save({
+      ...roleDto,
     });
+    if (!role.isSpecial) {
+      this.accountsRepository
+        .getAllVerified()
+        .then((accounts) =>
+          accounts.forEach((account) => this.addRoleToUser(role, account)),
+        );
+    }
+    return role;
   }
 
   public async getById(id: string): Promise<CompanyRoleEntity | undefined> {
@@ -46,7 +59,17 @@ export default class RolesRepository {
     };
   }
 
-  public async getAllCommon(): Promise<CompanyRoleEntity[]> {
-    return this.rolesModel.find({ isSpecial: false });
+  public async addCommonRolesToUser(account: AccountEntity) {
+    const roles = await this.rolesModel.find({ isSpecial: false });
+    return Promise.all(roles.map((role) => this.addRoleToUser(role, account)));
+  }
+
+  async addRoleToUser(role: CompanyRoleEntity, account: AccountEntity) {
+    await this.rolesModel
+      .createQueryBuilder()
+      .relation('accounts')
+      .of(role)
+      .add(account);
+    await this.walletsService.addRoleWallets(account, role);
   }
 }
