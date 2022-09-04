@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 
 import authConstants from './constants/auth-constants';
+import AccountEntity from '@entities/account.entity';
 
 @Injectable()
 export default class AuthRepository {
@@ -19,6 +20,28 @@ export default class AuthRepository {
       token,
       'EX',
       authConstants.redis.expirationTime.jwt.refreshToken,
+    );
+  }
+
+  public async addUser(account: AccountEntity): Promise<void> {
+    await this.redisClient.set(
+      `password:${account.username}`,
+      account.password,
+    );
+    await this.redisClient.set(`password:${account.email}`, account.password);
+    await this.redisClient.set(`id:${account.username}`, account.id);
+    await this.redisClient.set(`id:${account.email}`, account.id);
+  }
+
+  public async addUserRole(
+    accountId: string,
+    roleId: string,
+    walletType: string,
+    walletId: string,
+  ): Promise<void> {
+    await this.redisClient.set(
+      `wallet:${accountId}:${roleId}:${walletType}`,
+      walletId,
     );
   }
 

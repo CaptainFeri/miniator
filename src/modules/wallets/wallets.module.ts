@@ -6,9 +6,14 @@ import WalletEntity from '@entities/wallet.entity';
 import WalletsRepository from './wallets.repository';
 import WalletsGrpcController from './wallets-grpc.controller';
 import WalletTypesModule from '@/wallet-types/wallet-types.module';
+import AuthModule from '@/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([WalletEntity]), WalletTypesModule],
+  imports: [
+    TypeOrmModule.forFeature([WalletEntity]),
+    WalletTypesModule,
+    AuthModule,
+  ],
   controllers: [WalletsGrpcController],
   providers: [WalletsService, WalletsRepository],
   exports: [WalletsService, WalletsRepository],

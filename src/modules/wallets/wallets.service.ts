@@ -6,12 +6,14 @@ import WalletEntity from '@entities/wallet.entity';
 import AccountEntity from '@entities/account.entity';
 import WalletTypesRepository from '@/wallet-types/wallet-types.repository';
 import CompanyRoleEntity from '@entities/company-role.entity';
+import AuthRepository from '@/auth/auth.repository';
 
 @Injectable()
 export default class WalletsService {
   constructor(
     private readonly walletsRepository: WalletsRepository,
     private readonly walletTypesRepository: WalletTypesRepository,
+    private readonly authRepository: AuthRepository,
   ) {}
 
   async getById(id: string): Promise<WalletEntity> {
@@ -28,7 +30,13 @@ export default class WalletsService {
     const types = await this.walletTypesRepository.getAll();
     const wallets = [];
     for (const type of types) {
-      wallets.push(await this.walletsRepository.create(account, type, role));
+      const wallet = await this.walletsRepository.create(account, type, role);
+      await this.authRepository.addUserRole(
+        account.id,
+        role.id,
+        type.name,
+        wallet.id,
+      );
     }
     return wallets;
   }

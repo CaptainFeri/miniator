@@ -9,23 +9,24 @@ import CreateWalletTypeDto from './dto/create-wallet-type.dto';
 
 @Injectable()
 export default class WalletTypesService {
-  constructor(private readonly walletsRepository: WalletTypesRepository) {}
+  constructor(private readonly walletTypesRepository: WalletTypesRepository) {}
 
   async create(wallet: CreateWalletTypeDto): Promise<WalletTypeEntity> {
-    return this.walletsRepository.create(wallet);
+    // TODO: create wallets for new type
+    return await this.walletTypesRepository.create(wallet);
   }
 
   async getById(id: string): Promise<WalletTypeEntity> {
-    return this.walletsRepository.getById(id);
+    return this.walletTypesRepository.getById(id);
   }
 
   update(data: UpdateWalletTypeDto): Promise<UpdateResult> {
-    return this.walletsRepository.updateById(data.id, data);
+    return this.walletTypesRepository.updateById(data.id, data);
   }
 
   async getAllWithPagination(
     options: PaginationParamsInterface,
   ): Promise<PaginatedEntityInterface<WalletTypeEntity>> {
-    return this.walletsRepository.getAllWithPagination(options);
+    return this.walletTypesRepository.getAllWithPagination(options);
   }
 }

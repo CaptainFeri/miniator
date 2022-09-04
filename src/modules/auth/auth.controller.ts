@@ -151,10 +151,13 @@ export default class AuthController {
       throw new NotFoundException('The user does not exist');
     }
 
-    return ResponseUtils.success(
-      'users',
-      await this.accountsService.update(foundAccount.id, { verified: true }),
-    );
+    await this.authService.addUserToRedis(foundAccount);
+
+    await this.accountsService.verify(foundAccount.id);
+
+    return ResponseUtils.success('users', {
+      message: 'Success!',
+    });
   }
 
   @Public()

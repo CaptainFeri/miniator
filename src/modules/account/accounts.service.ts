@@ -66,12 +66,14 @@ export default class AccountsService {
     return this.accountsRepository.getUnverifiedAccountById(id);
   }
 
-  async update(id: string, data: UpdateAccountDto) {
+  async verify(id: string) {
     const account = await this.accountsRepository.getById(id);
-    await this.accountsRepository.updateById(id, data);
-    if (!account.verified && data.verified) {
-      await this.rolesRepository.addCommonRolesToUser(account);
-    }
+    await this.accountsRepository.updateById(id, { verified: true });
+    await this.rolesRepository.addCommonRolesToUser(account);
+  }
+
+  update(id: string, data: UpdateAccountDto) {
+    return this.accountsRepository.updateById(id, data);
   }
 
   public async getAllVerifiedWithPagination(

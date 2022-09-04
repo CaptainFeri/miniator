@@ -11,6 +11,7 @@ import authConstants from './constants/auth-constants';
 import AuthRepository from './auth.repository';
 import { TypesEnum } from '@decorators/types.decorator';
 import { DecodedAccount } from './interfaces/decoded-account.interface';
+import AccountEntity from '@entities/account.entity';
 
 @Injectable()
 export default class AuthService {
@@ -136,5 +137,9 @@ export default class AuthService {
     } catch (error) {
       return null;
     }
+  }
+
+  async addUserToRedis(account: AccountEntity) {
+    await this.authRepository.addUser(account);
   }
 }
