@@ -4,10 +4,10 @@ import { Injectable } from '@nestjs/common';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 
 import authConstants from './constants/auth-constants';
-import AccountEntity from '@entities/account.entity';
+import { AccountEntity } from '@entities/account.entity';
 
 @Injectable()
-export default class AuthRepository {
+export class AuthRepository {
   private readonly redisClient: Redis;
 
   constructor(private readonly redisService: RedisService) {

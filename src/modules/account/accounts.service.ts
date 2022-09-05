@@ -6,16 +6,16 @@ import {
 } from '@nestjs/common';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
-import AccountsRepository from './accounts.repository';
-import AccountEntity from '@entities/account.entity';
+import { AccountsRepository } from './accounts.repository';
+import { AccountEntity } from '@entities/account.entity';
 import { UpdateAccountDto } from './dto';
-import SignUpDto from '@/auth/dto/sign-up.dto';
+import { SignUpDto } from '@/auth/dto/sign-up.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateCompanyProfileDto } from './dto/update-company-profile.dto';
-import RolesRepository from '@/roles/roles.repository';
+import { RolesRepository } from '@/roles/roles.repository';
 
 @Injectable()
-export default class AccountsService {
+export class AccountsService {
   constructor(
     private readonly accountsRepository: AccountsRepository,
     private readonly rolesRepository: RolesRepository,

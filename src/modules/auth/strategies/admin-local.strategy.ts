@@ -6,13 +6,13 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import SignInDto from '../dto/sign-in.dto';
+import { SignInDto } from '../dto/sign-in.dto';
 import { ValidateAccountOutput } from '../interfaces/validate-account-output.interface';
 
-import AuthService from '../auth.service';
+import { AuthService } from '../auth.service';
 
 @Injectable()
-export default class LocalStrategy extends PassportStrategy(Strategy, 'admin') {
+export class AdminLocalStrategy extends PassportStrategy(Strategy, 'admin') {
   constructor(private authService: AuthService) {
     super({
       usernameField: 'username',

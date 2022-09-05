@@ -1,14 +1,14 @@
 import { BadRequestException, Controller } from '@nestjs/common';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
-import WalletTypesService from './wallet-types.service';
+import { WalletTypesService } from './wallet-types.service';
 import PaginationUtils from '@utils/pagination.utils';
 import { Types, TypesEnum } from '@decorators/types.decorator';
-import CreateWalletTypeDto from './dto/create-wallet-type.dto';
-import UpdateWalletTypeDto from './dto/update-wallet-type.dto';
+import { CreateWalletTypeDto } from './dto/create-wallet-type.dto';
+import { UpdateWalletTypeDto } from './dto/update-wallet-type.dto';
 import { GrpcMethod } from '@nestjs/microservices';
 
 @Controller()
-export default class WalletTypesGrpcController {
+export class WalletTypesController {
   constructor(private readonly walletsService: WalletTypesService) {}
 
   @Types(TypesEnum.superAdmin)

@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtStrategyValidate } from '../interfaces/jwt-strategy-validate.interface';
 
 @Injectable()
-export default class JwtAccessStrategy extends PassportStrategy(
+export class JwtAccessStrategy extends PassportStrategy(
   Strategy,
   'accessToken',
 ) {

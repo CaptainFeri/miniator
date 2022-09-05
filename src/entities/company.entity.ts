@@ -1,10 +1,10 @@
 import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
-import CompanyRoleEntity from '@entities/company-role.entity';
+import { CompanyRoleEntity } from '@entities/company-role.entity';
 import { BaseEntity } from '@entities/base.entity';
-import AdminEntity from '@entities/admin.entity';
+import { AdminEntity } from '@entities/admin.entity';
 
 @Entity('company')
-export default class CompanyEntity extends BaseEntity {
+export class CompanyEntity extends BaseEntity {
   @Column({
     length: 64,
     unique: true,

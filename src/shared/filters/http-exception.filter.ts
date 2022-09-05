@@ -44,6 +44,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     exception: HttpException,
     _host: ArgumentsHost,
   ): Observable<never> | void {
+    console.error(exception);
     const httpStatus = exception.getStatus();
     const httpRes = exception.getResponse() as { details?: unknown };
 

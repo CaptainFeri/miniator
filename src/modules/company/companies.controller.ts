@@ -5,14 +5,14 @@ import {
 } from '@nestjs/common';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import PaginationUtils from '@utils/pagination.utils';
-import CompaniesService from './companies.service';
+import { CompaniesService } from './companies.service';
 import { Types, TypesEnum } from '@decorators/types.decorator';
-import CreateCompanyDto from './dto/create-company.dto';
+import { CreateCompanyDto } from './dto/create-company.dto';
 import { GrpcMethod } from '@nestjs/microservices';
-import UpdateCompanyDto from './dto/update-company.dto';
+import { UpdateCompanyDto } from './dto/update-company.dto';
 
 @Controller()
-export default class CompaniesController {
+export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
   @Types(TypesEnum.superAdmin)

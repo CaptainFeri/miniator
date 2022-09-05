@@ -3,19 +3,19 @@ import * as bcrypt from 'bcryptjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import AccountsService from '@/account/accounts.service';
-import JwtTokensDto from './dto/jwt-tokens.dto';
+import { AccountsService } from '@/account/accounts.service';
+import { JwtTokensDto } from './dto/jwt-tokens.dto';
 import { ValidateAccountOutput } from './interfaces/validate-account-output.interface';
 import { LoginPayload } from './interfaces/login-payload.interface';
 import authConstants from './constants/auth-constants';
-import AuthRepository from './auth.repository';
+import { AuthRepository } from './auth.repository';
 import { TypesEnum } from '@decorators/types.decorator';
 import { DecodedAccount } from './interfaces/decoded-account.interface';
-import AccountEntity from '@entities/account.entity';
-import SignInDto from '@/auth/dto/sign-in.dto';
+import { AccountEntity } from '@entities/account.entity';
+import { SignInDto } from '@/auth/dto/sign-in.dto';
 
 @Injectable()
-export default class AuthService {
+export class AuthService {
   constructor(
     private readonly usersService: AccountsService,
     private readonly jwtService: JwtService,

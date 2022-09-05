@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { ServerUnaryCall } from '@grpc/grpc-js';
 
 @Injectable()
-export default class JwtAccessGuard extends AuthGuard('accessToken') {
+export class JwtAccessGuard extends AuthGuard('accessToken') {
   public constructor(
     private readonly reflector: Reflector,
     private readonly config: ConfigService,

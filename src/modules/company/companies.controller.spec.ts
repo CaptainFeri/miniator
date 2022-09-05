@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import CompaniesController from './companies.controller';
-import CompaniesService from './companies.service';
+import { CompaniesController } from './companies.controller';
+import { CompaniesService } from './companies.service';
 import { MockType } from '@/types';
 
 describe('Companies Controller', () => {
@@ -46,7 +46,7 @@ describe('Companies Controller', () => {
 
   it('should update', async () => {
     expect(controller.update).toBeDefined();
-    await controller.update('', {} as any);
+    await controller.update({} as any);
     expect(service.update).toBeCalled();
   });
 

@@ -3,19 +3,19 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
-import AccountEntity from '@entities/account.entity';
+import { AccountEntity } from '@entities/account.entity';
 import PaginationUtils from '@utils/pagination.utils';
 import { UpdateAccountDto } from './dto';
-import SignUpDto from '@/auth/dto/sign-up.dto';
+import { SignUpDto } from '@/auth/dto/sign-up.dto';
 import { LoginModel } from './models/login.model';
 import { TypesEnum } from '@decorators/types.decorator';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import ProfileEntity from '@entities/profile.entity';
-import CompanyProfileEntity from '@entities/companyProfile.entity';
+import { ProfileEntity } from '@entities/profile.entity';
+import { CompanyProfileEntity } from '@entities/companyProfile.entity';
 import { UpdateCompanyProfileDto } from './dto/update-company-profile.dto';
 
 @Injectable()
-export default class AccountsRepository {
+export class AccountsRepository {
   constructor(
     @InjectRepository(AccountEntity)
     private readonly accountsModel: Repository<AccountEntity>,

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import RolesService from './roles.service';
-import RolesRepository from './roles.repository';
-import RoleRequestsRepository from './role-request.repository';
+import { RolesService } from './roles.service';
+import { RolesRepository } from './roles.repository';
+import { RoleRequestsRepository } from './role-request.repository';
 import { MockType } from '@/types';
 
 describe('RolesService', () => {
@@ -73,7 +73,7 @@ describe('RolesService', () => {
 
   it('should accept request', async () => {
     expect(service.accept).toBeDefined();
-    await service.accept('');
+    await service.accept('', {} as any);
     expect(requestRepository.accept).toBeCalled();
   });
 });

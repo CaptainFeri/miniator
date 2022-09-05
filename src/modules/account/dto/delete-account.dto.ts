@@ -5,5 +5,5 @@ export class DeleteAccountDto {
   @IsString()
   @MinLength(8)
   @MaxLength(64)
-  readonly password: string = '';
+  readonly password: string;
 }

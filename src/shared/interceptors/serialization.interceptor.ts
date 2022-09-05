@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 import { getSerializeType } from '@decorators/serialization.decorator';
 
 @Injectable()
-export default class SerializeInterceptor implements NestInterceptor {
+export class SerializeInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((args) => {

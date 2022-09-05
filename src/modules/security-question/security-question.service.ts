@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
-import SecurityQuestionsRepository from './security-question.repository';
-import SecurityQuestionEntity from '@entities//security-question.entity';
-import UpdateSecurityQuestionDto from './dto/update-security-question.dto';
-import CreateSecurityQuestionDto from './dto/create-security-question.dto';
+import { SecurityQuestionsRepository } from './security-question.repository';
+import { SecurityQuestionEntity } from '@entities//security-question.entity';
+import { UpdateSecurityQuestionDto } from './dto/update-security-question.dto';
+import { CreateSecurityQuestionDto } from './dto/create-security-question.dto';
 
 @Injectable()
-export default class SecurityQuestionsService {
+export class SecurityQuestionsService {
   constructor(
     private readonly securityQuestionsRepository: SecurityQuestionsRepository,
   ) {}

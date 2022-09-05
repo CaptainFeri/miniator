@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
-export default class SignInDto {
+export class SignInDto {
   constructor(body: SignInDto | null = null) {
     if (body) {
       this.username = body.username;
@@ -12,19 +12,19 @@ export default class SignInDto {
   @IsString()
   @MinLength(4)
   @MaxLength(128)
-  readonly username: string = '';
+  readonly username: string;
 
   @IsNotEmpty()
   @IsString()
   @MinLength(8)
   @MaxLength(64)
-  readonly password: string = '';
+  readonly password: string;
 
   @IsNotEmpty()
   @IsString()
-  readonly companyId: string = '';
+  readonly companyId: string;
 
   @IsNotEmpty()
   @IsString()
-  readonly roleId: string = '';
+  readonly roleId: string;
 }

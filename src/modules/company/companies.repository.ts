@@ -4,12 +4,12 @@ import { Repository, UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import PaginationUtils from '@utils/pagination.utils';
-import UpdateCompanyDto from './dto/update-company.dto';
-import CompanyEntity from '@entities/company.entity';
-import CreateCompanyDto from './dto/create-company.dto';
+import { UpdateCompanyDto } from './dto/update-company.dto';
+import { CompanyEntity } from '@entities/company.entity';
+import { CreateCompanyDto } from './dto/create-company.dto';
 
 @Injectable()
-export default class CompaniesRepository {
+export class CompaniesRepository {
   constructor(
     @InjectRepository(CompanyEntity)
     private readonly companiesModel: Repository<CompanyEntity>,

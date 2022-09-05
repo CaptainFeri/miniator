@@ -1,11 +1,11 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import WalletsService from './wallets.service';
-import WalletEntity from '@entities/wallet.entity';
-import WalletsRepository from './wallets.repository';
-import WalletTypesModule from '@/wallet-types/wallet-types.module';
-import AuthModule from '@/auth/auth.module';
+import { WalletsService } from './wallets.service';
+import { WalletEntity } from '@entities/wallet.entity';
+import { WalletsRepository } from './wallets.repository';
+import { WalletTypesModule } from '@/wallet-types/wallet-types.module';
+import { AuthModule } from '@/auth/auth.module';
 
 @Module({
   imports: [
@@ -16,4 +16,4 @@ import AuthModule from '@/auth/auth.module';
   providers: [WalletsService, WalletsRepository],
   exports: [WalletsService, WalletsRepository],
 })
-export default class WalletsModule {}
+export class WalletsModule {}

@@ -1,8 +1,8 @@
 import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 
-export default class RefreshTokenDto {
+export class RefreshTokenDto {
   @IsNotEmpty()
   @MinLength(32)
   @IsString()
-  readonly refreshToken: string = '';
+  readonly refreshToken: string;
 }

@@ -1,9 +1,9 @@
 import { Entity, Column, Index, OneToOne } from 'typeorm';
-import AccountEntity from '@entities/account.entity';
+import { AccountEntity } from '@entities/account.entity';
 import { BaseEntity } from '@entities/base.entity';
 
 @Entity('companyProfile')
-export default class CompanyProfileEntity extends BaseEntity {
+export class CompanyProfileEntity extends BaseEntity {
   @Column({ length: 64 })
   @Index({ unique: true })
   readonly economicCode: string = '';

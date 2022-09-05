@@ -4,14 +4,14 @@ import { Repository, UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import PaginationUtils from '@utils/pagination.utils';
-import UpdateAdminDto from './dto/update-admin.dto';
-import AdminEntity from '@entities/admin.entity';
-import CreateAdminDto from './dto/create-admin.dto';
+import { UpdateAdminDto } from './dto/update-admin.dto';
+import { AdminEntity } from '@entities/admin.entity';
+import { CreateAdminDto } from './dto/create-admin.dto';
 import { TypesEnum } from '@decorators/types.decorator';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
-export default class AdminsRepository {
+export class AdminsRepository {
   constructor(
     @InjectRepository(AdminEntity)
     private readonly adminsModel: Repository<AdminEntity>,

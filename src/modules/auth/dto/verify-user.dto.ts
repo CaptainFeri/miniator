@@ -1,3 +1,3 @@
-export default class VerifyAccountDto {
-  readonly email: string = '';
+export class VerifyAccountDto {
+  readonly email: string;
 }

@@ -4,12 +4,12 @@ import { Repository, UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import PaginationUtils from '@utils/pagination.utils';
-import UpdateWalletTypeDto from './dto/update-wallet-type.dto';
-import CreateWalletTypeDto from './dto/create-wallet-type.dto';
-import WalletTypeEntity from '@entities/wallet-type.entity';
+import { UpdateWalletTypeDto } from './dto/update-wallet-type.dto';
+import { CreateWalletTypeDto } from './dto/create-wallet-type.dto';
+import { WalletTypeEntity } from '@entities/wallet-type.entity';
 
 @Injectable()
-export default class WalletTypesRepository {
+export class WalletTypesRepository {
   constructor(
     @InjectRepository(WalletTypeEntity)
     private readonly walletsModel: Repository<WalletTypeEntity>,

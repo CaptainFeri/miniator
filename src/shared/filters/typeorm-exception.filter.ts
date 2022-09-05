@@ -10,6 +10,7 @@ import { AllExceptionFilter } from './all-exception.filter';
 @Catch(TypeORMError)
 export class TypeORMExceptionFilter extends AllExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
+    console.error(exception);
     return super.catch(
       exception instanceof EntityNotFoundError
         ? new NotFoundException()

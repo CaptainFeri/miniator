@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import AccountsService from '@/account/accounts.service';
-import AuthController from './auth.controller';
-import AuthService from './auth.service';
+import { AccountsService } from '@/account/accounts.service';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';

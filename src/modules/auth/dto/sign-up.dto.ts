@@ -6,25 +6,25 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export default class SignUpDto {
+export class SignUpDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(4)
   @MaxLength(64)
-  readonly username: string = '';
+  readonly username: string;
 
   @IsNotEmpty()
   @IsString()
   @MinLength(8)
   @MaxLength(64)
-  readonly password: string = '';
+  readonly password: string;
 
   @IsNotEmpty()
   @IsString()
   @IsEmail()
   @MinLength(5)
   @MaxLength(128)
-  readonly email: string = '';
+  readonly email: string;
 
   // @ApiProperty({ type: String })
   // @IsNotEmpty()

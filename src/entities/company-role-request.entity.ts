@@ -1,10 +1,10 @@
 import { Entity, Column, ManyToOne } from 'typeorm';
-import AccountEntity from '@entities/account.entity';
-import CompanyRoleEntity from '@entities/company-role.entity';
+import { AccountEntity } from '@entities/account.entity';
+import { CompanyRoleEntity } from '@entities/company-role.entity';
 import { BaseEntity } from '@entities/base.entity';
 
 @Entity('companyRole')
-export default class CompanyRoleRequestEntity extends BaseEntity {
+export class CompanyRoleRequestEntity extends BaseEntity {
   @Column()
   readonly status: boolean = false;
 

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MockType } from '@/types';
-import SecurityQuestionsController from './security-question.controller';
-import SecurityQuestionsService from './security-question.service';
+import { SecurityQuestionsController } from './security-question.controller';
+import { SecurityQuestionsService } from './security-question.service';
 
 describe('SecurityQuestion Controller', () => {
   let controller: SecurityQuestionsController;
@@ -35,14 +35,14 @@ describe('SecurityQuestion Controller', () => {
   });
 
   it('should create', async () => {
-    expect(controller.create).toBeDefined();
-    await controller.create({} as any);
+    expect(controller.Create).toBeDefined();
+    await controller.Create({} as any);
     expect(service.create).toBeCalled();
   });
 
   it('should update', async () => {
     expect(controller.update).toBeDefined();
-    await controller.update('', {} as any);
+    await controller.update({} as any);
     expect(service.update).toBeCalled();
   });
 
@@ -55,7 +55,7 @@ describe('SecurityQuestion Controller', () => {
 
   it('should set', async () => {
     expect(controller.set).toBeDefined();
-    await controller.set('', {} as any, '');
+    await controller.set({} as any, {} as any);
     expect(service.set).toBeCalled();
   });
 });

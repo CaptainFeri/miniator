@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export default class CreateWalletTypeDto {
+export class CreateWalletTypeDto {
   @IsNotEmpty()
   @IsString()
   readonly name: string;

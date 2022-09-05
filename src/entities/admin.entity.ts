@@ -1,9 +1,9 @@
 import { Entity, Column, Index, OneToMany } from 'typeorm';
 import { BaseEntity } from '@entities/base.entity';
-import CompanyEntity from '@entities/company.entity';
+import { CompanyEntity } from '@entities/company.entity';
 
 @Entity('admin')
-export default class AdminEntity extends BaseEntity {
+export class AdminEntity extends BaseEntity {
   @Column({ length: 64 })
   @Index({ unique: true })
   readonly username: string = '';

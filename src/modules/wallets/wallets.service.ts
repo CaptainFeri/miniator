@@ -1,15 +1,15 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
-import WalletsRepository from './wallets.repository';
-import WalletEntity from '@entities/wallet.entity';
-import AccountEntity from '@entities/account.entity';
-import WalletTypesRepository from '@/wallet-types/wallet-types.repository';
-import CompanyRoleEntity from '@entities/company-role.entity';
-import AuthRepository from '@/auth/auth.repository';
+import { WalletsRepository } from './wallets.repository';
+import { WalletEntity } from '@entities/wallet.entity';
+import { AccountEntity } from '@entities/account.entity';
+import { WalletTypesRepository } from '@/wallet-types/wallet-types.repository';
+import { CompanyRoleEntity } from '@entities/company-role.entity';
+import { AuthRepository } from '@/auth/auth.repository';
 
 @Injectable()
-export default class WalletsService {
+export class WalletsService {
   constructor(
     private readonly walletsRepository: WalletsRepository,
     private readonly walletTypesRepository: WalletTypesRepository,

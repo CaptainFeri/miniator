@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
-import AdminsRepository from './admins.repository';
-import AdminEntity from '@entities/admin.entity';
-import UpdateAdminDto from './dto/update-admin.dto';
+import { AdminsRepository } from './admins.repository';
+import { AdminEntity } from '@entities/admin.entity';
+import { UpdateAdminDto } from './dto/update-admin.dto';
 import * as bcrypt from 'bcryptjs';
-import CreateAdminDto from './dto/create-admin.dto';
+import { CreateAdminDto } from './dto/create-admin.dto';
 
 @Injectable()
-export default class AdminsService {
+export class AdminsService {
   constructor(private readonly adminsRepository: AdminsRepository) {}
 
   public async create(admin: CreateAdminDto): Promise<AdminEntity> {

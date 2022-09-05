@@ -4,15 +4,15 @@ import { Repository, UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import PaginationUtils from '@utils/pagination.utils';
-import UpdateRoleDto from './dto/update-role.dto';
-import CompanyRoleEntity from '@entities/company-role.entity';
-import CreateRoleDto from './dto/create-role.dto';
-import AccountEntity from '@entities/account.entity';
-import WalletsService from '@/wallets/wallets.service';
-import AccountsRepository from '@/account/accounts.repository';
+import { UpdateRoleDto } from './dto/update-role.dto';
+import { CompanyRoleEntity } from '@entities/company-role.entity';
+import { CreateRoleDto } from './dto/create-role.dto';
+import { AccountEntity } from '@entities/account.entity';
+import { WalletsService } from '@/wallets/wallets.service';
+import { AccountsRepository } from '@/account/accounts.repository';
 
 @Injectable()
-export default class RolesRepository {
+export class RolesRepository {
   constructor(
     @InjectRepository(CompanyRoleEntity)
     private readonly rolesModel: Repository<CompanyRoleEntity>,

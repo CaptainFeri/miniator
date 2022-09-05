@@ -1,8 +1,8 @@
 import { IsNotEmpty, IsString, IsJWT } from 'class-validator';
 
-export default class VerifyAccountTokenDto {
+export class VerifyAccountTokenDto {
   @IsNotEmpty()
   @IsString()
   @IsJWT()
-  readonly token: string = '';
+  readonly token: string;
 }

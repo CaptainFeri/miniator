@@ -1,6 +1,6 @@
 import { IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 
-export default class UpdateCompanyDto {
+export class UpdateCompanyDto {
   @IsUUID()
   id: string;
 

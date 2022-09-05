@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import AdminsController from './admins.controller';
-import AdminsService from './admins.service';
+import { AdminsController } from './admins.controller';
+import { AdminsService } from './admins.service';
 import { MockType } from '@/types';
 
 describe('Admins Controller', () => {
@@ -39,7 +39,7 @@ describe('Admins Controller', () => {
 
   it('should update', async () => {
     expect(controller.update).toBeDefined();
-    await controller.update('', {} as any);
+    await controller.update({} as any);
     expect(service.update).toBeCalled();
   });
 

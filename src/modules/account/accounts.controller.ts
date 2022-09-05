@@ -5,21 +5,21 @@ import {
   UseInterceptors,
   BadRequestException,
 } from '@nestjs/common';
-import JwtAccessGuard from '@guards/jwt-access.guard';
-import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
+import { JwtAccessGuard } from '@guards/jwt-access.guard';
+import { WrapResponseInterceptor } from '@interceptors/wrap-response.interceptor';
 import Serialize from '@decorators/serialization.decorator';
 import { AllAccountsResponseModel } from '@/account/models/account-response.model';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import { SuccessResponseInterface } from '@interfaces/success-response.interface';
-import AccountEntity from '@entities/account.entity';
-import AccountsService from './accounts.service';
+import { AccountEntity } from '@entities/account.entity';
+import { AccountsService } from './accounts.service';
 import { User } from '@decorators/user.decorator';
 import { Types, TypesEnum } from '@decorators/types.decorator';
 import { DeleteAccountDto } from './dto';
 import ResponseUtils from '@utils/response.utils';
 import PaginationUtils from '@utils/pagination.utils';
-import SignUpDto from '@/auth/dto/sign-up.dto';
+import { SignUpDto } from '@/auth/dto/sign-up.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateCompanyProfileDto } from './dto/update-company-profile.dto';
 import { BanAccountDto } from './dto';
@@ -27,7 +27,7 @@ import { GrpcMethod } from '@nestjs/microservices';
 
 @UseInterceptors(WrapResponseInterceptor)
 @Controller()
-export default class AccountsController {
+export class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
 
   @GrpcMethod('AccountService', 'Delete')

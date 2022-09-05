@@ -11,7 +11,7 @@ import * as _ from 'lodash';
 import PaginationUtils from '@utils/pagination.utils';
 
 @Injectable()
-export default class WrapResponseInterceptor implements NestInterceptor {
+export class WrapResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((...args) => {

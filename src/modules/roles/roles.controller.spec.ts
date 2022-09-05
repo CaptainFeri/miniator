@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import RolesController from './roles.controller';
-import RolesService from './roles.service';
+import { RolesController } from './roles.controller';
+import { RolesService } from './roles.service';
 import { MockType } from '@/types';
 
 describe('Roles Controller', () => {
@@ -48,7 +48,7 @@ describe('Roles Controller', () => {
 
   it('should update', async () => {
     expect(controller.update).toBeDefined();
-    await controller.update('', {} as any);
+    await controller.update({} as any);
     expect(service.update).toBeCalled();
   });
 
@@ -67,7 +67,7 @@ describe('Roles Controller', () => {
 
   it('should accept request', async () => {
     expect(controller.accept).toBeDefined();
-    await controller.accept('');
+    await controller.accept({}, {} as any);
     expect(service.accept).toBeCalled();
   });
 });

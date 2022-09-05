@@ -4,13 +4,13 @@ import { Repository, UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import PaginationUtils from '@utils/pagination.utils';
-import UpdateSecurityQuestionDto from './dto/update-security-question.dto';
-import SecurityQuestionEntity from '@entities/security-question.entity';
-import SecurityQuestionAnswerEntity from '@entities/securityQuestionAnswer.entity';
-import CreateSecurityQuestionDto from './dto/create-security-question.dto';
+import { UpdateSecurityQuestionDto } from './dto/update-security-question.dto';
+import { SecurityQuestionEntity } from '@entities/security-question.entity';
+import { SecurityQuestionAnswerEntity } from '@entities/securityQuestionAnswer.entity';
+import { CreateSecurityQuestionDto } from './dto/create-security-question.dto';
 
 @Injectable()
-export default class SecurityQuestionsRepository {
+export class SecurityQuestionsRepository {
   constructor(
     @InjectRepository(SecurityQuestionEntity)
     private readonly securityQuestionsModel: Repository<SecurityQuestionEntity>,

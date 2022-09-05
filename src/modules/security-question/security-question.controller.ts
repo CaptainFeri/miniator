@@ -1,20 +1,20 @@
 import { BadRequestException, Controller } from '@nestjs/common';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
-import SecurityQuestionsService from './security-question.service';
+import { SecurityQuestionsService } from './security-question.service';
 import PaginationUtils from '@utils/pagination.utils';
-import AccountEntity from '@entities/account.entity';
+import { AccountEntity } from '@entities/account.entity';
 import User from '@decorators/user.decorator';
 import { Types, TypesEnum } from '@decorators/types.decorator';
 import { Public } from '@decorators/public.decorator';
-import CreateSecurityQuestionDto from './dto/create-security-question.dto';
-import SecurityQuestionEntity from '@entities/security-question.entity';
-import UpdateSecurityQuestionDto from './dto/update-security-question.dto';
+import { CreateSecurityQuestionDto } from './dto/create-security-question.dto';
+import { SecurityQuestionEntity } from '@entities/security-question.entity';
+import { UpdateSecurityQuestionDto } from './dto/update-security-question.dto';
 import { GrpcMethod } from '@nestjs/microservices';
 import { SetSecurityQuestionDto } from './dto/set-security-question.dto';
 
 @Controller()
-export default class SecurityQuestionsGrpcController {
+export class SecurityQuestionsController {
   constructor(
     private readonly securityQuestionsService: SecurityQuestionsService,
   ) {}

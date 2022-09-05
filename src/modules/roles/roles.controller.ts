@@ -4,19 +4,20 @@ import {
   NotFoundException,
   UseGuards,
 } from '@nestjs/common';
-import JwtAccessGuard from '@guards/jwt-access.guard';
+import { JwtAccessGuard } from '@guards/jwt-access.guard';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import PaginationUtils from '@utils/pagination.utils';
-import RolesService from './roles.service';
+import { RolesService } from './roles.service';
 import User from '@decorators/user.decorator';
-import AccountEntity from '@entities/account.entity';
+import { AccountEntity } from '@entities/account.entity';
 import { Types, TypesEnum } from '@decorators/types.decorator';
 import { Public } from '@decorators/public.decorator';
-import CreateRoleDto from './dto/create-role.dto';
+import { CreateRoleDto } from './dto/create-role.dto';
 import { GrpcMethod } from '@nestjs/microservices';
+import { UpdateRoleDto } from '@/roles/dto/update-role.dto';
 
 @Controller()
-export default class RolesController {
+export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
   @Types(TypesEnum.superAdmin)
@@ -59,7 +60,7 @@ export default class RolesController {
   @UseGuards(JwtAccessGuard)
   @Types(TypesEnum.superAdmin)
   @GrpcMethod('RolesService', 'Update')
-  async update(body: any): Promise<any> {
+  async update(body: UpdateRoleDto): Promise<any> {
     await this.rolesService.update(body.id, body);
 
     return {

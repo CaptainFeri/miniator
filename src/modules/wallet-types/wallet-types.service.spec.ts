@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import WalletTypesService from './wallet-types.service';
-import WalletsRepository from './wallet-types.repository';
+import { WalletTypesService } from './wallet-types.service';
+import { WalletTypesRepository } from './wallet-types.repository';
 import { MockType } from '@/types';
 
 describe('WalletsService', () => {
   let service: WalletTypesService;
-  let repository: MockType<WalletsRepository>;
+  let repository: MockType<WalletTypesRepository>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         {
-          provide: WalletsRepository,
+          provide: WalletTypesRepository,
           useValue: {
             create: jest.fn(),
             getById: jest.fn(),
@@ -24,7 +24,7 @@ describe('WalletsService', () => {
     }).compile();
 
     service = module.get<WalletTypesService>(WalletTypesService);
-    repository = module.get(WalletsRepository);
+    repository = module.get(WalletTypesRepository);
   });
 
   it('should be defined', () => {

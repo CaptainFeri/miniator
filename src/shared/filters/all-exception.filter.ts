@@ -9,6 +9,7 @@ import { HttpExceptionFilter } from './http-exception.filter';
 @Catch()
 export class AllExceptionFilter extends HttpExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
+    console.error(exception);
     return super.catch(
       exception instanceof HttpException
         ? exception

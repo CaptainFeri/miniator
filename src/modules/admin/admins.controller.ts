@@ -1,16 +1,16 @@
 import { BadRequestException, Controller } from '@nestjs/common';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
-import AdminsService from './admins.service';
+import { AdminsService } from './admins.service';
 import PaginationUtils from '@utils/pagination.utils';
 import { Types, TypesEnum } from '@decorators/types.decorator';
-import CreateAdminDto from './dto/create-admin.dto';
-import AdminEntity from '@entities/admin.entity';
+import { CreateAdminDto } from './dto/create-admin.dto';
+import { AdminEntity } from '@entities/admin.entity';
 import { GrpcMethod } from '@nestjs/microservices';
-import UpdateAdminDto from '@/admin/dto/update-admin.dto';
+import { UpdateAdminDto } from '@/admin/dto/update-admin.dto';
 
 @Controller()
-export default class AdminsController {
+export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
   @Types(TypesEnum.superAdmin)

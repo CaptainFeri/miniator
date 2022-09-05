@@ -5,7 +5,7 @@ import { JwtDecodeResponse } from '@interfaces/jwt-decode-response.interface';
 import { TypesEnum } from '@decorators/types.decorator';
 
 @Injectable()
-export default class TypesGuard implements CanActivate {
+export class TypesGuard implements CanActivate {
   constructor(private reflector: Reflector, private jwtService: JwtService) {}
 
   getRequest(context: ExecutionContext) {

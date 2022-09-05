@@ -4,11 +4,11 @@ import { Repository, UpdateResult } from 'typeorm';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import PaginationUtils from '@utils/pagination.utils';
-import CompanyRoleRequestEntity from '@entities/company-role-request.entity';
-import CompanyRoleEntity from '@entities/company-role.entity';
+import { CompanyRoleRequestEntity } from '@entities/company-role-request.entity';
+import { CompanyRoleEntity } from '@entities/company-role.entity';
 
 @Injectable()
-export default class RoleRequestsRepository {
+export class RoleRequestsRepository {
   constructor(
     @InjectRepository(CompanyRoleRequestEntity)
     private readonly roleRequestsModel: Repository<CompanyRoleRequestEntity>,

@@ -8,15 +8,15 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import ProfileEntity from './profile.entity';
-import CompanyProfileEntity from './companyProfile.entity';
-import SecurityQuestionAnswerEntity from './securityQuestionAnswer.entity';
+import { ProfileEntity } from './profile.entity';
+import { CompanyProfileEntity } from './companyProfile.entity';
+import { SecurityQuestionAnswerEntity } from './securityQuestionAnswer.entity';
 import { BaseEntity } from '@entities/base.entity';
-import CompanyRoleRequestEntity from '@entities/company-role-request.entity';
-import CompanyRoleEntity from '@entities/company-role.entity';
+import { CompanyRoleRequestEntity } from '@entities/company-role-request.entity';
+import { CompanyRoleEntity } from '@entities/company-role.entity';
 
 @Entity('account')
-export default class AccountEntity extends BaseEntity {
+export class AccountEntity extends BaseEntity {
   @Column({ length: 64 })
   @Index({ unique: true })
   readonly username: string = '';

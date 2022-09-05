@@ -1,5 +1,5 @@
 import { Entity, Column, Index, OneToOne } from 'typeorm';
-import AccountEntity from '@entities/account.entity';
+import { AccountEntity } from '@entities/account.entity';
 import { BaseEntity } from '@entities/base.entity';
 
 export enum GenderEnum {
@@ -8,7 +8,7 @@ export enum GenderEnum {
 }
 
 @Entity('profile')
-export default class ProfileEntity extends BaseEntity {
+export class ProfileEntity extends BaseEntity {
   @Column({ length: 10 })
   @Index({ unique: true })
   readonly nationalCode: string = '';

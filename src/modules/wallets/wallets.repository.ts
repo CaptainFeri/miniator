@@ -4,13 +4,13 @@ import { Repository } from 'typeorm';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import PaginationUtils from '@utils/pagination.utils';
-import WalletEntity from '@entities/wallet.entity';
-import AccountEntity from '@entities/account.entity';
-import WalletTypeEntity from '@entities/wallet-type.entity';
-import CompanyRoleEntity from '@entities/company-role.entity';
+import { WalletEntity } from '@entities/wallet.entity';
+import { AccountEntity } from '@entities/account.entity';
+import { WalletTypeEntity } from '@entities/wallet-type.entity';
+import { CompanyRoleEntity } from '@entities/company-role.entity';
 
 @Injectable()
-export default class WalletsRepository {
+export class WalletsRepository {
   constructor(
     @InjectRepository(WalletEntity)
     private readonly walletsModel: Repository<WalletEntity>,

@@ -15,32 +15,29 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SuccessResponseInterface } from '@interfaces/success-response.interface';
-import AccountsService from '@/account/accounts.service';
-import JwtAccessGuard from '@guards/jwt-access.guard';
-import TypesGuard from '@guards/types.guard';
-import AccountEntity from '@entities/account.entity';
-import AuthBearer from '@decorators/auth-bearer.decorator';
+import { AccountsService } from '@/account/accounts.service';
+import { JwtAccessGuard } from '@guards/jwt-access.guard';
+import { TypesGuard } from '@guards/types.guard';
+import { AccountEntity } from '@entities/account.entity';
+import { AuthBearer } from '@decorators/auth-bearer.decorator';
 import { Types, TypesEnum } from '@decorators/types.decorator';
 import { DecodedAccount } from './interfaces/decoded-account.interface';
-import AuthService from './auth.service';
-import RefreshTokenDto from './dto/refresh-token.dto';
-import SignInDto from './dto/sign-in.dto';
-import SignUpDto from './dto/sign-up.dto';
+import { AuthService } from './auth.service';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { SignInDto } from './dto/sign-in.dto';
+import { SignUpDto } from './dto/sign-up.dto';
 import ResponseUtils from '@utils/response.utils';
 import { User } from '@decorators/user.decorator';
 import { Public } from '@decorators/public.decorator';
-import JwtRefreshGuard from '@guards/jwt-refresh.guard';
-import AdminEntity from '@entities/admin.entity';
+import { JwtRefreshGuard } from '@guards/jwt-refresh.guard';
+import { AdminEntity } from '@entities/admin.entity';
 import authConstants from './constants/auth-constants';
 import { GrpcMethod } from '@nestjs/microservices';
-import AdminsService from '@/admin/admins.service';
-import VerifyAccountTokenDto from './dto/verify-account.dto';
+import { AdminsService } from '@/admin/admins.service';
+import { VerifyAccountTokenDto } from './dto/verify-account.dto';
 
-// @ApiTags('Auth')
-// @UseInterceptors(WrapResponseInterceptor)
-// @ApiExtraModels(JwtTokensDto)
 @Controller('auth')
-export default class AuthController {
+export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly accountsService: AccountsService,

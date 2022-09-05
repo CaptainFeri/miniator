@@ -2,9 +2,9 @@ import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 // @Injectable()
-// export default class JwtRefreshGuard extends AuthGuard('refreshToken') {}
+// export class JwtRefreshGuard extends AuthGuard('refreshToken') {}
 
-export default class JwtRefreshGuard implements CanActivate {
+export class JwtRefreshGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
 
   getRequest(context: ExecutionContext) {

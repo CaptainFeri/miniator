@@ -1,5 +1,5 @@
-export default class JwtTokensDto {
-  readonly accessToken: string = '';
+export class JwtTokensDto {
+  readonly accessToken: string;
 
-  readonly refreshToken: string = '';
+  readonly refreshToken: string;
 }

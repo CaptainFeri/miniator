@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtStrategyValidate } from '../interfaces/jwt-strategy-validate.interface';
 
 @Injectable()
-export default class JwtRefreshStrategy extends PassportStrategy(
+export class JwtRefreshStrategy extends PassportStrategy(
   Strategy,
   'refreshToken',
 ) {
