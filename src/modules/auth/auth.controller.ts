@@ -35,6 +35,8 @@ import authConstants from './constants/auth-constants';
 import { GrpcMethod } from '@nestjs/microservices';
 import { AdminsService } from '@/admin/admins.service';
 import { VerifyAccountTokenDto } from './dto/verify-account.dto';
+import { JwtService } from '@nestjs/jwt';
+import { AdminSignInDto } from '@/auth/dto/admin-sign-in.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -43,67 +45,54 @@ export class AuthController {
     private readonly accountsService: AccountsService,
     private readonly adminService: AdminsService,
     private readonly configService: ConfigService,
+    private readonly jwtService: JwtService,
   ) {}
 
   @GrpcMethod('AuthService', 'Login')
   async Login(data: SignInDto) {
-    const login = await this.accountsService.login(
+    const login = await this.authService.validateAccount(
       data.username,
       data.password,
     );
-    if (login.status) {
-      const user = {
-        username: login.username,
-        id: login.id,
-        type: login.type,
-      };
-      return ResponseUtils.success(
-        'tokens',
-        await this.authService.login(user),
-      );
+
+    if (!login) {
+      throw new UnauthorizedException();
     }
-    return ResponseUtils.error(login.message);
+
+    const user = {
+      username: login.username,
+      id: login.id,
+      type: login.type,
+    };
+
+    await this.authService.login(user);
   }
 
   @GrpcMethod('AuthService', 'LoginAdmin')
-  async LoginAdmin(data: SignInDto) {
+  async LoginAdmin(data: AdminSignInDto) {
     const login = await this.adminService.login(data.username, data.password);
-    if (login.status) {
-      const user = {
-        username: login.username,
-        id: login.id,
-        type: login.type,
-      };
-      const data = ResponseUtils.success(
-        'tokens',
-        await this.authService.login(user),
-      );
-      console.log(data);
-      return data;
+
+    if (!login.status) {
+      throw new UnauthorizedException();
     }
-    return ResponseUtils.error(login.message);
+
+    const user = {
+      username: login.username,
+      id: login.id,
+      type: login.type,
+    };
+
+    return await this.authService.login(user);
   }
 
-  @UseGuards(JwtRefreshGuard)
-  @GrpcMethod('AuthService', 'refreshToken1')
-  async refreshToken1(data: RefreshTokenDto, @User('authorization') account) {
-    const oldRefreshToken: string | null =
-      await this.authService.getRefreshTokenByUsername(account.username);
-    // if the old refresh token is not equal to request refresh token then this user is unauthorized
-    if (!oldRefreshToken || oldRefreshToken !== data.refreshToken) {
-      throw new UnauthorizedException(
-        'Authentication credentials were missing or incorrect',
-      );
-    }
-    const payload = {
-      id: account.id,
-      username: account.username,
-      type: TypesEnum.user,
+  @GrpcMethod('AuthService', 'RefreshToken')
+  async RefreshToken(data: RefreshTokenDto) {
+    const payload = await this.jwtService.verifyAsync(data.refreshToken, {
+      secret: this.configService.get<string>('REFRESH_SECRET'),
+    });
+    return {
+      token: (await this.authService.login(payload)).accessToken,
     };
-    return ResponseUtils.success(
-      'tokens',
-      await this.authService.login(payload),
-    );
   }
 
   @GrpcMethod('AuthService', 'SignUp')
@@ -123,11 +112,10 @@ export class AuthController {
     //     host: this.configService.get('HOST'),
     //   },
     // });
-    return ResponseUtils.success('auth', {
-      message: 'Success! please verify your email',
-      // TODO: remove this for production
+    return {
+      success: true,
       url: `${this.configService.get('HOST')}/auth/verify?token=${token}`,
-    });
+    };
   }
 
   @GrpcMethod('AuthService', 'Verify')
@@ -150,9 +138,9 @@ export class AuthController {
 
     await this.accountsService.verify(foundAccount.id);
 
-    return ResponseUtils.success('users', {
-      message: 'Success!',
-    });
+    return {
+      success: true,
+    };
   }
 
   @Public()

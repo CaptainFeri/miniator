@@ -3,7 +3,7 @@ import { AccountEntity } from '@entities/account.entity';
 import { CompanyRoleEntity } from '@entities/company-role.entity';
 import { BaseEntity } from '@entities/base.entity';
 
-@Entity('companyRole')
+@Entity('companyRoleRequest')
 export class CompanyRoleRequestEntity extends BaseEntity {
   @Column()
   readonly status: boolean = false;

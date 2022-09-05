@@ -22,9 +22,13 @@ export class RolesRepository {
   ) {}
 
   public async create(roleDto: CreateRoleDto): Promise<CompanyRoleEntity> {
+    console.log(roleDto);
     const role = await this.rolesModel.save({
       ...roleDto,
     });
+
+    console.log(role);
+
     if (!role.isSpecial) {
       this.accountsRepository
         .getAllVerified()

@@ -28,6 +28,7 @@ export class AuthService {
     password: string,
   ): Promise<null | ValidateAccountOutput> {
     const pwd = await this.authRepository.getPassword(username);
+    console.log(pwd);
 
     if (!pwd) {
       throw new NotFoundException('The item does not exist');

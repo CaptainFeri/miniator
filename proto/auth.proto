@@ -2,26 +2,29 @@ syntax = "proto3";
 
 package auth;
 
+import "common.proto";
+
 service AuthService {
   rpc Login(LoginRequest) returns (LoginResponse) {}
-  rpc LoginAdmin(LoginRequest) returns (LoginResponse) {}
-  rpc refreshToken1(RefreshTokenRequest) returns (RefreshTokenResponse) {}
+  rpc LoginAdmin(AdminLoginRequest) returns (LoginResponse) {}
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {}
   rpc SignUp(SignUpRequest) returns (SignUpResponse) {}
+  rpc Verify(VerifyRequest) returns (SuccessResponse) {}
 }
 
 message LoginRequest {
   string username = 1;
   string password = 2;
+  string companyId = 3;
+  string roleId = 4;
+}
+
+message AdminLoginRequest {
+  string username = 1;
+  string password = 2;
 }
 
 message LoginResponse {
-  bool status = 1;
-  string message = 2;
-  string collectionName = 3;
-  TokenDataResponse data = 4;
-}
-
-message TokenDataResponse {
   string accessToken = 1;
   string refreshToken = 2;
 }
@@ -40,14 +43,11 @@ message SignUpRequest {
   string email = 3;
 }
 
-message SignUpResponse {
-  bool status = 1;
-  string message = 2;
-  string collectionName = 3;
-  SignUpVerifyResponse data = 4;
+message SignUpResponse{
+  bool success = 1;
+  string url = 2;
 }
 
-message SignUpVerifyResponse{
-  string message = 1;
-  string url = 2;
+message VerifyRequest {
+  string token = 1;
 }

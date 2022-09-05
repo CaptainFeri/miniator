@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class SignInDto {
-  constructor(body: SignInDto | null = null) {
+  constructor(body: any) {
     if (body) {
       this.username = body.username;
       this.password = body.password;
