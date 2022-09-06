@@ -195,6 +195,11 @@ export class AccountsRepository {
     return account.profile;
   }
 
+  async getCompanyProfile(id: string) {
+    const account = await this.accountsModel.findOne(id);
+    return account.companyProfile;
+  }
+
   async updateCompanyProfile(id: string, data: UpdateCompanyProfileDto) {
     const account = await this.accountsModel.findOne(id);
     await this.accountsModel.save({

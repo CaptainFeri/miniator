@@ -11,13 +11,13 @@ export enum GenderEnum {
 export class ProfileEntity extends BaseEntity {
   @Column({ length: 10 })
   @Index({ unique: true })
-  readonly nationalCode: string = '';
+  readonly nationalCode: string;
 
   @Column({ length: 64 })
-  readonly firstName: string = '';
+  readonly firstName: string;
 
   @Column({ length: 64 })
-  readonly lastName: string = '';
+  readonly lastName: string;
 
   @Column({
     type: 'enum',
@@ -27,16 +27,16 @@ export class ProfileEntity extends BaseEntity {
   readonly gender: GenderEnum = GenderEnum.Male;
 
   @Column({ length: 64 })
-  readonly phone: string = '';
+  readonly phone: string;
 
   @Column('jsonb', { nullable: true })
   readonly socialMedia: object[];
 
   @Column({ length: 64 })
-  readonly city: string = '';
+  readonly city: string;
 
   @Column({ length: 64 })
-  readonly job: string = '';
+  readonly job: string;
 
   @Column('timestamp with time zone')
   readonly birthday: Date = new Date();

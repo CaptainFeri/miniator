@@ -45,7 +45,7 @@ message SignUpRequest {
 
 message SignUpResponse{
   bool success = 1;
-  string url = 2;
+  string token = 2;
 }
 
 message VerifyRequest {

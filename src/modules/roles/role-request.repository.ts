@@ -6,12 +6,14 @@ import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface'
 import PaginationUtils from '@utils/pagination.utils';
 import { CompanyRoleRequestEntity } from '@entities/company-role-request.entity';
 import { CompanyRoleEntity } from '@entities/company-role.entity';
+import { RolesRepository } from '@/roles/roles.repository';
 
 @Injectable()
 export class RoleRequestsRepository {
   constructor(
     @InjectRepository(CompanyRoleRequestEntity)
     private readonly roleRequestsModel: Repository<CompanyRoleRequestEntity>,
+    private readonly rolesRepository: RolesRepository,
   ) {}
 
   public async create(
@@ -40,7 +42,7 @@ export class RoleRequestsRepository {
     const req = await this.roleRequestsModel.findOne(id, {
       relations: ['companyRole'],
     });
-    return req.companyRole;
+    return this.rolesRepository.getByIdWithCompany(req.companyRole.id);
   }
 
   public async getByUserId(

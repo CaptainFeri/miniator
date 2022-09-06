@@ -22,12 +22,9 @@ export class RolesRepository {
   ) {}
 
   public async create(roleDto: CreateRoleDto): Promise<CompanyRoleEntity> {
-    console.log(roleDto);
     const role = await this.rolesModel.save({
       ...roleDto,
     });
-
-    console.log(role);
 
     if (!role.isSpecial) {
       this.accountsRepository
@@ -41,6 +38,14 @@ export class RolesRepository {
 
   public async getById(id: string): Promise<CompanyRoleEntity | undefined> {
     return this.rolesModel.findOne(id);
+  }
+
+  public async getByIdWithCompany(
+    id: string,
+  ): Promise<CompanyRoleEntity | undefined> {
+    return this.rolesModel.findOne(id, {
+      relations: ['company'],
+    });
   }
 
   public updateById(id: string, data: UpdateRoleDto): Promise<UpdateResult> {
@@ -65,7 +70,10 @@ export class RolesRepository {
   }
 
   public async addCommonRolesToUser(account: AccountEntity) {
-    const roles = await this.rolesModel.find({ isSpecial: false });
+    const roles = await this.rolesModel.find({
+      where: { isSpecial: false },
+      relations: ['company'],
+    });
     return Promise.all(roles.map((role) => this.addRoleToUser(role, account)));
   }
 

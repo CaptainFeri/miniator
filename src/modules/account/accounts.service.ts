@@ -109,6 +109,10 @@ export class AccountsService {
     return await this.accountsRepository.getProfile(id);
   }
 
+  async getCompanyProfile(id: string) {
+    return await this.accountsRepository.getCompanyProfile(id);
+  }
+
   async updateCompanyProfile(id: string, data: UpdateCompanyProfileDto) {
     await this.accountsRepository.updateCompanyProfile(id, data);
   }

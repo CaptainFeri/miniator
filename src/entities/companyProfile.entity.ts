@@ -6,16 +6,16 @@ import { BaseEntity } from '@entities/base.entity';
 export class CompanyProfileEntity extends BaseEntity {
   @Column({ length: 64 })
   @Index({ unique: true })
-  readonly economicCode: string = '';
+  readonly economicCode: string;
 
   @Column({ length: 64 })
-  readonly registrationId: string = '';
+  readonly registrationId: string;
 
   @Column({ length: 64 })
-  readonly phone: string = '';
+  readonly phone: string;
 
   @Column({ length: 64 })
-  readonly activityField: string = '';
+  readonly activityField: string;
 
   @OneToOne(() => AccountEntity, (object) => object.companyProfile, {
     onDelete: 'CASCADE',

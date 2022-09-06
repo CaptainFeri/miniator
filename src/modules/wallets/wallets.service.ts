@@ -34,6 +34,7 @@ export class WalletsService {
       const wallet = await this.walletsRepository.create(account, type, role);
       await this.authRepository.addUserRole(
         account.id,
+        role.company.id,
         role.id,
         type.name,
         wallet.id,

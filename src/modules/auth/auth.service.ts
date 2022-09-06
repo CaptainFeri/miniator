@@ -1,6 +1,10 @@
 import * as bcrypt from 'bcryptjs';
 
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AccountsService } from '@/account/accounts.service';
@@ -28,7 +32,6 @@ export class AuthService {
     password: string,
   ): Promise<null | ValidateAccountOutput> {
     const pwd = await this.authRepository.getPassword(username);
-    console.log(pwd);
 
     if (!pwd) {
       throw new NotFoundException('The item does not exist');
@@ -74,27 +77,26 @@ export class AuthService {
     return null;
   }
 
-  async login(data: LoginPayload): Promise<JwtTokensDto> {
-    const payload: LoginPayload = {
-      id: data.id,
-      username: data.username,
-      type: data.type,
-    };
-
-    const accessToken = this.jwtService.sign(payload, {
+  async accessToken(payload: LoginPayload) {
+    return this.jwtService.sign(payload, {
       expiresIn: authConstants.jwt.expirationTime.accessToken,
       secret: this.configService.get<string>('ACCESS_SECRET'),
     });
+  }
+
+  async login(payload: any): Promise<JwtTokensDto> {
+    const accessToken = await this.accessToken(payload);
+
     const refreshToken = this.jwtService.sign(payload, {
       expiresIn: authConstants.jwt.expirationTime.refreshToken,
       secret: this.configService.get<string>('REFRESH_SECRET'),
     });
 
-    await this.authRepository.addRefreshToken(
-      ((data.type === TypesEnum.admin ? 'admin:' : '') +
-        payload.username) as string,
-      refreshToken,
-    );
+    // await this.authRepository.addRefreshToken(
+    //   ((payload.type === TypesEnum.admin ? 'admin:' : '') +
+    //     payload.username) as string,
+    //   refreshToken,
+    // );
 
     return {
       accessToken,
@@ -103,7 +105,6 @@ export class AuthService {
   }
 
   getRefreshTokenByUsername(_username: string): string {
-    // TODO: change this
     return '';
     // return this.authRepository.getToken(username);
   }
@@ -127,14 +128,22 @@ export class AuthService {
   }
 
   async createPayload(id: string, signIn: SignInDto) {
+    const wallets = await this.authRepository.getWallets(
+      id,
+      signIn.companyId,
+      signIn.roleId,
+    );
+    if (!wallets) {
+      throw new BadRequestException();
+    }
     return {
-      userId: id,
+      id,
       services: [
         {
           id: signIn.companyId,
           roles: {
             id: signIn.roleId,
-            wallets: await this.authRepository.getWallets(id, signIn.roleId),
+            wallets,
           },
         },
       ],

@@ -49,7 +49,6 @@ export class AdminsRepository {
   }
 
   async login(username: string, password: string) {
-    console.log(password);
     const user = await this.adminsModel.findOne({
       where: {
         username,

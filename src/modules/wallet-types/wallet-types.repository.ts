@@ -29,7 +29,6 @@ export class WalletTypesRepository {
     id: string,
     data: UpdateWalletTypeDto,
   ): Promise<UpdateResult> {
-    console.log(data.name);
     return this.walletsModel.update(id, {
       name: data.name,
     });

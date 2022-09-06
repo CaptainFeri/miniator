@@ -1,36 +1,14 @@
 import {
-  Body,
   Controller,
-  HttpCode,
-  Get,
-  Post,
-  Delete,
-  Param,
   UnauthorizedException,
-  UseGuards,
   NotFoundException,
-  ForbiddenException,
-  HttpStatus,
-  Query,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SuccessResponseInterface } from '@interfaces/success-response.interface';
 import { AccountsService } from '@/account/accounts.service';
-import { JwtAccessGuard } from '@guards/jwt-access.guard';
-import { TypesGuard } from '@guards/types.guard';
-import { AccountEntity } from '@entities/account.entity';
-import { AuthBearer } from '@decorators/auth-bearer.decorator';
-import { Types, TypesEnum } from '@decorators/types.decorator';
-import { DecodedAccount } from './interfaces/decoded-account.interface';
 import { AuthService } from './auth.service';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
-import ResponseUtils from '@utils/response.utils';
-import { User } from '@decorators/user.decorator';
-import { Public } from '@decorators/public.decorator';
-import { JwtRefreshGuard } from '@guards/jwt-refresh.guard';
-import { AdminEntity } from '@entities/admin.entity';
 import authConstants from './constants/auth-constants';
 import { GrpcMethod } from '@nestjs/microservices';
 import { AdminsService } from '@/admin/admins.service';
@@ -59,13 +37,9 @@ export class AuthController {
       throw new UnauthorizedException();
     }
 
-    const user = {
-      username: login.username,
-      id: login.id,
-      type: login.type,
-    };
-
-    await this.authService.login(user);
+    return await this.authService.login(
+      await this.authService.createPayload(login.id, data),
+    );
   }
 
   @GrpcMethod('AuthService', 'LoginAdmin')
@@ -91,7 +65,7 @@ export class AuthController {
       secret: this.configService.get<string>('REFRESH_SECRET'),
     });
     return {
-      token: (await this.authService.login(payload)).accessToken,
+      token: await this.authService.accessToken(payload),
     };
   }
 
@@ -114,7 +88,7 @@ export class AuthController {
     // });
     return {
       success: true,
-      url: `${this.configService.get('HOST')}/auth/verify?token=${token}`,
+      token,
     };
   }
 
@@ -141,172 +115,5 @@ export class AuthController {
     return {
       success: true,
     };
-  }
-
-  @Public()
-  @Post('sign-in')
-  async signInApi(
-    @User() account: any,
-  ): Promise<SuccessResponseInterface | never> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...user } = account;
-
-    return ResponseUtils.success('tokens', await this.authService.login(user));
-  }
-
-  @Public()
-  @Post('admins/sign-in')
-  async adminSignIn(
-    @User() adminEntity: any,
-  ): Promise<SuccessResponseInterface | never> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...admin } = adminEntity;
-
-    return ResponseUtils.success('tokens', await this.authService.login(admin));
-  }
-
-  @Post('refresh-token')
-  @Public()
-  @UseGuards(JwtRefreshGuard)
-  async refreshToken(
-    @User() account: AccountEntity,
-    @Body() refreshTokenDto: RefreshTokenDto,
-  ): Promise<SuccessResponseInterface | never> {
-    const oldRefreshToken: string | null =
-      await this.authService.getRefreshTokenByUsername(account.username);
-
-    // if the old refresh token is not equal to request refresh token then this user is unauthorized
-    if (!oldRefreshToken || oldRefreshToken !== refreshTokenDto.refreshToken) {
-      throw new UnauthorizedException(
-        'Authentication credentials were missing or incorrect',
-      );
-    }
-
-    const payload = {
-      id: account.id,
-      username: account.username,
-      type: TypesEnum.user,
-    };
-
-    return ResponseUtils.success(
-      'tokens',
-      await this.authService.login(payload),
-    );
-  }
-
-  @Post('admins/refresh-token')
-  @Public()
-  @UseGuards(JwtRefreshGuard)
-  async adminRefreshToken(
-    @User() admin: AdminEntity,
-    @Body() refreshTokenDto: RefreshTokenDto,
-  ): Promise<SuccessResponseInterface | never> {
-    const oldRefreshToken: string | null =
-      await this.authService.getRefreshTokenByUsername(
-        'admin:' + admin.username,
-      );
-
-    // if the old refresh token is not equal to request refresh token then this user is unauthorized
-    if (!oldRefreshToken || oldRefreshToken !== refreshTokenDto.refreshToken) {
-      throw new UnauthorizedException(
-        'Authentication credentials were missing or incorrect',
-      );
-    }
-
-    const payload = {
-      id: admin.id,
-      username: admin.username,
-      type: TypesEnum.admin,
-    };
-
-    return ResponseUtils.success(
-      'tokens',
-      await this.authService.login(payload),
-    );
-  }
-
-  @Get('verify')
-  @Public()
-  async verifyAccount(
-    @Query('token') token: string,
-  ): Promise<SuccessResponseInterface | never> {
-    const { id } = await this.authService.verifyEmailVerToken(
-      token,
-      this.configService.get<string>(
-        'ACCESS_SECRET',
-        authConstants.jwt.secrets.accessToken,
-      ),
-    );
-    const foundAccount = await this.accountsService.getUnverifiedAccountById(
-      id,
-    );
-
-    if (!foundAccount) {
-      throw new NotFoundException('The user does not exist');
-    }
-
-    return ResponseUtils.success(
-      'users',
-      await this.accountsService.update(foundAccount.id, { verified: true }),
-    );
-  }
-
-  @UseGuards(JwtAccessGuard)
-  @Delete('logout/:token')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async logout(@Param('token') token: string) {
-    const decodedAccount: DecodedAccount | null =
-      await this.authService.verifyToken(
-        token,
-        this.configService.get<string>(
-          'ACCESS_SECRET',
-          authConstants.jwt.secrets.accessToken,
-        ),
-      );
-
-    if (!decodedAccount) {
-      throw new ForbiddenException('Incorrect token');
-    }
-
-    const deletedAccountsCount = await this.authService.deleteTokenByUsername(
-      (decodedAccount.type === TypesEnum.admin ? 'admin:' : '') +
-        decodedAccount.username,
-    );
-
-    if (deletedAccountsCount === 0) {
-      throw new NotFoundException();
-    }
-  }
-
-  @Delete('logout-all')
-  @UseGuards(TypesGuard)
-  @Types(TypesEnum.admin)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async logoutAll(): Promise<string> {
-    return this.authService.deleteAllTokens();
-  }
-
-  @UseGuards(JwtAccessGuard)
-  @Get('token')
-  async getAccountByAccessToken(
-    @AuthBearer() token: string,
-  ): Promise<SuccessResponseInterface | never> {
-    const decodedAccount: DecodedAccount | null =
-      await this.authService.verifyToken(
-        token,
-        this.configService.get<string>(
-          'ACCESS_SECRET',
-          authConstants.jwt.secrets.accessToken,
-        ),
-      );
-
-    if (!decodedAccount) {
-      throw new ForbiddenException('Incorrect token');
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { exp, iat, ...user } = decodedAccount;
-
-    return ResponseUtils.success('users', user);
   }
 }

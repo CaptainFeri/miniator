@@ -35,12 +35,13 @@ export class AuthRepository {
 
   public async addUserRole(
     accountId: string,
+    companyId: string,
     roleId: string,
     walletType: string,
     walletId: string,
   ): Promise<void> {
     await this.redisClient.set(
-      `wallet:${accountId}:${roleId}:${walletType}`,
+      `wallet:${accountId}:${companyId}:${roleId}:${walletType}`,
       walletId,
     );
   }
@@ -53,12 +54,18 @@ export class AuthRepository {
     return this.redisClient.get(`id:${username}`);
   }
 
-  private getKeys(accountId: string, roleId: string): Promise<string[] | null> {
-    return this.redisClient.keys(`wallet:${accountId}:${roleId}:*`);
+  private getKeys(
+    accountId: string,
+    companyId: string,
+    roleId: string,
+  ): Promise<string[] | null> {
+    return this.redisClient.keys(
+      `wallet:${accountId}:${companyId}:${roleId}:*`,
+    );
   }
 
-  getWallets(accountId: string, roleId: string) {
-    return this.getKeys(accountId, roleId).then((keys) =>
+  async getWallets(accountId: string, companyId: string, roleId: string) {
+    return this.getKeys(accountId, companyId, roleId).then((keys) =>
       Promise.all(
         keys.map(async (key) => ({
           type: key.split(':')[3],

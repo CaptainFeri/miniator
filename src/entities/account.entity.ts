@@ -41,14 +41,14 @@ export class AccountEntity extends BaseEntity {
     cascade: true,
     nullable: true,
   })
-  @JoinColumn({ name: 'profile_fk' })
+  @JoinColumn()
   profile?: ProfileEntity;
 
   @OneToOne(() => CompanyProfileEntity, (object) => object.account, {
     cascade: true,
     nullable: true,
   })
-  @JoinColumn({ name: 'company_profile_fk' })
+  @JoinColumn()
   companyProfile?: CompanyProfileEntity;
 
   @OneToMany(() => SecurityQuestionAnswerEntity, (object) => object.account, {
