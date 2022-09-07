@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package wallet;
+
+message ID {
+  string id = 1;
+}
+
+message SuccessResponse {
+  string success = 1;
+}
+
+message Company {
+  string id = 1;
+  int32 minDeposit = 2;
+  int32 maxDeposit = 3;
+  int32 minWithdrawal = 4;
+  int32 maxWithdrawal = 5;
+  int32 maxCapacity = 6;
+  string name = 7;
+  string companyId = 8;
+}
+
+message CreateCompanyRequest {
+  int32 minDeposit = 1;
+  int32 maxDeposit = 2;
+  int32 minWithdrawal = 3;
+  int32 maxWithdrawal = 4;
+  int32 maxCapacity = 5;
+  string name = 6;
+  string companyId = 7;
+}
+
+message UpdateCompanyRequest {
+  optional string id = 1;
+  optional int32 minDeposit = 2;
+  optional int32 maxDeposit = 3;
+  optional int32 minWithdrawal = 4;
+  optional int32 maxWithdrawal = 5;
+  optional int32 maxCapacity = 6;
+  optional string name = 7;
+  optional string companyId = 8;
+}
+
+service CompanyService {
+  rpc create(CreateCompanyRequest) returns (ID);
+  rpc update(UpdateCompanyRequest) returns (SuccessResponse);
+}
+
+message Wallet {
+  string id = 1;
+  int32 balance = 2;
+}
+
+message CreateWalletRequest {
+  string companyId = 1;
+  string walletId = 2;
+}
+
+service WalletService {
+  rpc create(CreateWalletRequest) returns (ID);
+}

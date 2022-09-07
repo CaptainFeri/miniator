@@ -11,6 +11,9 @@ import { CompaniesModule } from '@/company/companies.module';
 import { SecurityQuestionsModule } from '@/security-question/security-question.module';
 import { WalletTypesModule } from '@/wallet-types/wallet-types.module';
 import { WalletsModule } from '@/wallets/wallets.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigService } from '@nestjs/config';
+import { WALLET_PACKAGE_NAME } from '@interfaces/wallet.interface';
 
 @Module({
   imports: [
@@ -18,6 +21,19 @@ import { WalletsModule } from '@/wallets/wallets.module';
     database,
     redis,
     mailer,
+    ClientsModule.registerAsync([
+      {
+        name: 'WALLET_SERVICE',
+        useFactory: (config: ConfigService) => ({
+          transport: Transport.GRPC,
+          options: {
+            url: config.get('WALLET_SERVICE_URL'),
+            package: WALLET_PACKAGE_NAME,
+            protoPath: 'proto/wallet/wallet.proto',
+          },
+        }),
+      },
+    ]),
     AuthModule,
     AdminsModule,
     AccountsModule,
