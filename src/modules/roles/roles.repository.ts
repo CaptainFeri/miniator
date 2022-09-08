@@ -24,6 +24,9 @@ export class RolesRepository {
   public async create(roleDto: CreateRoleDto): Promise<CompanyRoleEntity> {
     const role = await this.rolesModel.save({
       ...roleDto,
+      company: {
+        id: roleDto.companyId,
+      } as any,
     });
 
     if (!role.isSpecial) {

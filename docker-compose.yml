@@ -1,7 +1,6 @@
 version: "3.8"
 services:
   app:
-    container_name: app
     restart: always
     build:
       context: .
@@ -10,7 +9,6 @@ services:
     volumes:
       - .:/usr/src/app
     ports:
-      - "9229:9229"
       - ${PORT}:3000
     expose:
       - ${PORT}
@@ -25,7 +23,6 @@ services:
       - redis
 
   postgres:
-    container_name: postgres
     image: postgres:alpine
     restart: always
     env_file:
