@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { config } from './config/config';
 import { database } from './config/database';
 import { redis } from './config/redis';
+import { kafka } from './config/kafka';
 import { mailer } from './config/mailer';
 import { AuthModule } from '@/auth/auth.module';
 import { AdminsModule } from '@/admin/admins.module';
@@ -17,6 +18,7 @@ import { WalletsModule } from '@/wallets/wallets.module';
     config,
     database,
     redis,
+    kafka,
     mailer,
     AuthModule,
     AdminsModule,

@@ -3,12 +3,12 @@ import {
   Controller,
   NotFoundException,
 } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import PaginationUtils from '@utils/pagination.utils';
 import { CompaniesService } from './companies.service';
 import { Types, TypesEnum } from '@decorators/types.decorator';
 import { CreateCompanyDto } from './dto/create-company.dto';
-import { GrpcMethod } from '@nestjs/microservices';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 
 @Controller()
@@ -16,13 +16,15 @@ export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
   @Types(TypesEnum.superAdmin)
-  @GrpcMethod('CompanyService', 'Create')
-  async create(body: CreateCompanyDto): Promise<any> {
+  @MessagePattern('CompanyService_Create')
+  async create(@Payload() msg: any): Promise<any> {
+    const body: CreateCompanyDto = msg.value;
     return await this.companiesService.create(body);
   }
 
-  @GrpcMethod('CompanyService', 'GetAll')
-  async getAll(query: any): Promise<any> {
+  @MessagePattern('CompanyService_GetAll')
+  async getAll(@Payload() msg: any): Promise<any> {
+    const query: any = msg.value;
     const paginationParams: PaginationParamsInterface | false =
       PaginationUtils.normalizeParams(query.page);
     if (!paginationParams) {
@@ -39,8 +41,9 @@ export class CompaniesController {
     };
   }
 
-  @GrpcMethod('CompanyService', 'GetById')
-  async getById(body: any): Promise<any> {
+  @MessagePattern('CompanyService_GetById')
+  async getById(@Payload() msg: any): Promise<any> {
+    const body: any = msg.value;
     const foundCompany = await this.companiesService.getById(body.id);
 
     if (!foundCompany) {
@@ -51,8 +54,9 @@ export class CompaniesController {
   }
 
   @Types(TypesEnum.superAdmin)
-  @GrpcMethod('CompanyService', 'Update')
-  async update(body: UpdateCompanyDto): Promise<any> {
+  @MessagePattern('CompanyService_Update')
+  async update(@Payload() msg: any): Promise<any> {
+    const body: UpdateCompanyDto = msg.value;
     await this.companiesService.update(body.id, body);
 
     return {

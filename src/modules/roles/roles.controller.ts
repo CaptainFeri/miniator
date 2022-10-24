@@ -4,6 +4,7 @@ import {
   NotFoundException,
   UseGuards,
 } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { JwtAccessGuard } from '@guards/jwt-access.guard';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import PaginationUtils from '@utils/pagination.utils';
@@ -13,7 +14,6 @@ import { AccountEntity } from '@entities/account.entity';
 import { Types, TypesEnum } from '@decorators/types.decorator';
 import { Public } from '@decorators/public.decorator';
 import { CreateRoleDto } from './dto/create-role.dto';
-import { GrpcMethod } from '@nestjs/microservices';
 import { UpdateRoleDto } from '@/roles/dto/update-role.dto';
 
 @Controller()
@@ -21,14 +21,16 @@ export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
   @Types(TypesEnum.superAdmin)
-  @GrpcMethod('RolesService', 'Create')
-  async create(data: CreateRoleDto): Promise<any> {
+  @MessagePattern('RolesService_Create')
+  async create(@Payload() msg: any): Promise<any> {
+    const data: CreateRoleDto = msg.value;
     return await this.rolesService.create(data);
   }
 
   @Public()
-  @GrpcMethod('RolesService', 'GetAll')
-  async getAll(query: any) {
+  @MessagePattern('RolesService_GetAll')
+  async getAll(@Payload() msg: any) {
+    const query: any = msg.value;
     const paginationParams: PaginationParamsInterface | false =
       PaginationUtils.normalizeParams(query.page);
     if (!paginationParams) {
@@ -46,8 +48,9 @@ export class RolesController {
   }
 
   @Public()
-  @GrpcMethod('RolesService', 'GetById')
-  async getById(query: any) {
+  @MessagePattern('RolesService_GetById')
+  async getById(@Payload() msg: any) {
+    const query: any = msg.value;
     const foundRole = await this.rolesService.getById(query.id);
 
     if (!foundRole) {
@@ -59,8 +62,9 @@ export class RolesController {
 
   @UseGuards(JwtAccessGuard)
   @Types(TypesEnum.superAdmin)
-  @GrpcMethod('RolesService', 'Update')
-  async update(body: UpdateRoleDto): Promise<any> {
+  @MessagePattern('RolesService_Update')
+  async update(@Payload() msg: any): Promise<any> {
+    const body: UpdateRoleDto = msg.value;
     await this.rolesService.update(body.id, body);
 
     return {
@@ -68,19 +72,19 @@ export class RolesController {
     };
   }
 
-  @GrpcMethod('RolesService', 'Request')
-  async request(body: any, @User() account: AccountEntity): Promise<any> {
-    await this.rolesService.request(body.id, account.id);
+  @MessagePattern('RolesService_Request')
+  async request(@Payload() msg: any, @User() account: AccountEntity): Promise<any> {
+    await this.rolesService.request(msg.value.id, account.id);
 
     return {
       success: true,
     };
   }
 
-  @GrpcMethod('WalletService', 'Accept')
+  @MessagePattern('WalletService_Accept')
   @Types(TypesEnum.superAdmin, TypesEnum.admin)
-  async accept(body: any, @User() account: AccountEntity): Promise<any> {
-    await this.rolesService.accept(body.id, account);
+  async accept(@Payload() msg: any, @User() account: AccountEntity): Promise<any> {
+    await this.rolesService.accept(msg.value.id, account);
 
     return {
       success: true,

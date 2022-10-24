@@ -72,7 +72,8 @@ export class AccountsService {
     await this.rolesRepository.addCommonRolesToUser(account);
   }
 
-  update(id: string, data: UpdateAccountDto) {
+  async update(id: string, data: UpdateAccountDto) {
+    data.password = await bcrypt.hash(data.password, 10);
     return this.accountsRepository.updateById(id, data);
   }
 

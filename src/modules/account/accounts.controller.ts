@@ -3,6 +3,7 @@ import {
   Controller,
   NotFoundException,
 } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import { AccountEntity } from '@entities/account.entity';
@@ -11,20 +12,20 @@ import { User } from '@decorators/user.decorator';
 import { Types, TypesEnum } from '@decorators/types.decorator';
 import { BanAccountDto, DeleteAccountDto } from './dto';
 import PaginationUtils from '@utils/pagination.utils';
-import { SignUpDto } from '@/auth/dto/sign-up.dto';
+import { UpdateAccountDto } from '@/account/dto/update-account.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateCompanyProfileDto } from './dto/update-company-profile.dto';
-import { GrpcMethod } from '@nestjs/microservices';
 
 @Controller()
 export class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
 
-  @GrpcMethod('AccountService', 'Delete')
+  @MessagePattern('AccountService_Delete')
   async deleteAccount(
-    data: DeleteAccountDto,
+    @Payload() msg: any,
     @User() account: AccountEntity,
   ): Promise<any> {
+    const data: DeleteAccountDto = msg.value;
     const deletedAccount = await this.accountsService.deleteAccount(
       account.id,
       data.password,
@@ -38,8 +39,9 @@ export class AccountsController {
     };
   }
 
-  @GrpcMethod('AccountService', 'GetByID')
-  async getById(body: any) {
+  @MessagePattern('AccountService_GetByID')
+  async getById(@Payload() msg: any) {
+    const body: any = msg.value;
     const foundAccount = await this.accountsService.getVerifiedAccountById(
       body.id,
     );
@@ -49,9 +51,10 @@ export class AccountsController {
     return foundAccount;
   }
 
-  @GrpcMethod('AccountService', 'GetAll')
+  @MessagePattern('AccountService_GetAll')
   @Types(TypesEnum.superAdmin)
-  async getAllVerifiedAccounts(query: any) {
+  async getAllVerifiedAccounts(@Payload() msg: any) {
+    const query: any = msg.value;
     const paginationParams: PaginationParamsInterface | false =
       PaginationUtils.normalizeParams(query.page);
     if (!paginationParams) {
@@ -67,8 +70,9 @@ export class AccountsController {
     };
   }
 
-  @GrpcMethod('AccountService', 'Update')
-  async update(dto: SignUpDto, @User() account: AccountEntity): Promise<any> {
+  @MessagePattern('AccountService_Update')
+  async update(@Payload() msg: any, @User() account: AccountEntity): Promise<any> {
+    const dto: UpdateAccountDto = msg.value;
     await this.accountsService.update(account.id, dto);
 
     return {
@@ -76,11 +80,12 @@ export class AccountsController {
     };
   }
 
-  @GrpcMethod('AccountService', 'UpdateProfile')
+  @MessagePattern('AccountService_UpdateProfile')
   async updateProfile(
-    body: UpdateProfileDto,
+    @Payload() msg: any,
     @User() account: AccountEntity,
   ): Promise<any> {
+    const body: UpdateProfileDto = msg.value;
     await this.accountsService.updateProfile(account.id, body);
 
     return {
@@ -88,7 +93,7 @@ export class AccountsController {
     };
   }
 
-  @GrpcMethod('AccountService', 'GetProfile')
+  @MessagePattern('AccountService_GetProfile')
   async getProfile(@User() account: AccountEntity): Promise<any> {
     const profile = await this.accountsService.getProfile(account.id);
     if (!profile) {
@@ -98,7 +103,7 @@ export class AccountsController {
     return profile;
   }
 
-  @GrpcMethod('AccountService', 'GetCompanyProfile')
+  @MessagePattern('AccountService_GetCompanyProfile')
   async getCompanyProfile(@User() account: AccountEntity): Promise<any> {
     const companyProfile = await this.accountsService.getCompanyProfile(
       account.id,
@@ -110,11 +115,12 @@ export class AccountsController {
     return companyProfile;
   }
 
-  @GrpcMethod('AccountService', 'UpdateCompanyProfile')
+  @MessagePattern('AccountService_UpdateCompanyProfile')
   async updateCompanyProfile(
-    body: UpdateCompanyProfileDto,
+    @Payload() msg: any,
     @User() account: AccountEntity,
   ): Promise<any> {
+    const body: UpdateCompanyProfileDto = msg.value;
     await this.accountsService.updateCompanyProfile(account.id, body);
 
     return {
@@ -122,12 +128,13 @@ export class AccountsController {
     };
   }
 
+  @MessagePattern('AccountService_Ban')
   @Types(TypesEnum.admin, TypesEnum.superAdmin)
-  @GrpcMethod('AccountService', 'Ban')
   async banOrUnban(
-    body: BanAccountDto,
+    @Payload() msg: any,
     @User() account: AccountEntity,
   ): Promise<any> {
+    const body: BanAccountDto = msg.value;
     await this.accountsService.banOrUnbanAccount(account.id, body.ban);
 
     return {

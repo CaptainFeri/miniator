@@ -1,4 +1,5 @@
 import { BadRequestException, Controller } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedEntityInterface } from '@interfaces/paginatedEntity.interface';
 import { SecurityQuestionsService } from './security-question.service';
@@ -10,7 +11,6 @@ import { Public } from '@decorators/public.decorator';
 import { CreateSecurityQuestionDto } from './dto/create-security-question.dto';
 import { SecurityQuestionEntity } from '@entities/security-question.entity';
 import { UpdateSecurityQuestionDto } from './dto/update-security-question.dto';
-import { GrpcMethod } from '@nestjs/microservices';
 import { SetSecurityQuestionDto } from './dto/set-security-question.dto';
 
 @Controller()
@@ -20,16 +20,17 @@ export class SecurityQuestionsController {
   ) {}
 
   @Types(TypesEnum.superAdmin)
-  @GrpcMethod('QuestionService', 'Create')
-  async Create(data: CreateSecurityQuestionDto) {
+  @MessagePattern('QuestionService_Create')
+  async Create(@Payload() msg: any) {
+    const data: CreateSecurityQuestionDto = msg.value;
     return await this.securityQuestionsService.create(data);
   }
 
   @Public()
-  @GrpcMethod('QuestionService', 'GetAll')
-  async getAll(query: any) {
+  @MessagePattern('QuestionService_GetAll')
+  async getAll(@Payload() msg: any) {
     const paginationParams: PaginationParamsInterface | false =
-      PaginationUtils.normalizeParams(query.page);
+      PaginationUtils.normalizeParams(msg.value.page);
     if (!paginationParams) {
       throw new BadRequestException('Invalid pagination parameters');
     }
@@ -46,8 +47,9 @@ export class SecurityQuestionsController {
   }
 
   @Types(TypesEnum.superAdmin)
-  @GrpcMethod('QuestionService', 'Update')
-  async update(body: UpdateSecurityQuestionDto) {
+  @MessagePattern('QuestionService_Update')
+  async update(@Payload() msg: any) {
+    const body: UpdateSecurityQuestionDto = msg.value;
     await this.securityQuestionsService.update(body.id, body);
 
     return {
@@ -56,8 +58,12 @@ export class SecurityQuestionsController {
   }
 
   //TODO later
-  @GrpcMethod('QuestionService', 'Set')
-  async set(body: SetSecurityQuestionDto, @User() account: AccountEntity) {
+  @MessagePattern('QuestionService_Set')
+  async set(
+    @Payload() msg: any,
+    @User() account: AccountEntity
+  ) {
+    const body: SetSecurityQuestionDto = msg.value;
     await this.securityQuestionsService.set(body.id, account.id, body.answer);
 
     return {

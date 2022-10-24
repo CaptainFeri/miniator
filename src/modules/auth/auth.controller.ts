@@ -3,6 +3,7 @@ import {
   UnauthorizedException,
   NotFoundException,
 } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { AccountsService } from '@/account/accounts.service';
 import { AuthService } from './auth.service';
@@ -10,7 +11,6 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import authConstants from './constants/auth-constants';
-import { GrpcMethod } from '@nestjs/microservices';
 import { AdminsService } from '@/admin/admins.service';
 import { VerifyAccountTokenDto } from './dto/verify-account.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -26,8 +26,9 @@ export class AuthController {
     private readonly jwtService: JwtService,
   ) {}
 
-  @GrpcMethod('AuthService', 'Login')
-  async Login(data: SignInDto) {
+  @MessagePattern('AuthService_Login')
+  async Login(@Payload() msg: any) {
+    const data: SignInDto = msg.value;
     const login = await this.authService.validateAccount(
       data.username,
       data.password,
@@ -42,8 +43,9 @@ export class AuthController {
     );
   }
 
-  @GrpcMethod('AuthService', 'LoginAdmin')
-  async LoginAdmin(data: AdminSignInDto) {
+  @MessagePattern('AuthService_LoginAdmin')
+  async LoginAdmin(@Payload() msg: any) {
+    const data: AdminSignInDto = msg.value;
     const login = await this.adminService.login(data.username, data.password);
 
     if (!login.status) {
@@ -59,8 +61,9 @@ export class AuthController {
     return await this.authService.login(user);
   }
 
-  @GrpcMethod('AuthService', 'RefreshToken')
-  async RefreshToken(data: RefreshTokenDto) {
+  @MessagePattern('AuthService_RefreshToken')
+  async RefreshToken(@Payload() msg: any) {
+    const data: RefreshTokenDto = msg.value;
     const payload = await this.jwtService.verifyAsync(data.refreshToken, {
       secret: this.configService.get<string>('REFRESH_SECRET'),
     });
@@ -69,10 +72,10 @@ export class AuthController {
     };
   }
 
-  @GrpcMethod('AuthService', 'SignUp')
-  async SignUp(data: SignUpDto) {
+  @MessagePattern('AuthService_SignUp')
+  async SignUp(@Payload() msg: any) {
+    const data: SignUpDto = msg.value;
     const { id } = await this.accountsService.create(data);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const token = this.authService.createVerifyToken(id);
 
     // await this.mailerService.sendMail({
@@ -92,8 +95,9 @@ export class AuthController {
     };
   }
 
-  @GrpcMethod('AuthService', 'Verify')
-  async Verify(data: VerifyAccountTokenDto) {
+  @MessagePattern('AuthService_Verify')
+  async Verify(@Payload() msg: any) {
+    const data: VerifyAccountTokenDto = msg.value;
     const { id } = await this.authService.verifyEmailVerToken(
       data.token,
       this.configService.get<string>(
