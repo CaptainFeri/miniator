@@ -1,0 +1,46 @@
+version: "3.7"
+services:
+  srv:
+    image: miniator_auth:1.0.0
+    container_name: miniator_auth
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    ports:
+      - 7000:3000
+    valumes:
+      - ./app:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      miniator_auth_network:
+        ipv4_address: 172.11.8.1
+  postgres:
+    image: postgres
+    container_name: miniator_auth_postgres
+    restart: always
+    volumes:
+      - ./db/postgres/miniator:/var/lib/postgresql/data
+    enviroment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=miniator_auth
+    networks:
+      miniator_auth_network:
+        ipv4_address: 172.11.8.2
+  redis:
+    image: redis:alpine
+    container_name: miniator_auth_redis
+    restart: always
+    volumes:
+      - ./db/redis-data:/var/lib/redis
+    command: redis-server
+    networks:
+      miniator_auth_network:
+        ipv4_address: 172.11.8.3
+networks:
+  miniator_auth_network:
+    external: true
