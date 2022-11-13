@@ -1,9 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { SuperadminModule } from './superadmin/superadmin.module';
 import appEnvConfig from './config/app-env.config';
+import { AdminAuthMiddleware } from './superadmin/auth/middleware/admin-auth.middleware';
 
 @Module({
   imports: [
@@ -30,8 +32,16 @@ import appEnvConfig from './config/app-env.config';
       },
       inject: [ConfigService],
     }),
+    SuperadminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AdminAuthMiddleware).forRoutes({
+      path: '*',
+      method: RequestMethod.ALL,
+    });
+  }
+}
