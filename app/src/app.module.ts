@@ -6,9 +6,19 @@ import { AppService } from './app.service';
 import { SuperadminModule } from './superadmin/superadmin.module';
 import appEnvConfig from './config/app-env.config';
 import { AdminAuthMiddleware } from './superadmin/auth/middleware/admin-auth.middleware';
+import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
+import { join } from 'path';
 
 @Module({
   imports: [
+    I18nModule.forRoot({
+      fallbackLanguage: 'en',
+      loaderOptions: {
+        path: join(__dirname, 'i18n'),
+        watch: true,
+      },
+      resolvers: [AcceptLanguageResolver],
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appEnvConfig],

@@ -11,6 +11,6 @@ export class AdminAuthGuard implements CanActivate {
       return true;
     }
 
-    throw new UnauthorizedException('unauthorized');
+    throw new UnauthorizedException('FORBIDDEN');
   }
 }
