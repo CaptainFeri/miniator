@@ -24,8 +24,9 @@ export class AdminAuthMiddleware implements NestMiddleware {
       const token = req.headers.authorization.split(' ')[1];
       const adminInfo = this.configService.get('admin', { infer: true });
       const decode = verify(token, adminInfo.superAdminJwtSecret);
-      const adminUser = await this.superAdminService.findById(
-        decode['adminId'],
+      const adminUser = await this.superAdminService.findSuperAdmin(
+        decode['username'],
+        decode['role'],
       );
       req.admin = adminUser;
       next();

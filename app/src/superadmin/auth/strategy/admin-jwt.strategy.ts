@@ -22,7 +22,7 @@ export class AdminJwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: AdminTokenPayload) {
-    return await this.superadminService.findById(payload);
+  async validate() {
+    return true;
   }
 }
