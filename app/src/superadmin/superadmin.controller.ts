@@ -9,6 +9,15 @@ import { SuperadminService } from './superadmin.service';
 export class SuperadminController {
   constructor(private readonly superadminService: SuperadminService) {}
 
+  @Post('create-admin')
+  async createAdmin() {}
+
+  @Post('create-service')
+  async createService() {}
+
+  @Post('assign-admin-service')
+  async assignAdminToService() {}
+
   @Post('log-in')
   async generateToken(@Body() data: SuperAdminDto) {
     const token = await this.superadminService.generateSuperAdminToken(
@@ -22,10 +31,18 @@ export class SuperadminController {
       };
   }
 
+  @Get('all-services')
+  async getAllServices() {}
+
+  @Get('all-admins')
+  async getAllAdmins() {}
+
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
   @Get('test')
-  getHello(): string {
-    return 'test';
+  getHello() {
+    return {
+      data: 'test',
+    };
   }
 }

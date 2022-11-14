@@ -7,6 +7,7 @@ import appEnvConfig from './config/app-env.config';
 import { AdminAuthMiddleware } from './superadmin/auth/middleware/admin-auth.middleware';
 import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import { join } from 'path';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { join } from 'path';
       inject: [ConfigService],
     }),
     SuperadminModule,
+    AdminModule,
   ],
   providers: [AppService],
 })
