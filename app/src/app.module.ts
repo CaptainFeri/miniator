@@ -1,7 +1,6 @@
 import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SuperadminModule } from './superadmin/superadmin.module';
 import appEnvConfig from './config/app-env.config';
@@ -44,7 +43,6 @@ import { join } from 'path';
     }),
     SuperadminModule,
   ],
-  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
