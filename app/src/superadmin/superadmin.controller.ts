@@ -9,12 +9,18 @@ import { SuperadminService } from './superadmin.service';
 export class SuperadminController {
   constructor(private readonly superadminService: SuperadminService) {}
 
+  @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth()
   @Post('create-admin')
   async createAdmin() {}
 
+  @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth()
   @Post('create-service')
   async createService() {}
 
+  @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth()
   @Post('assign-admin-service')
   async assignAdminToService() {}
 
@@ -31,9 +37,13 @@ export class SuperadminController {
       };
   }
 
+  @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth()
   @Get('all-services')
   async getAllServices() {}
 
+  @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth()
   @Get('all-admins')
   async getAllAdmins() {}
 
