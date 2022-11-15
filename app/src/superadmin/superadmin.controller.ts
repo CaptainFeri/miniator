@@ -1,6 +1,8 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { UserRole } from 'src/common/enum/userRole.enum';
 import { AdminAuthGuard } from './auth/Guard/admin.guard';
+import { CreateAdminDto } from './dto/createAdmin.dto';
 import { SuperAdminDto } from './dto/superadminLogin.dto';
 import { SuperadminService } from './superadmin.service';
 
@@ -11,8 +13,14 @@ export class SuperadminController {
 
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
-  @Post('create-admin')
-  async createAdmin() {}
+  @Post('admin-register')
+  async createAdmin(@Body() data: CreateAdminDto) {
+    const newAdmin = await this.superadminService.createNewAdmin(data);
+    if (newAdmin)
+      return {
+        data: newAdmin,
+      };
+  }
 
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
@@ -29,7 +37,7 @@ export class SuperadminController {
     const token = await this.superadminService.generateSuperAdminToken(
       data.username,
       data.password,
-      1,
+      UserRole.SUPERADMIN,
     );
     if (token)
       return {
@@ -44,8 +52,16 @@ export class SuperadminController {
 
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
-  @Get('all-admins')
-  async getAllAdmins() {}
+  @Get('admins')
+  async getAllAdmins(
+    @Query('take') take: number = 10,
+    @Query('skip') skip: number = 0,
+  ) {
+    const admins = await this.superadminService.getAdmins(take, skip);
+    return {
+      data: admins,
+    };
+  }
 
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
