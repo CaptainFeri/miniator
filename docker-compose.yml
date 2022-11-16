@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   srv:
-    image: miniator_auth:1.0.0
+    image: miniator_auth
     container_name: miniator_auth
     restart: unless-stopped
     build:
@@ -10,9 +10,11 @@ services:
     command: npm run start:dev
     ports:
       - 7000:3000
-    valumes:
+    volumes:
       - ./app:/app
       - /app/node_modules
+    env_file:
+      - docker.env
     depends_on:
       - postgres
       - redis
@@ -25,7 +27,7 @@ services:
     restart: always
     volumes:
       - ./db/postgres/miniator:/var/lib/postgresql/data
-    enviroment:
+    environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=miniator_auth
     networks:

@@ -1,4 +1,4 @@
-FROM node:lts-stretch
+FROM node
 WORKDIR /app
 COPY app/pakage*.json ./
 COPY ./app .
