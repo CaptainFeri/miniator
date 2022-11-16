@@ -9,11 +9,13 @@ import appEnvConfig from 'src/config/app-env.config';
 import { SubAdminJwtStrategy } from './auth/strategy/subadmin-jwt.strategy';
 import { SubAdminAuthMiddleware } from './auth/middleware/sub-admin.middleware';
 import { UsersModule } from 'src/users/users.module';
+import { ServiceEntity } from 'src/service/entity/service.entity';
+import { RoleEntity } from 'src/role/entity/role.entity';
 
 @Module({
   imports: [
     UsersModule,
-    TypeOrmModule.forFeature([AdminEntity]),
+    TypeOrmModule.forFeature([AdminEntity, ServiceEntity, RoleEntity]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (

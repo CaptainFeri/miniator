@@ -2,6 +2,7 @@ import { AdminEntity } from '../../admin/entity/admin.entity';
 import { Column, Entity, ManyToMany, ManyToOne } from 'typeorm';
 import { myBaseEntity } from '../../common/entity/base.entity';
 import { UserEntity } from '../../users/entity/users.entity';
+import { RoleEntity } from 'src/role/entity/role.entity';
 
 @Entity('SERVICE')
 export class ServiceEntity extends myBaseEntity {
@@ -20,7 +21,8 @@ export class ServiceEntity extends myBaseEntity {
   @ManyToMany(() => UserEntity, (user: UserEntity) => user.services)
   public users: UserEntity[];
 
-  public roles: any[];
+  @ManyToMany(() => RoleEntity, (role: RoleEntity) => role.services)
+  public roles: RoleEntity[];
 
   @Column()
   public status: boolean;

@@ -10,6 +10,7 @@ import { join } from 'path';
 import { AdminModule } from './admin/admin.module';
 import { ServiceModule } from './service/service.module';
 import { UsersModule } from './users/users.module';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { UsersModule } from './users/users.module';
     AdminModule,
     ServiceModule,
     UsersModule,
+    RoleModule,
   ],
   providers: [AppService],
 })
