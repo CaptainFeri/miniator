@@ -8,6 +8,8 @@ import { AdminAuthMiddleware } from './superadmin/auth/middleware/admin-auth.mid
 import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import { join } from 'path';
 import { AdminModule } from './admin/admin.module';
+import { ServiceModule } from './service/service.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -37,21 +39,16 @@ import { AdminModule } from './admin/admin.module';
           database: postgresConfig.dbname,
           entities: ['dist/**/*.entity{.ts,.js}'],
           migrations: ['dist/migrations/**/*{.ts,.js}'],
-          migrationsRun: true,
+          synchronize: true,
         };
       },
       inject: [ConfigService],
     }),
     SuperadminModule,
     AdminModule,
+    ServiceModule,
+    UsersModule,
   ],
   providers: [AppService],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AdminAuthMiddleware).forRoutes({
-      path: '*',
-      method: RequestMethod.ALL,
-    });
-  }
-}
+export class AppModule {}

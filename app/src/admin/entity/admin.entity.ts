@@ -1,5 +1,6 @@
 import { myBaseEntity } from 'src/common/entity/base.entity';
-import { Column, Entity } from 'typeorm';
+import { ServiceEntity } from 'src/service/entity/service.entity';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity('ADMIN')
 export class AdminEntity extends myBaseEntity {
@@ -8,4 +9,7 @@ export class AdminEntity extends myBaseEntity {
 
   @Column()
   password: string;
+
+  @OneToMany(() => ServiceEntity, (service: ServiceEntity) => service.admin)
+  public services: ServiceEntity[];
 }
