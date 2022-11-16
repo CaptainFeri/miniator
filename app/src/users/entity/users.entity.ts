@@ -10,8 +10,15 @@ export class UserEntity extends myBaseEntity {
   @Column()
   password: string;
 
-  @Column()
-  phone: string;
+  @Column({
+    nullable: true,
+  })
+  phone?: string;
+
+  @Column({
+    nullable: true,
+  })
+  createdBy?: string;
 
   @ManyToMany(() => ServiceEntity, (service: ServiceEntity) => service.users)
   @JoinTable({

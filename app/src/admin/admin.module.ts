@@ -8,9 +8,11 @@ import { ConfigService, ConfigType } from '@nestjs/config';
 import appEnvConfig from 'src/config/app-env.config';
 import { SubAdminJwtStrategy } from './auth/strategy/subadmin-jwt.strategy';
 import { SubAdminAuthMiddleware } from './auth/middleware/sub-admin.middleware';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
+    UsersModule,
     TypeOrmModule.forFeature([AdminEntity]),
     JwtModule.registerAsync({
       inject: [ConfigService],

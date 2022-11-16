@@ -11,6 +11,8 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { AdminEntity } from './entity/admin.entity';
 import { JwtService } from '@nestjs/jwt';
+import { CreateAdminDto } from 'src/superadmin/dto/createAdmin.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AdminService {
@@ -21,7 +23,17 @@ export class AdminService {
     private readonly configService: ConfigService<
       ConfigType<typeof appEnvConfig>
     >,
+    private readonly userService: UsersService,
   ) {}
+
+  async createUser(data: CreateAdminDto, subadmin) {
+    const newUser = await this.userService.createUser(data, subadmin);
+    if (newUser) {
+      return {
+        data: newUser,
+      };
+    }
+  }
 
   async generateSuperAdminToken(
     username: string,
