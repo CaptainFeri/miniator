@@ -17,6 +17,10 @@ export default () => ({
     subAdminJwtExpirationTime:
       process.env.MINIATOR_AUTH_SUB_ADMIN_JWT_EXPIRATION_TIME,
   },
+  user: {
+    userJwtSecret: process.env.MINIATOR_AUTH_USER_JWT_SECRET,
+    userJwtExpirationTime: process.env.MINIATOR_AUTH_USER_JWT_EXPIRATION_TIME,
+  },
   swagger: {
     username: process.env.MINIATOR_SWAGGER_USERNAME,
     password: process.env.MINIATOR_SWAGGER_PASSWORD,

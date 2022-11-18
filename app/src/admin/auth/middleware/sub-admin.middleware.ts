@@ -2,7 +2,6 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import { verify } from 'jsonwebtoken';
 import { AdminService } from 'src/admin/admin.service';
-import { SuperadminService } from 'src/superadmin/superadmin.service';
 import appEnvConfig from '../../../config/app-env.config';
 import { SubAdminExpressRequest } from '../types/subadminExpressRequest';
 

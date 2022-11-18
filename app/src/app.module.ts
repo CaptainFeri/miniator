@@ -11,6 +11,7 @@ import { AdminModule } from './admin/admin.module';
 import { ServiceModule } from './service/service.module';
 import { UsersModule } from './users/users.module';
 import { RoleModule } from './role/role.module';
+import { SecurityQModule } from './security-q/security-q.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { RoleModule } from './role/role.module';
     ServiceModule,
     UsersModule,
     RoleModule,
+    SecurityQModule,
   ],
   providers: [AppService],
 })
