@@ -10,14 +10,16 @@ import { SubAdminJwtStrategy } from './auth/strategy/subadmin-jwt.strategy';
 import { SubAdminAuthMiddleware } from './auth/middleware/sub-admin.middleware';
 import { UsersModule } from 'src/users/users.module';
 import { ServiceEntity } from 'src/service/entity/service.entity';
-import { RoleEntity } from 'src/role/entity/role.entity';
 import { ServiceModule } from 'src/service/service.module';
+import { AdminRoleManagmentController } from './role-managment/admin-role-managment.controller';
+import { RoleModule } from '../role/role.module';
 
 @Module({
   imports: [
     UsersModule,
+    RoleModule,
     ServiceModule,
-    TypeOrmModule.forFeature([AdminEntity, ServiceEntity, RoleEntity]),
+    TypeOrmModule.forFeature([AdminEntity, ServiceEntity]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (
@@ -32,7 +34,7 @@ import { ServiceModule } from 'src/service/service.module';
     }),
   ],
   providers: [AdminService, SubAdminJwtStrategy],
-  controllers: [AdminController],
+  controllers: [AdminController, AdminRoleManagmentController],
 })
 export class AdminModule {
   configure(consumer: MiddlewareConsumer) {

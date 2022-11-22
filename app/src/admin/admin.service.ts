@@ -20,6 +20,7 @@ import { AssignRoleServiceDto } from './dto/assign-role-service.dto';
 import { ServiceService } from 'src/service/service.service';
 import { SecurityQService } from 'src/security-q/security-q.service';
 import { createSecurityQuestionDto } from 'src/security-q/dto/security-question.dto';
+import { RoleService } from 'src/role/role.service';
 
 @Injectable()
 export class AdminService {
@@ -33,73 +34,36 @@ export class AdminService {
     private readonly userService: UsersService,
     @InjectRepository(ServiceEntity)
     private readonly serviceRepo: Repository<ServiceEntity>,
-    @InjectRepository(RoleEntity)
-    private readonly roleRepo: Repository<RoleEntity>,
     private readonly serviceService: ServiceService,
+    private readonly roleService: RoleService,
   ) {}
+
+  async updateRole(data: CreateRoleDto, id: number) {
+    return await this.roleService.updateRole(data, id);
+  }
+
+  async getAllRoles(take: number, skip: number) {
+    return await this.roleService.getAllRoles(take, skip);
+  }
 
   async getUsersOfService(id: number) {
     return await this.serviceService.getUsersOfServiceById(id);
   }
 
   async getRoles(username: string) {
-    const admin = await this.adminRepo.findOne({
-      where: { username },
-      relations: ['services'],
-    });
-    if (admin) {
-      return await this.roleRepo.find();
-    }
-    throw new NotFoundException('ADMIN.NOT_FOUND');
+    return await this.roleService.getRoles(username);
   }
 
   async getRolesOfService(serviceId: number) {
-    const service = await this.serviceRepo.findOne({
-      where: { id: serviceId },
-      relations: ['roles'],
-    });
-    if (service) return service;
-    throw new NotFoundException('SERVICE.NOT_FOUND');
+    return await this.roleService.getRolesOfService(serviceId);
   }
 
   async assignRoleServie(data: AssignRoleServiceDto, subadmin: string) {
-    const { roleId, serviceId } = data;
-    const role = await this.roleRepo.findOne({ where: { id: roleId } });
-    if (!role) throw new NotFoundException('ROLE.NOT_FOUND');
-    const service = await this.serviceRepo.findOne({
-      where: { id: serviceId },
-      relations: ['roles'],
-    });
-    if (!service) throw new NotFoundException('SERVICE.NOT_FOUND');
-    if (role.createBy == subadmin && service.admin.username == subadmin) {
-      service.roles.forEach((r) => {
-        if (r.id == role.id) throw new BadRequestException('BAD_REQUEST');
-      });
-      service.roles.push(role);
-      await this.serviceRepo.save(service);
-      return service.roles;
-    } else {
-      throw new BadRequestException('BAD_REQUEST');
-    }
+    return await this.roleService.assignRoleServie(data, subadmin);
   }
 
   async createNewRole(data: CreateRoleDto, subadmin: string) {
-    const exRole = await this.roleRepo.find({
-      where: { title: data.title },
-    });
-    const serviceAdmin = await this.serviceRepo.findOne({
-      where: { admin: { username: subadmin } },
-      relations: ['roles'],
-    });
-    if (exRole.length > 0) throw new BadRequestException('BAD_REQUEST');
-    if (!serviceAdmin) throw new NotFoundException('ADMIN.NOT_FOUND');
-    const newRole = new RoleEntity();
-    newRole.title = data.title;
-    newRole.vip = data.vip;
-    newRole.createBy = subadmin;
-    await this.roleRepo.save(newRole);
-    serviceAdmin.roles.push(newRole);
-    return await this.serviceRepo.save(serviceAdmin);
+    return await this.roleService.createNewRole(data, subadmin);
   }
 
   async getServices(admin, take: number, skip: number) {

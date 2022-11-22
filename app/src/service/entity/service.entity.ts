@@ -37,7 +37,7 @@ export class ServiceEntity extends myBaseEntity {
   @ManyToMany(() => UserEntity, (user: UserEntity) => user.services)
   public users: UserEntity[];
 
-  @ManyToMany(() => RoleEntity, (role: RoleEntity) => role.services)
+  @ManyToOne(() => RoleEntity, (role: RoleEntity) => role.service)
   public roles: RoleEntity[];
 
   @Column()
