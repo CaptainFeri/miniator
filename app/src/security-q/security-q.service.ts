@@ -26,6 +26,23 @@ export class SecurityQService {
     private readonly userRepo: Repository<UserEntity>,
   ) {}
 
+  async updateSecurityQuestion(data: createSecurityQuestionDto, id: number) {
+    const { serviceId, title } = data;
+    const ex = await this.sercurityDocsRepo.findOne({
+      where: { title },
+    });
+    if (ex) throw new BadRequestException('TITLE.INVALID');
+    const serv = await this.serviceRepo.findOne({
+      where: { id: serviceId },
+      relations: ['questions'],
+    });
+    if (!serv) throw new BadRequestException('SERVICE.INVALID');
+    const sq = await this.sercurityDocsRepo.findOne({ where: { id } });
+    if (!sq) throw new BadRequestException('BAD_REQUEST');
+    sq.service = serv;
+    return await this.sercurityDocsRepo.save(sq);
+  }
+
   async getQuestions() {
     const resList = [];
     const questions = await this.sercurityDocsRepo.find();

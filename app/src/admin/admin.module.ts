@@ -12,11 +12,9 @@ import { UsersModule } from 'src/users/users.module';
 import { ServiceEntity } from 'src/service/entity/service.entity';
 import { RoleEntity } from 'src/role/entity/role.entity';
 import { ServiceModule } from 'src/service/service.module';
-import { SecurityQModule } from 'src/security-q/security-q.module';
 
 @Module({
   imports: [
-    SecurityQModule,
     UsersModule,
     ServiceModule,
     TypeOrmModule.forFeature([AdminEntity, ServiceEntity, RoleEntity]),

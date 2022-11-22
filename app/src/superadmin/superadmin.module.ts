@@ -4,19 +4,23 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminEntity } from 'src/admin/entity/admin.entity';
 import appEnvConfig from 'src/config/app-env.config';
-import { ServiceEntity } from 'src/service/entity/service.entity';
+import { SecurityQModule } from 'src/security-q/security-q.module';
 import { ServiceModule } from 'src/service/service.module';
+import { UserEntity } from 'src/users/entity/users.entity';
 import { SuperadminAdminManagmenController } from './admin-managment/superadmin.admin.controller';
 import { AdminAuthMiddleware } from './auth/middleware/admin-auth.middleware';
 import { AdminJwtStrategy } from './auth/strategy/admin-jwt.strategy';
+import { AdminSecurityQuestionManagmentController } from './security-question-managment/admin-security-question-managment.controller';
 import { SuperAdminServiceManagmentController } from './service-managment/superadmin.service.controller';
 import { SuperadminController } from './superadmin.controller';
 import { SuperadminService } from './superadmin.service';
+import { SuperAdminUserManagmentController } from './user-managment/superadmin.user.controller';
 
 @Module({
   imports: [
+    SecurityQModule,
     ServiceModule,
-    TypeOrmModule.forFeature([AdminEntity]),
+    TypeOrmModule.forFeature([AdminEntity, UserEntity]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (
@@ -35,6 +39,8 @@ import { SuperadminService } from './superadmin.service';
     SuperadminController,
     SuperAdminServiceManagmentController,
     SuperadminAdminManagmenController,
+    SuperAdminUserManagmentController,
+    AdminSecurityQuestionManagmentController,
   ],
   exports: [SuperadminService],
 })

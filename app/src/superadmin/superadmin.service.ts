@@ -16,6 +16,10 @@ import { ServiceService } from 'src/service/service.service';
 import { CreateServiceDto } from 'src/service/dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
+import { UserFilterDto } from './user-managment/dto/get-user.dto';
+import { UserEntity } from 'src/users/entity/users.entity';
+import { createSecurityQuestionDto } from 'src/security-q/dto/security-question.dto';
+import { SecurityQService } from 'src/security-q/security-q.service';
 
 @Injectable()
 export class SuperadminService {
@@ -27,7 +31,32 @@ export class SuperadminService {
     @InjectRepository(AdminEntity)
     private readonly adminRepo: Repository<AdminEntity>,
     private readonly serviceService: ServiceService,
+    @InjectRepository(UserEntity)
+    private readonly userRepo: Repository<UserEntity>,
+    private readonly securityQservice: SecurityQService,
   ) {}
+  async getQuestions() {
+    return await this.securityQservice.getQuestions();
+  }
+
+  async updateSecurityQuestion(data: createSecurityQuestionDto, id: number) {
+    return await this.securityQservice.updateSecurityQuestion(data, id);
+  }
+
+  async createSecurityQuestion(data: createSecurityQuestionDto) {
+    return await this.securityQservice.insertNewSecurityQuestion(data);
+  }
+
+  async getUsers(data: UserFilterDto) {
+    const [users, total] = await this.userRepo.findAndCount({
+      take: data.take,
+      skip: data.skip,
+    });
+    return {
+      users,
+      total,
+    };
+  }
 
   async updateAdmin(id: number, data: UpdateAdminDto) {
     const admin = await this.adminRepo.findOne({ where: { id } });

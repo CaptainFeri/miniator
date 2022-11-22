@@ -1,19 +1,16 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { UserRole } from 'src/common/enum/userRole.enum';
-import { AssignAdminServiceDto } from 'src/service/dto/assign-admin-service.dto';
-import { CreateServiceDto } from 'src/service/dto/create-service.dto';
+import { UserRole } from '../common/enum/userRole.enum';
 import { AdminAuthGuard } from './auth/Guard/admin.guard';
-import { CreateAdminDto } from './dto/createAdmin.dto';
 import { SuperAdminDto } from './dto/superadminLogin.dto';
 import { SuperadminService } from './superadmin.service';
 
-@Controller('superadmin')
+@Controller('super-admin')
 @ApiTags('super-admin')
 export class SuperadminController {
   constructor(private readonly superadminService: SuperadminService) {}
 
-  @Post('log-in')
+  @Post('login')
   async generateToken(@Body() data: SuperAdminDto) {
     const token = await this.superadminService.generateSuperAdminToken(
       data.username,

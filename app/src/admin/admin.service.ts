@@ -36,16 +36,7 @@ export class AdminService {
     @InjectRepository(RoleEntity)
     private readonly roleRepo: Repository<RoleEntity>,
     private readonly serviceService: ServiceService,
-    private readonly securityQservice: SecurityQService,
   ) {}
-
-  async getQuestions() {
-    return await this.securityQservice.getQuestions();
-  }
-
-  async createSecurityQuestion(data: createSecurityQuestionDto) {
-    return await this.securityQservice.insertNewSecurityQuestion(data);
-  }
 
   async getUsersOfService(id: number) {
     return await this.serviceService.getUsersOfServiceById(id);

@@ -25,26 +25,6 @@ import { AssignRoleServiceDto } from './dto/assign-role-service.dto';
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
-  @Get('security-questions')
-  @ApiBearerAuth()
-  @UseGuards(SubadminAuthGuard)
-  async getQuestions() {
-    const questions = await this.adminService.getQuestions();
-    return {
-      data: questions,
-    };
-  }
-
-  @Post('create-question')
-  @ApiBearerAuth()
-  @UseGuards(SubadminAuthGuard)
-  async createSecurityQuestion(@Body() data: createSecurityQuestionDto) {
-    const newSecurity = await this.adminService.createSecurityQuestion(data);
-    return {
-      data: newSecurity,
-    };
-  }
-
   @Get('services')
   @ApiBearerAuth()
   @UseGuards(SubadminAuthGuard)

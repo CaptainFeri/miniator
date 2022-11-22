@@ -14,7 +14,7 @@ import { AdminAuthGuard } from '../auth/Guard/admin.guard';
 import { UpdateServiceDto } from '../dto/update-service.dto';
 import { SuperadminService } from '../superadmin.service';
 
-@Controller('superadmin/service')
+@Controller('super-admin/service')
 @ApiTags('super-admin_service-managment')
 export class SuperAdminServiceManagmentController {
   constructor(private readonly superadminService: SuperadminService) {}
