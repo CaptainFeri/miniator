@@ -14,8 +14,8 @@ import { AdminEntity } from 'src/admin/entity/admin.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceService } from 'src/service/service.service';
 import { CreateServiceDto } from 'src/service/dto/create-service.dto';
-import { AssignAdminServiceDto } from 'src/service/dto/assign-admin-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
+import { UpdateAdminDto } from './dto/update-admin.dto';
 
 @Injectable()
 export class SuperadminService {
@@ -28,6 +28,17 @@ export class SuperadminService {
     private readonly adminRepo: Repository<AdminEntity>,
     private readonly serviceService: ServiceService,
   ) {}
+
+  async updateAdmin(id: number, data: UpdateAdminDto) {
+    const admin = await this.adminRepo.findOne({ where: { id } });
+    if (!admin) throw new NotFoundException('ADMiN.MOT_FOUND');
+    const { username = 0, password = 0 } = data;
+    if (username != 0) admin.username = username;
+    if (password != 0)
+      admin.password = (await bcrypt.hash(password, 10)).toString();
+
+    return await this.adminRepo.save(admin);
+  }
 
   async updateService(id: number, data: UpdateServiceDto) {
     return await this.serviceService.updateService(id, data);

@@ -6,6 +6,7 @@ import { AdminEntity } from 'src/admin/entity/admin.entity';
 import appEnvConfig from 'src/config/app-env.config';
 import { ServiceEntity } from 'src/service/entity/service.entity';
 import { ServiceModule } from 'src/service/service.module';
+import { SuperadminAdminManagmenController } from './admin-managment/superadmin.admin.controller';
 import { AdminAuthMiddleware } from './auth/middleware/admin-auth.middleware';
 import { AdminJwtStrategy } from './auth/strategy/admin-jwt.strategy';
 import { SuperAdminServiceManagmentController } from './service-managment/superadmin.service.controller';
@@ -30,7 +31,11 @@ import { SuperadminService } from './superadmin.service';
     }),
   ],
   providers: [SuperadminService, AdminJwtStrategy],
-  controllers: [SuperadminController, SuperAdminServiceManagmentController],
+  controllers: [
+    SuperadminController,
+    SuperAdminServiceManagmentController,
+    SuperadminAdminManagmenController,
+  ],
   exports: [SuperadminService],
 })
 export class SuperadminModule {

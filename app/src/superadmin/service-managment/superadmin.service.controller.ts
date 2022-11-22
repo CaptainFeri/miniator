@@ -9,13 +9,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CreateServiceDto } from 'src/service/dto/create-service.dto';
+import { CreateServiceDto } from '../../service/dto/create-service.dto';
 import { AdminAuthGuard } from '../auth/Guard/admin.guard';
 import { UpdateServiceDto } from '../dto/update-service.dto';
 import { SuperadminService } from '../superadmin.service';
 
 @Controller('superadmin/service')
-@ApiTags('super-admin-service')
+@ApiTags('super-admin_service-managment')
 export class SuperAdminServiceManagmentController {
   constructor(private readonly superadminService: SuperadminService) {}
 
@@ -31,7 +31,7 @@ export class SuperAdminServiceManagmentController {
 
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
-  @Get('service')
+  @Get()
   async getAllServices(
     @Query('take') take: number = 10,
     @Query('skip') skip: number = 0,
@@ -44,7 +44,7 @@ export class SuperAdminServiceManagmentController {
 
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
-  @Patch('service/:id')
+  @Patch(':id')
   async updateService(@Param('id') id: number, @Body() data: UpdateServiceDto) {
     const service = await this.superadminService.updateService(id, data);
     return {

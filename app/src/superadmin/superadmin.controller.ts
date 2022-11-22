@@ -28,30 +28,6 @@ export class SuperadminController {
 
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
-  @Post('admin-register')
-  async createAdmin(@Body() data: CreateAdminDto) {
-    const newAdmin = await this.superadminService.createNewAdmin(data);
-    if (newAdmin)
-      return {
-        data: newAdmin,
-      };
-  }
-
-  @UseGuards(AdminAuthGuard)
-  @ApiBearerAuth()
-  @Get('admins')
-  async getAllAdmins(
-    @Query('take') take: number = 10,
-    @Query('skip') skip: number = 0,
-  ) {
-    const admins = await this.superadminService.getAdmins(take, skip);
-    return {
-      data: admins,
-    };
-  }
-
-  @UseGuards(AdminAuthGuard)
-  @ApiBearerAuth()
   @Get('test')
   getHello() {
     return {
