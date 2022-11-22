@@ -22,6 +22,8 @@ import { GenderEnum } from './info/enum/gender.enum';
 import { ProfileDto } from './dto/profile.dto';
 import { SocialMediaEntity } from './social-media/entity/social-media.entity';
 import { SocialMediaDto } from './dto/social-media.dto';
+import { WalletEntity } from './entity/wallet.entity';
+import { currencyTypeEnum, getCurrencies } from './type/currency.enum';
 
 @Injectable()
 export class UsersService {
@@ -32,6 +34,8 @@ export class UsersService {
     private readonly userInfoRepo: Repository<UserInfoEntity>,
     @InjectRepository(SocialMediaEntity)
     private readonly socialMediaRepo: Repository<SocialMediaEntity>,
+    @InjectRepository(WalletEntity)
+    private readonly walletRepo: Repository<WalletEntity>,
     private readonly jwtService: JwtService,
     private readonly serviceService: ServiceService,
     private readonly securityQservice: SecurityQService,
@@ -173,16 +177,32 @@ export class UsersService {
     const services = await this.serviceService.getAllServices();
     const newUser = new UserEntity();
     let profile = await this.userInfoRepo.save(new UserInfoEntity());
-    console.log(profile.id);
     newUser.profileId = profile.id;
     newUser.username = data.username;
     newUser.password = (await bcrypt.hash(data.password, 10)).toString();
     newUser.createdBy = 'self';
     await this.userRepo.save(newUser);
+
+    const currencies = getCurrencies();
+    for (let i = 0; i < services.length; i++) {
+      const { roles } = services[i];
+      for (let j = 0; j < roles.length; j++) {
+        for (let k = 0; k < currencies.length; k++) {
+          const newWallet = new WalletEntity();
+          newWallet.roleId = roles[j].id;
+          newWallet.currencyId = k;
+          newWallet.userId = newUser.id;
+          newWallet.serviceId = services[i].id;
+          await this.walletRepo.save(newWallet);
+        }
+      }
+    }
+
     for (let i = 0; i < services.length; i++) {
       services[i].users.push(newUser);
       await this.serviceService.saveService(services[i]);
     }
+
     const { questionId, answer } = data;
     if (!questionId && !answer)
       throw new BadRequestException('QUESTION.NOT_FOUND');

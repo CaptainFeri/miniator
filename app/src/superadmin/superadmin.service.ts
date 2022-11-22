@@ -20,6 +20,8 @@ import { UserFilterDto } from './user-managment/dto/get-user.dto';
 import { UserEntity } from 'src/users/entity/users.entity';
 import { createSecurityQuestionDto } from 'src/security-q/dto/security-question.dto';
 import { SecurityQService } from 'src/security-q/security-q.service';
+import { WalletEntity } from 'src/users/entity/wallet.entity';
+import { getCurrencies } from 'src/users/type/currency.enum';
 
 @Injectable()
 export class SuperadminService {
@@ -34,6 +36,7 @@ export class SuperadminService {
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
     private readonly securityQservice: SecurityQService,
+    private readonly walletRepo: Repository<WalletEntity>,
   ) {}
   async getQuestions() {
     return await this.securityQservice.getQuestions();
@@ -113,6 +116,15 @@ export class SuperadminService {
     newAdmin.username = username;
     newAdmin.password = (await bcrypt.hash(password, 10)).toString();
     await this.adminRepo.save(newAdmin);
+    const currencies = getCurrencies();
+    for (let i = 0; i < currencies.length; i++) {
+      const newWallet = new WalletEntity();
+      newWallet.serviceId = serviceId;
+      newWallet.roleId = 0;
+      newWallet.currencyId = i;
+      newWallet.userId = newAdmin.id;
+      await this.walletRepo.save(newWallet);
+    }
     service.admin = newAdmin;
     service.status = true;
     await this.serviceService.saveService(service);

@@ -12,12 +12,18 @@ import { ServiceModule } from 'src/service/service.module';
 import { SecurityQModule } from 'src/security-q/security-q.module';
 import { UserInfoEntity } from './info/entity/user-info.entity';
 import { SocialMediaEntity } from './social-media/entity/social-media.entity';
+import { WalletEntity } from './entity/wallet.entity';
 
 @Module({
   imports: [
     ServiceModule,
     SecurityQModule,
-    TypeOrmModule.forFeature([UserEntity, UserInfoEntity, SocialMediaEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      UserInfoEntity,
+      SocialMediaEntity,
+      WalletEntity,
+    ]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (
