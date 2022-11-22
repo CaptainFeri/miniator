@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AdminEntity } from 'src/admin/entity/admin.entity';
+import { AdminEntity } from 'src/subadmin/entity/admin.entity';
 import appEnvConfig from 'src/config/app-env.config';
 import { SecurityQModule } from 'src/security-q/security-q.module';
 import { ServiceModule } from 'src/service/service.module';

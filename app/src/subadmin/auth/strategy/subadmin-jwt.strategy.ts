@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { AdminService } from 'src/admin/admin.service';
+import { AdminService } from 'src/subadmin/admin.service';
 import appEnvConfig from 'src/config/app-env.config';
 import { SuperadminService } from 'src/superadmin/superadmin.service';
 import AdminTokenPayload from '../interface/subAdminTokenPayload.interface';

@@ -1,4 +1,4 @@
-import { AdminEntity } from '../../admin/entity/admin.entity';
+import { AdminEntity } from '../../subadmin/entity/admin.entity';
 import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { myBaseEntity } from '../../common/entity/base.entity';
 import { UserEntity } from '../../users/entity/users.entity';

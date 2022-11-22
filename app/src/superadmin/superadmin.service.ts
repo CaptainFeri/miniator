@@ -10,7 +10,7 @@ import appEnvConfig from 'src/config/app-env.config';
 import * as bcrypt from 'bcrypt';
 import { CreateAdminDto } from './dto/createAdmin.dto';
 import { Repository } from 'typeorm';
-import { AdminEntity } from 'src/admin/entity/admin.entity';
+import { AdminEntity } from 'src/subadmin/entity/admin.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceService } from 'src/service/service.service';
 import { CreateServiceDto } from 'src/service/dto/create-service.dto';

@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AssignRoleServiceDto } from 'src/admin/dto/assign-role-service.dto';
-import { AdminEntity } from 'src/admin/entity/admin.entity';
+import { AssignRoleServiceDto } from 'src/subadmin/dto/assign-role-service.dto';
+import { AdminEntity } from 'src/subadmin/entity/admin.entity';
 import { ServiceEntity } from 'src/service/entity/service.entity';
 import { Repository } from 'typeorm';
 import { CreateRoleDto } from './dto/create-role.dto';

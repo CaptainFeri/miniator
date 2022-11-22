@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AdminEntity } from 'src/admin/entity/admin.entity';
+import { AdminEntity } from 'src/subadmin/entity/admin.entity';
 import { UpdateServiceDto } from 'src/superadmin/dto/update-service.dto';
 import { UserEntity } from 'src/users/entity/users.entity';
 import { Repository } from 'typeorm';
