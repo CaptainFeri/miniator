@@ -10,12 +10,14 @@ import { UserJwtStrategy } from './auth/strategy/user-jwt.strategy';
 import { UserAuthMiddleware } from './auth/middleware/user-auth.middleware';
 import { ServiceModule } from 'src/service/service.module';
 import { SecurityQModule } from 'src/security-q/security-q.module';
+import { UserInfoEntity } from './info/entity/user-info.entity';
+import { SocialMediaEntity } from './social-media/entity/social-media.entity';
 
 @Module({
   imports: [
     ServiceModule,
     SecurityQModule,
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([UserEntity, UserInfoEntity, SocialMediaEntity]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (

@@ -3,6 +3,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { SubadminAuthGuard } from 'src/subadmin/auth/Guard/subadmin.guard';
 import { createSecurityQuestionDto } from 'src/security-q/dto/security-question.dto';
 import { SuperadminService } from '../superadmin.service';
+import { AdminAuthGuard } from '../auth/Guard/admin.guard';
 
 @ApiTags('admin-security-question-managment')
 @Controller('super-admin')
@@ -11,7 +12,7 @@ export class AdminSecurityQuestionManagmentController {
 
   @Get('security-questions')
   @ApiBearerAuth()
-  @UseGuards(SubadminAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async getQuestions() {
     const questions = await this.superAdminService.getQuestions();
     return {
@@ -21,7 +22,7 @@ export class AdminSecurityQuestionManagmentController {
 
   @Post('security-question')
   @ApiBearerAuth()
-  @UseGuards(SubadminAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async createSecurityQuestion(@Body() data: createSecurityQuestionDto) {
     const newSecurity = await this.superAdminService.createSecurityQuestion(
       data,
@@ -33,7 +34,7 @@ export class AdminSecurityQuestionManagmentController {
 
   @Post('security-question/:id')
   @ApiBearerAuth()
-  @UseGuards(SubadminAuthGuard)
+  @UseGuards(AdminAuthGuard)
   async updateSecurityQuestion(
     @Param('id') id: number,
     @Body() data: createSecurityQuestionDto,

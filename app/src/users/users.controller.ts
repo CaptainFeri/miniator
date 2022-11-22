@@ -6,6 +6,7 @@ import {
   Req,
   UseGuards,
   BadRequestException,
+  Param,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserRole } from '../common/enum/userRole.enum';
@@ -16,11 +17,74 @@ import {
 import { UserAuthGuard } from './auth/Guard/user.guard';
 import { UsersService } from './users.service';
 import { ForgetPasswordDto } from './dto/forgetPassword.dto';
+import { UserExpressRequest } from './auth/types/userExpressRequest';
+import { ProfileDto } from './dto/profile.dto';
+import { SocialMediaDto } from './dto/social-media.dto';
 
-@Controller('users')
+@Controller('user')
 @ApiTags('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
+
+  @Get('social-media')
+  @ApiBearerAuth()
+  @UseGuards(UserAuthGuard)
+  async getSocials(@Req() req: UserExpressRequest) {
+    const socials = await this.userService.getSocialMedias(req.user.username);
+    return {
+      data: socials,
+    };
+  }
+
+  @Post('social-media')
+  @UseGuards(UserAuthGuard)
+  @ApiBearerAuth()
+  async createSocialMedia(
+    @Body() data: SocialMediaDto,
+    @Req() req: UserExpressRequest,
+  ) {
+    const social = await this.userService.addNewSocialMedia(
+      req.user.username,
+      data,
+    );
+    return {
+      data: social,
+    };
+  }
+
+  @Post('social-media/:id')
+  @UseGuards(UserAuthGuard)
+  @ApiBearerAuth()
+  async updateSocialMedia(
+    @Param('id') id: number,
+    @Body() data: SocialMediaDto,
+  ) {
+    const social = await this.userService.updateSocialMedia(id, data);
+    return {
+      data: social,
+    };
+  }
+
+  @Post('info')
+  @ApiBearerAuth()
+  @UseGuards(UserAuthGuard)
+  async updateProfile(
+    @Req() req: UserExpressRequest,
+    @Body() data: ProfileDto,
+  ) {
+    return {
+      data: await this.userService.updateProfile(req.user.username, data),
+    };
+  }
+
+  @Get('info')
+  @ApiBearerAuth()
+  @UseGuards(UserAuthGuard)
+  async getProfile(@Req() req: UserExpressRequest) {
+    return {
+      data: await this.userService.getProfile(req.user.username),
+    };
+  }
 
   @Post('check-security-answer')
   async forgetPassword(@Body() data: ForgetPasswordDto) {

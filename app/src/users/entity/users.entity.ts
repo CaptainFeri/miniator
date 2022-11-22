@@ -1,8 +1,18 @@
 import { Exclude } from 'class-transformer';
+import { Profile } from 'passport';
 import { SecurityQuestionEntity } from 'src/security-q/entity/security.entity';
 import { ServiceEntity } from 'src/service/entity/service.entity';
-import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { myBaseEntity } from '../../common/entity/base.entity';
+import { UserInfoEntity } from '../info/entity/user-info.entity';
 
 @Entity('USERS')
 export class UserEntity extends myBaseEntity {
@@ -34,4 +44,7 @@ export class UserEntity extends myBaseEntity {
     (sq: SecurityQuestionEntity) => sq.user,
   )
   public sqs: SecurityQuestionEntity[];
+
+  @Column()
+  public profileId: number;
 }
