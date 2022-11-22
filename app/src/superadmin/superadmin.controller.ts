@@ -39,39 +39,6 @@ export class SuperadminController {
 
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
-  @Post('create-service')
-  async createService(@Body() data: CreateServiceDto) {
-    const newService = await this.superadminService.createNewService(data);
-    return {
-      data: newService,
-    };
-  }
-
-  @UseGuards(AdminAuthGuard)
-  @ApiBearerAuth()
-  @Post('assign-admin-service')
-  async assignAdminToService(@Body() data: AssignAdminServiceDto) {
-    const assign = await this.superadminService.assignAdminService(data);
-    return {
-      data: assign,
-    };
-  }
-
-  @UseGuards(AdminAuthGuard)
-  @ApiBearerAuth()
-  @Get('services')
-  async getAllServices(
-    @Query('take') take: number = 10,
-    @Query('skip') skip: number = 0,
-  ) {
-    const services = await this.superadminService.getServices(take, skip);
-    return {
-      data: services,
-    };
-  }
-
-  @UseGuards(AdminAuthGuard)
-  @ApiBearerAuth()
   @Get('admins')
   async getAllAdmins(
     @Query('take') take: number = 10,
@@ -91,5 +58,14 @@ export class SuperadminController {
       data: 'test',
     };
   }
-  
+
+  //@UseGuards(AdminAuthGuard)
+  // @ApiBearerAuth()
+  // @Post('assign-admin-service')
+  // async assignAdminToService(@Body() data: AssignAdminServiceDto) {
+  //   const assign = await this.superadminService.assignAdminService(data);
+  //   return {
+  //     data: assign,
+  //   };
+  // }
 }

@@ -8,9 +8,13 @@ import { ConfigService, ConfigType } from '@nestjs/config';
 import appEnvConfig from '../config/app-env.config';
 import { UserJwtStrategy } from './auth/strategy/user-jwt.strategy';
 import { UserAuthMiddleware } from './auth/middleware/user-auth.middleware';
+import { ServiceModule } from 'src/service/service.module';
+import { SecurityQModule } from 'src/security-q/security-q.module';
 
 @Module({
   imports: [
+    ServiceModule,
+    SecurityQModule,
     TypeOrmModule.forFeature([UserEntity]),
     JwtModule.registerAsync({
       inject: [ConfigService],

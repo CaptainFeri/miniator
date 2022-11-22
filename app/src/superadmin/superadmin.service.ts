@@ -15,6 +15,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceService } from 'src/service/service.service';
 import { CreateServiceDto } from 'src/service/dto/create-service.dto';
 import { AssignAdminServiceDto } from 'src/service/dto/assign-admin-service.dto';
+import { UpdateServiceDto } from './dto/update-service.dto';
 
 @Injectable()
 export class SuperadminService {
@@ -28,10 +29,14 @@ export class SuperadminService {
     private readonly serviceService: ServiceService,
   ) {}
 
-  async assignAdminService(data: AssignAdminServiceDto) {
-    const assign = await this.serviceService.assignAdminService(data);
-    return assign;
+  async updateService(id: number, data: UpdateServiceDto) {
+    return await this.serviceService.updateService(id, data);
   }
+
+  // async assignAdminService(data: AssignAdminServiceDto) {
+  //   const assign = await this.serviceService.assignAdminService(data);
+  //   return assign;
+  // }
 
   async getServices(take: number, skip: number) {
     const services = await this.serviceService.getServices(take, skip);
@@ -60,13 +65,18 @@ export class SuperadminService {
   }
 
   async createNewAdmin(data: CreateAdminDto) {
-    const { username, password } = data;
+    const { username, password, serviceId } = data;
     const existAdmin = await this.adminRepo.findOne({ where: { username } });
     if (existAdmin) throw new BadRequestException('ADMIN.ALREADY_EXISTS');
+    const service = await this.serviceService.getServiceById(serviceId);
     const newAdmin = new AdminEntity();
     newAdmin.username = username;
     newAdmin.password = (await bcrypt.hash(password, 10)).toString();
-    return await this.adminRepo.save(newAdmin);
+    await this.adminRepo.save(newAdmin);
+    service.admin = newAdmin;
+    service.status = true;
+    await this.serviceService.saveService(service);
+    return newAdmin;
   }
 
   async generateSuperAdminToken(

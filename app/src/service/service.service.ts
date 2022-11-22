@@ -2,9 +2,12 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AdminEntity } from 'src/admin/entity/admin.entity';
+import { UpdateServiceDto } from 'src/superadmin/dto/update-service.dto';
+import { UserEntity } from 'src/users/entity/users.entity';
 import { Repository } from 'typeorm';
 import { AssignAdminServiceDto } from './dto/assign-admin-service.dto';
 import { CreateServiceDto } from './dto/create-service.dto';
@@ -17,7 +20,19 @@ export class ServiceService {
     private readonly serviceRepo: Repository<ServiceEntity>,
     @InjectRepository(AdminEntity)
     private readonly adminRepo: Repository<AdminEntity>,
+    @InjectRepository(UserEntity)
+    private readonly userRepo: Repository<UserEntity>,
   ) {}
+
+  async getServiceById(id: number) {
+    const service = await this.serviceRepo.findOne({ where: { id } });
+    if (!service) throw new NotFoundException('SERVICE.NOT_FOUND');
+    return service;
+  }
+
+  async saveService(service: ServiceEntity) {
+    return await this.serviceRepo.save(service);
+  }
 
   async assignAdminService(data: AssignAdminServiceDto) {
     const { adminId, serviceId } = data;
@@ -44,36 +59,114 @@ export class ServiceService {
     });
     const resList = [];
     for (let i = 0; i < services.length; i++) {
-      const { assignTime, id, title } = services[i];
-      const adminInfo = {
-        username: services[i].admin.username,
-        id: services[i].admin.id,
-      };
-      resList.push({
+      const {
         assignTime,
         id,
         title,
-        adminInfo,
-      });
+        admin,
+        maxCapacity,
+        maxDeposit,
+        maxWithdrawal,
+        minDeposit,
+        minWithdrawal,
+      } = services[i];
+      if (admin) {
+        const adminInfo = {
+          username: admin.username,
+          id: admin.id,
+        };
+        resList.push({
+          assignTime,
+          id,
+          title,
+          adminInfo,
+          settings: {
+            maxCapacity,
+            minDeposit,
+            maxDeposit,
+            minWithdrawal,
+            maxWithdrawal,
+          },
+        });
+      }
     }
     return { resList, total };
   }
 
+  async getUserServices() {
+    const resList = [];
+    const services = await this.serviceRepo.find({ relations: ['users'] });
+    for (let i = 0; i < services.length; i++) {
+      const { id, title, status } = services[i];
+      resList.push({ id, title, status });
+    }
+    return resList;
+  }
+
+  async getAllServices() {
+    return await this.serviceRepo.find({ relations: ['users'] });
+  }
+
+  async getUsersOfServiceById(serviceId: number) {
+    const service = await this.serviceRepo.findOne({
+      where: { id: serviceId },
+      relations: ['users'],
+    });
+    if (service) {
+      return service.users.filter((u) => delete u.password);
+    }
+    throw new BadRequestException('SERVICE.NOT_FOUND');
+  }
+
+  async updateService(id: number, data: UpdateServiceDto) {
+    const {
+      title,
+      maxCapacity = 0,
+      maxDeposit = 0,
+      maxWithdrawal = 0,
+      minWithdrawal = 0,
+      minDeposit = 0,
+    } = data;
+    const service = await this.serviceRepo.findOne({ where: { id } });
+    if (!service) throw new BadRequestException('SERVICE.NOT_FOUND');
+    service.title = title;
+    if (maxCapacity != 0) service.maxCapacity = maxCapacity;
+    if (maxDeposit != 0) service.maxDeposit = maxDeposit;
+    if (maxWithdrawal != 0) service.maxWithdrawal = maxWithdrawal;
+    if (minDeposit != 0) service.minDeposit = minDeposit;
+    if (minWithdrawal != 0) service.minWithdrawal = minWithdrawal;
+    return await this.serviceRepo.save(service);
+  }
+
   async createNewService(data: CreateServiceDto) {
-    const { adminId = 0, title } = data;
+    const {
+      title,
+      maxCapacity,
+      maxDeposit,
+      maxWithdrawal,
+      minDeposit,
+      minWithdrawal,
+    } = data;
     const exService = await this.serviceRepo.find({ where: { title } });
     if (exService.length > 0) {
       throw new BadRequestException('TITLE.INVALID');
     }
     const newService = new ServiceEntity();
-    if (adminId != 0) {
-      const admin = await this.adminRepo.findOne({ where: { id: adminId } });
-      if (!admin) throw new BadRequestException('ADMIN.NOT_FOUND');
-      newService.admin = admin;
-    }
+
+    const users = await this.userRepo.find({ relations: ['services'] });
     newService.assignTime = new Date();
-    newService.status = true;
+    newService.status = false;
     newService.title = title;
-    return await this.serviceRepo.save(newService);
+    newService.maxCapacity = maxCapacity;
+    newService.maxDeposit = maxDeposit;
+    newService.maxWithdrawal = maxWithdrawal;
+    newService.minDeposit = minDeposit;
+    newService.minWithdrawal = minWithdrawal;
+    await this.serviceRepo.save(newService);
+    for (let i = 0; i < users.length; i++) {
+      users[i].services.push(newService);
+      await this.userRepo.save(users[i]);
+    }
+    return newService;
   }
 }

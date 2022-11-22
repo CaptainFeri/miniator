@@ -1,16 +1,21 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class CreateServiceDto {
+export class UpdateServiceDto {
   @ApiPropertyOptional()
   title: string;
+
   @ApiPropertyOptional()
-  minDeposit: string;
+  public maxDeposit?: string;
+
   @ApiPropertyOptional()
-  maxDeposit: string;
+  public minDeposit?: string;
+
   @ApiPropertyOptional()
-  minWithdrawal: string;
+  public minWithdrawal?: string;
+
   @ApiPropertyOptional()
-  maxWithdrawal: string;
+  public maxWithdrawal?: string;
+
   @ApiPropertyOptional()
-  maxCapacity: string;
+  public maxCapacity?: string;
 }

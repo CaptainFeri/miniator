@@ -1,14 +1,54 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  UseGuards,
+  BadRequestException,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserRole } from '../common/enum/userRole.enum';
-import { CreateAdminDto } from 'src/superadmin/dto/createAdmin.dto';
+import {
+  CreateAdminDto,
+  RegisterUserDto,
+} from 'src/superadmin/dto/createAdmin.dto';
 import { UserAuthGuard } from './auth/Guard/user.guard';
 import { UsersService } from './users.service';
+import { ForgetPasswordDto } from './dto/forgetPassword.dto';
 
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
+
+  @Post('check-security-answer')
+  async forgetPassword(@Body() data: ForgetPasswordDto) {
+    const check = await this.userService.forgetPassword(data);
+    if (check == true) {
+      return {
+        data: 'SUCCESS',
+      };
+    } else {
+      throw new BadRequestException('USER.INVALID');
+    }
+  }
+
+  @Get('security-questions')
+  async getSecurityQuestion() {
+    const sq = await this.userService.getSecurityQuestions();
+    return {
+      data: sq,
+    };
+  }
+
+  @Get('services')
+  async seeSerivces() {
+    const services = await this.userService.getServices();
+    return {
+      data: services,
+    };
+  }
 
   @Get('test')
   @ApiBearerAuth()
@@ -20,7 +60,7 @@ export class UsersController {
   }
 
   @Post('register')
-  async registerUser(@Body() data: CreateAdminDto) {
+  async registerUser(@Body() data: RegisterUserDto) {
     const user = await this.userService.registerUser(data);
     return {
       data: user,

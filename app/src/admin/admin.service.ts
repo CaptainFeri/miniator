@@ -17,6 +17,9 @@ import { ServiceEntity } from 'src/service/entity/service.entity';
 import { RoleEntity } from 'src/role/entity/role.entity';
 import { CreateRoleDto } from 'src/role/dto/create-role.dto';
 import { AssignRoleServiceDto } from './dto/assign-role-service.dto';
+import { ServiceService } from 'src/service/service.service';
+import { SecurityQService } from 'src/security-q/security-q.service';
+import { createSecurityQuestionDto } from 'src/security-q/dto/security-question.dto';
 
 @Injectable()
 export class AdminService {
@@ -32,7 +35,32 @@ export class AdminService {
     private readonly serviceRepo: Repository<ServiceEntity>,
     @InjectRepository(RoleEntity)
     private readonly roleRepo: Repository<RoleEntity>,
+    private readonly serviceService: ServiceService,
+    private readonly securityQservice: SecurityQService,
   ) {}
+
+  async getQuestions() {
+    return await this.securityQservice.getQuestions();
+  }
+
+  async createSecurityQuestion(data: createSecurityQuestionDto) {
+    return await this.securityQservice.insertNewSecurityQuestion(data);
+  }
+
+  async getUsersOfService(id: number) {
+    return await this.serviceService.getUsersOfServiceById(id);
+  }
+
+  async getRoles(username: string) {
+    const admin = await this.adminRepo.findOne({
+      where: { username },
+      relations: ['services'],
+    });
+    if (admin) {
+      return await this.roleRepo.find();
+    }
+    throw new NotFoundException('ADMIN.NOT_FOUND');
+  }
 
   async getRolesOfService(serviceId: number) {
     const service = await this.serviceRepo.findOne({
@@ -53,6 +81,9 @@ export class AdminService {
     });
     if (!service) throw new NotFoundException('SERVICE.NOT_FOUND');
     if (role.createBy == subadmin && service.admin.username == subadmin) {
+      service.roles.forEach((r) => {
+        if (r.id == role.id) throw new BadRequestException('BAD_REQUEST');
+      });
       service.roles.push(role);
       await this.serviceRepo.save(service);
       return service.roles;
@@ -62,13 +93,22 @@ export class AdminService {
   }
 
   async createNewRole(data: CreateRoleDto, subadmin: string) {
-    const exRole = await this.roleRepo.find({ where: { title: data.title } });
+    const exRole = await this.roleRepo.find({
+      where: { title: data.title },
+    });
+    const serviceAdmin = await this.serviceRepo.findOne({
+      where: { admin: { username: subadmin } },
+      relations: ['roles'],
+    });
     if (exRole.length > 0) throw new BadRequestException('BAD_REQUEST');
+    if (!serviceAdmin) throw new NotFoundException('ADMIN.NOT_FOUND');
     const newRole = new RoleEntity();
     newRole.title = data.title;
     newRole.vip = data.vip;
     newRole.createBy = subadmin;
-    return await this.roleRepo.save(newRole);
+    await this.roleRepo.save(newRole);
+    serviceAdmin.roles.push(newRole);
+    return await this.serviceRepo.save(serviceAdmin);
   }
 
   async getServices(admin, take: number, skip: number) {
@@ -93,15 +133,6 @@ export class AdminService {
       res.push({ assignTime, title, status, id, roles });
     }
     return { res, total };
-  }
-
-  async createUser(data: CreateAdminDto, subadmin) {
-    const newUser = await this.userService.createUser(data, subadmin);
-    if (newUser) {
-      return {
-        data: newUser,
-      };
-    }
   }
 
   async generateSuperAdminToken(
