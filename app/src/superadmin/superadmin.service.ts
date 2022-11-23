@@ -36,6 +36,7 @@ export class SuperadminService {
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
     private readonly securityQservice: SecurityQService,
+    @InjectRepository(WalletEntity)
     private readonly walletRepo: Repository<WalletEntity>,
   ) {}
   async getQuestions() {
@@ -116,7 +117,7 @@ export class SuperadminService {
     newAdmin.username = username;
     newAdmin.password = (await bcrypt.hash(password, 10)).toString();
     await this.adminRepo.save(newAdmin);
-    const currencies = getCurrencies();
+    const currencies = await getCurrencies();
     for (let i = 0; i < currencies.length; i++) {
       const newWallet = new WalletEntity();
       newWallet.serviceId = serviceId;

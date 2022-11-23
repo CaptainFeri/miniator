@@ -47,8 +47,8 @@ export class SecurityQService {
     const resList = [];
     const questions = await this.sercurityDocsRepo.find();
     for (let i = 0; i < questions.length; i++) {
-      const { id, title } = questions[i];
-      resList.push({ id, title });
+      const { id, title, service } = questions[i];
+      resList.push({ id, title, service });
     }
     return resList;
   }

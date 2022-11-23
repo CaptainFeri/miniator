@@ -1,5 +1,5 @@
 import { ServiceEntity } from 'src/service/entity/service.entity';
-import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { myBaseEntity } from '../../common/entity/base.entity';
 
 @Entity('ROLE')
@@ -15,13 +15,9 @@ export class RoleEntity extends myBaseEntity {
   })
   public vip: boolean = false;
 
-  @OneToMany(() => ServiceEntity, (service: ServiceEntity) => service.roles)
-  // @JoinTable({
-  //   name: 'ROLE_SERVICES',
-  //   joinColumn: {
-  //     name: 'roleId',
-  //     referencedColumnName: 'id',
-  //   },
-  // })
+  @ManyToOne(() => ServiceEntity, (service: ServiceEntity) => service.roles, {
+    eager: true,
+    cascade: true,
+  })
   public service: ServiceEntity;
 }

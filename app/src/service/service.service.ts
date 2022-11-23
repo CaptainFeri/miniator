@@ -95,16 +95,18 @@ export class ServiceService {
 
   async getUserServices() {
     const resList = [];
-    const services = await this.serviceRepo.find({ relations: ['users'] });
+    const services = await this.serviceRepo.find({
+      relations: ['users', 'roles'],
+    });
     for (let i = 0; i < services.length; i++) {
-      const { id, title, status } = services[i];
-      resList.push({ id, title, status });
+      const { id, title, status, roles } = services[i];
+      resList.push({ id, title, status, roles });
     }
     return resList;
   }
 
   async getAllServices() {
-    return await this.serviceRepo.find({ relations: ['users'] });
+    return await this.serviceRepo.find({ relations: ['users', 'roles'] });
   }
 
   async getUsersOfServiceById(serviceId: number) {
@@ -162,6 +164,7 @@ export class ServiceService {
     newService.maxWithdrawal = maxWithdrawal;
     newService.minDeposit = minDeposit;
     newService.minWithdrawal = minWithdrawal;
+    newService.roles = [];
     await this.serviceRepo.save(newService);
     for (let i = 0; i < users.length; i++) {
       users[i].services.push(newService);

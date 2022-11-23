@@ -4,6 +4,6 @@ export enum currencyTypeEnum {
   POND,
 }
 
-export function getCurrencies() {
+export async function getCurrencies(): Promise<number[]> {
   return [0, 1, 2];
 }

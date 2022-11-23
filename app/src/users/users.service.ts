@@ -113,8 +113,9 @@ export class UsersService {
     const [socials, total] = await this.socialMediaRepo.findAndCount({
       where: { userId: user.id },
     });
+    const wallet = await this.walletRepo.find({ where: { userId: user.id } });
     delete user.password;
-    return { user, info, socials: { socials, total } };
+    return { user, info, wallet, socials: { socials, total } };
   }
 
   async forgetPassword(data: ForgetPasswordDto) {
@@ -183,13 +184,15 @@ export class UsersService {
     newUser.createdBy = 'self';
     await this.userRepo.save(newUser);
 
-    const currencies = getCurrencies();
+    const currencies = await getCurrencies();
     for (let i = 0; i < services.length; i++) {
-      const { roles } = services[i];
-      for (let j = 0; j < roles.length; j++) {
+      console.log(services[i].roles);
+
+      if (services[i].roles == null) services[i].roles = [];
+      for (let j = 0; j < services[i].roles.length; j++) {
         for (let k = 0; k < currencies.length; k++) {
           const newWallet = new WalletEntity();
-          newWallet.roleId = roles[j].id;
+          newWallet.roleId = services[i].roles[j].id;
           newWallet.currencyId = k;
           newWallet.userId = newUser.id;
           newWallet.serviceId = services[i].id;

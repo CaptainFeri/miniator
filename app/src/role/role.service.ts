@@ -31,7 +31,10 @@ export class RoleService {
   }
 
   async getAllRoles(take: number, skip: number) {
-    const [roles, total] = await this.roleRepo.findAndCount({ take, skip });
+    const [roles, total] = await this.roleRepo.findAndCount({
+      take,
+      skip,
+    });
     return {
       roles,
       total,
@@ -87,14 +90,14 @@ export class RoleService {
       where: { admin: { username: subadmin } },
       relations: ['roles'],
     });
+    console.log(serviceAdmin);
     if (exRole.length > 0) throw new BadRequestException('BAD_REQUEST');
     if (!serviceAdmin) throw new NotFoundException('ADMIN.NOT_FOUND');
     const newRole = new RoleEntity();
     newRole.title = data.title;
     newRole.vip = data.vip;
     newRole.createBy = subadmin;
-    await this.roleRepo.save(newRole);
-    serviceAdmin.roles.push(newRole);
-    return await this.serviceRepo.save(serviceAdmin);
+    newRole.service = serviceAdmin;
+    return await this.roleRepo.save(newRole);
   }
 }
