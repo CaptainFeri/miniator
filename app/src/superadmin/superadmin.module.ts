@@ -16,11 +16,13 @@ import { SuperadminController } from './superadmin.controller';
 import { SuperadminService } from './superadmin.service';
 import { SuperAdminUserManagmentController } from './user-managment/superadmin.user.controller';
 import { WalletEntity } from 'src/users/entity/wallet.entity';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
     SecurityQModule,
     ServiceModule,
+    UsersModule,
     TypeOrmModule.forFeature([AdminEntity, UserEntity, WalletEntity]),
     JwtModule.registerAsync({
       inject: [ConfigService],

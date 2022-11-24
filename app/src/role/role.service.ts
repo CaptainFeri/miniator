@@ -57,7 +57,7 @@ export class RoleService {
       where: { id: serviceId },
       relations: ['roles'],
     });
-    if (service) return service;
+    if (service) return service.roles;
     throw new NotFoundException('SERVICE.NOT_FOUND');
   }
 

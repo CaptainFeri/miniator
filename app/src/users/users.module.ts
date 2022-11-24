@@ -13,11 +13,13 @@ import { SecurityQModule } from 'src/security-q/security-q.module';
 import { UserInfoEntity } from './info/entity/user-info.entity';
 import { SocialMediaEntity } from './social-media/entity/social-media.entity';
 import { WalletEntity } from './entity/wallet.entity';
+import { RoleModule } from 'src/role/role.module';
 
 @Module({
   imports: [
     ServiceModule,
     SecurityQModule,
+    RoleModule,
     TypeOrmModule.forFeature([
       UserEntity,
       UserInfoEntity,

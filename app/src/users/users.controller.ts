@@ -20,6 +20,7 @@ import { ForgetPasswordDto } from './dto/forgetPassword.dto';
 import { UserExpressRequest } from './auth/types/userExpressRequest';
 import { ProfileDto } from './dto/profile.dto';
 import { SocialMediaDto } from './dto/social-media.dto';
+import { UserLoginDto } from './dto/userLogin.dto';
 
 @Controller('user')
 @ApiTags('users')
@@ -114,6 +115,14 @@ export class UsersController {
     };
   }
 
+  @Get('role-service/:id')
+  async getRolesOfService(@Param('id') serviceId: number) {
+    const roles = await this.userService.getRolesOfService(serviceId);
+    return {
+      data: roles,
+    };
+  }
+
   @Get('test')
   @ApiBearerAuth()
   @UseGuards(UserAuthGuard)
@@ -132,12 +141,8 @@ export class UsersController {
   }
 
   @Post('login')
-  async loginUser(@Body() data: CreateAdminDto) {
-    const userToken = await this.userService.generateUserToken(
-      data.username,
-      data.password,
-      UserRole.USER,
-    );
+  async loginUser(@Body() data: UserLoginDto) {
+    const userToken = await this.userService.generateUserToken(data);
     return {
       data: userToken,
     };

@@ -21,6 +21,7 @@ import { ServiceService } from 'src/service/service.service';
 import { SecurityQService } from 'src/security-q/security-q.service';
 import { createSecurityQuestionDto } from 'src/security-q/dto/security-question.dto';
 import { RoleService } from 'src/role/role.service';
+import { UserFilterDto } from 'src/superadmin/user-managment/dto/get-user.dto';
 
 @Injectable()
 export class AdminService {
@@ -37,6 +38,11 @@ export class AdminService {
     private readonly serviceService: ServiceService,
     private readonly roleService: RoleService,
   ) {}
+
+  async getUsers(data: UserFilterDto) {
+    const users = await this.userService.getUserFilter(data);
+    return users;
+  }
 
   async updateRole(data: CreateRoleDto, id: number) {
     return await this.roleService.updateRole(data, id);

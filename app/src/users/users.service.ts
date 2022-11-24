@@ -24,6 +24,9 @@ import { SocialMediaEntity } from './social-media/entity/social-media.entity';
 import { SocialMediaDto } from './dto/social-media.dto';
 import { WalletEntity } from './entity/wallet.entity';
 import { currencyTypeEnum, getCurrencies } from './type/currency.enum';
+import { UserFilterDto } from 'src/superadmin/user-managment/dto/get-user.dto';
+import { RoleService } from 'src/role/role.service';
+import { UserLoginDto } from './dto/userLogin.dto';
 
 @Injectable()
 export class UsersService {
@@ -39,7 +42,40 @@ export class UsersService {
     private readonly jwtService: JwtService,
     private readonly serviceService: ServiceService,
     private readonly securityQservice: SecurityQService,
+    private readonly roleService: RoleService,
   ) {}
+
+  async getRolesOfService(serviceId: number) {
+    const roles = await this.roleService.getRolesOfService(serviceId);
+    return roles;
+  }
+
+  async getUserFilter(data: UserFilterDto) {
+    const { birthday = 0, city = 0, gender = null, skip, take } = data;
+    const reslist = [];
+    const [users, userTotal] = await this.userRepo.findAndCount({ take, skip });
+    for (let i = 0; i < users.length; i++) {
+      const { profileId } = users[i];
+      const profile = await this.userInfoRepo.findOne({
+        where: { id: profileId },
+      });
+      if (
+        (profile && gender != null && profile.gender == gender) ||
+        (profile && birthday != 0 && profile.birthday == new Date(birthday)) ||
+        (profile && city != 0 && profile.city == city) ||
+        (profile && gender == null && birthday == 0 && city == 0)
+      ) {
+        reslist.push({
+          userInfo: { username: users[i].username, id: users[i].id },
+          profileInfo: profile,
+        });
+      }
+    }
+    return {
+      reslist,
+      userTotal,
+    };
+  }
 
   async getSocialMedias(username: string) {
     const user = await this.userRepo.findOne({
@@ -158,14 +194,22 @@ export class UsersService {
     return await this.userRepo.save(newUser);
   }
 
-  async generateUserToken(username: string, password: string, role: UserRole) {
-    if (role == UserRole.USER) {
-      const user = await this.userRepo.findOne({ where: { username } });
-      if (user) {
-        await bcrypt.compare(password, user.password);
-        const token = this.jwtService.sign({ username, role });
-        return token;
-      }
+  async generateUserToken(data: UserLoginDto) {
+    const { password, roleId, serviceId, username } = data;
+    const user = await this.userRepo.findOne({
+      where: { username: data.username },
+    });
+    if (user) {
+      const walletinfo = await this.walletRepo.find({
+        where: {
+          serviceId,
+          roleId,
+          userId: user.id,
+        },
+      });
+      await bcrypt.compare(data.password, user.password);
+      const token = this.jwtService.sign({ password, role: UserRole.USER });
+      return { token, walletinfo };
     }
     throw new BadRequestException('ADMIN.INVALID');
   }
@@ -186,8 +230,6 @@ export class UsersService {
 
     const currencies = await getCurrencies();
     for (let i = 0; i < services.length; i++) {
-      console.log(services[i].roles);
-
       if (services[i].roles == null) services[i].roles = [];
       for (let j = 0; j < services[i].roles.length; j++) {
         for (let k = 0; k < currencies.length; k++) {
@@ -213,10 +255,6 @@ export class UsersService {
       { questionId, answer },
       data.username,
     );
-    return await this.generateUserToken(
-      data.username,
-      data.password,
-      UserRole.USER,
-    );
+    return 'done';
   }
 }

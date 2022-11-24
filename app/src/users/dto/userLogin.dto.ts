@@ -1,14 +1,12 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class UserFilterDto {
+export class UserLoginDto {
   @ApiPropertyOptional()
-  take: number;
+  username: string;
   @ApiPropertyOptional()
-  skip: number;
+  password: string;
   @ApiPropertyOptional()
-  gender: number;
+  serviceId: number;
   @ApiPropertyOptional()
-  birthday: string;
-  @ApiPropertyOptional()
-  city: string;
+  roleId: number;
 }

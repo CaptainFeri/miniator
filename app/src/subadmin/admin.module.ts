@@ -13,6 +13,7 @@ import { ServiceEntity } from 'src/service/entity/service.entity';
 import { ServiceModule } from 'src/service/service.module';
 import { AdminRoleManagmentController } from './role-managment/admin-role-managment.controller';
 import { RoleModule } from '../role/role.module';
+import { AdminUserManagmentController } from './user-managment/admin-user-managment.controller';
 
 @Module({
   imports: [
@@ -34,7 +35,11 @@ import { RoleModule } from '../role/role.module';
     }),
   ],
   providers: [AdminService, SubAdminJwtStrategy],
-  controllers: [AdminController, AdminRoleManagmentController],
+  controllers: [
+    AdminController,
+    AdminRoleManagmentController,
+    AdminUserManagmentController,
+  ],
 })
 export class AdminModule {
   configure(consumer: MiddlewareConsumer) {

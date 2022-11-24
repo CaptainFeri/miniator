@@ -22,6 +22,7 @@ import { createSecurityQuestionDto } from 'src/security-q/dto/security-question.
 import { SecurityQService } from 'src/security-q/security-q.service';
 import { WalletEntity } from 'src/users/entity/wallet.entity';
 import { getCurrencies } from 'src/users/type/currency.enum';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class SuperadminService {
@@ -36,6 +37,7 @@ export class SuperadminService {
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
     private readonly securityQservice: SecurityQService,
+    private readonly userService: UsersService,
     @InjectRepository(WalletEntity)
     private readonly walletRepo: Repository<WalletEntity>,
   ) {}
@@ -52,14 +54,8 @@ export class SuperadminService {
   }
 
   async getUsers(data: UserFilterDto) {
-    const [users, total] = await this.userRepo.findAndCount({
-      take: data.take,
-      skip: data.skip,
-    });
-    return {
-      users,
-      total,
-    };
+    const users = await this.userService.getUserFilter(data);
+    return users;
   }
 
   async updateAdmin(id: number, data: UpdateAdminDto) {
