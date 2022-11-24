@@ -102,11 +102,19 @@ export class AdminService {
     role: UserRole,
   ) {
     if (UserRole.ADMIN == role) {
-      const admin = await this.adminRepo.findOne({ where: { username } });
+      const admin = await this.adminRepo.findOne({
+        where: { username },
+        relations: ['services'],
+      });
       if (admin) {
         await bcrypt.compare(password, admin.password);
+        const wallets = await this.userService.getWalletsId(
+          admin.services[0].id,
+          UserRole.ADMIN,
+          admin.id,
+        );
         const token = this.jwtService.sign({ username, role });
-        return token;
+        return { token, wallets };
       }
     }
     throw new BadRequestException('ADMIN.INVALID');

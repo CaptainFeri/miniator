@@ -117,7 +117,7 @@ export class SuperadminService {
     for (let i = 0; i < currencies.length; i++) {
       const newWallet = new WalletEntity();
       newWallet.serviceId = serviceId;
-      newWallet.roleId = 0;
+      newWallet.roleId = UserRole.ADMIN;
       newWallet.currencyId = i;
       newWallet.userId = newAdmin.id;
       await this.walletRepo.save(newWallet);

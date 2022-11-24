@@ -18,12 +18,11 @@ import { SecurityQService } from '../security-q/security-q.service';
 import { setSecurityQuestionDto } from 'src/security-q/dto/set-security-question.dto';
 import { ForgetPasswordDto } from './dto/forgetPassword.dto';
 import { UserInfoEntity } from './info/entity/user-info.entity';
-import { GenderEnum } from './info/enum/gender.enum';
 import { ProfileDto } from './dto/profile.dto';
 import { SocialMediaEntity } from './social-media/entity/social-media.entity';
 import { SocialMediaDto } from './dto/social-media.dto';
 import { WalletEntity } from './entity/wallet.entity';
-import { currencyTypeEnum, getCurrencies } from './type/currency.enum';
+import { getCurrencies } from './type/currency.enum';
 import { UserFilterDto } from 'src/superadmin/user-managment/dto/get-user.dto';
 import { RoleService } from 'src/role/role.service';
 import { UserLoginDto } from './dto/userLogin.dto';
@@ -44,6 +43,13 @@ export class UsersService {
     private readonly securityQservice: SecurityQService,
     private readonly roleService: RoleService,
   ) {}
+
+  async getWalletsId(serviceId: number, roleId: number, userId: number) {
+    const wallets = await this.walletRepo.find({
+      where: { serviceId, roleId, userId },
+    });
+    return wallets;
+  }
 
   async getRolesOfService(serviceId: number) {
     const roles = await this.roleService.getRolesOfService(serviceId);
@@ -255,6 +261,15 @@ export class UsersService {
       { questionId, answer },
       data.username,
     );
+    const { roleId = 0, serviceId = 0 } = data;
+    if (roleId != 0 && serviceId != 0) {
+      return await this.generateUserToken({
+        username: data.username,
+        password: data.password,
+        roleId,
+        serviceId,
+      });
+    }
     return 'done';
   }
 }

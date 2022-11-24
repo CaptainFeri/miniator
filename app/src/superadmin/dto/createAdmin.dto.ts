@@ -19,4 +19,8 @@ export class RegisterUserDto {
   questionId: number;
   @ApiPropertyOptional()
   answer: string;
+  @ApiPropertyOptional()
+  serviceId: number;
+  @ApiPropertyOptional()
+  roleId: number;
 }
