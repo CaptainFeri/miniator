@@ -22,6 +22,9 @@ import { SecurityQService } from 'src/security-q/security-q.service';
 import { createSecurityQuestionDto } from 'src/security-q/dto/security-question.dto';
 import { RoleService } from 'src/role/role.service';
 import { UserFilterDto } from 'src/superadmin/user-managment/dto/get-user.dto';
+import { AdminUpdateUesrDto } from 'src/superadmin/user-managment/dto/admin-update-user.dto';
+import { ProfileDto } from 'src/users/dto/profile.dto';
+import { GenderEnum } from 'src/users/info/enum/gender.enum';
 
 @Injectable()
 export class AdminService {
@@ -38,6 +41,34 @@ export class AdminService {
     private readonly serviceService: ServiceService,
     private readonly roleService: RoleService,
   ) {}
+
+  async updateUser(id: number, data: AdminUpdateUesrDto) {
+    const {
+      birthday = 0,
+      city = 0,
+      firstname = 0,
+      gender = null,
+      lastname = 0,
+      nationalCode = 0,
+      password = 0,
+      phone = 0,
+      username = 0,
+    } = data;
+    const user = await this.userService.getUser(id);
+    if (!user) throw new NotFoundException('USER.NOT_FOUND');
+    const profile = await this.userService.getProfile(user.username);
+    if (!profile) throw new NotFoundException('USER.NOT_FOUND');
+    const prof = new ProfileDto();
+    if (birthday != 0) prof.birthday = birthday;
+    if (city != 0) prof.city = city;
+    if (firstname != 0) prof.firstname = firstname;
+    if (gender != null) prof.gender = GenderEnum[gender];
+    if (lastname != 0) prof.lastname = lastname;
+    if (nationalCode != 0) prof.nationalCode = nationalCode;
+    if (phone != 0) prof.phone = phone;
+    const res = await this.userService.updateProfile(user.username, prof);
+    return res;
+  }
 
   async getUsers(data: UserFilterDto) {
     const users = await this.userService.getUserFilter(data);

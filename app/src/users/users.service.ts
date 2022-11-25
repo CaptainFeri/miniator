@@ -44,6 +44,12 @@ export class UsersService {
     private readonly roleService: RoleService,
   ) {}
 
+  async getUser(id: number) {
+    const user = await this.userRepo.findOne({ where: { id } });
+    if (!user) throw new NotFoundException('USER.NOT_FOUND');
+    return user;
+  }
+
   async getWalletsId(serviceId: number, roleId: number, userId: number) {
     const wallets = await this.walletRepo.find({
       where: { serviceId, roleId, userId },

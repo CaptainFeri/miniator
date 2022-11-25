@@ -23,6 +23,9 @@ export class SuperAdminUserManagmentController {
   @UseGuards(AdminAuthGuard)
   async updateUser(@Param('id') id: number, @Body() data: AdminUpdateUesrDto) {
     const resUser = await this.superadminSerivce.updateUser(id, data);
+    return {
+      data: resUser,
+    };
   }
 
   @UseGuards(AdminAuthGuard)

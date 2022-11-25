@@ -57,7 +57,7 @@ export class SuperadminService {
       phone = 0,
       username = 0,
     } = data;
-    const user = await this.userRepo.findOne({ where: { id } });
+    const user = await this.userService.getUser(id);
     if (!user) throw new NotFoundException('USER.NOT_FOUND');
     const profile = await this.userService.getProfile(user.username);
     if (!profile) throw new NotFoundException('USER.NOT_FOUND');
