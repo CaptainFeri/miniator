@@ -23,6 +23,9 @@ import { SecurityQService } from 'src/security-q/security-q.service';
 import { WalletEntity } from 'src/users/entity/wallet.entity';
 import { getCurrencies } from 'src/users/type/currency.enum';
 import { UsersService } from 'src/users/users.service';
+import { AdminUpdateUesrDto } from './user-managment/dto/admin-update-user.dto';
+import { GenderEnum } from 'src/users/info/enum/gender.enum';
+import { ProfileDto } from 'src/users/dto/profile.dto';
 
 @Injectable()
 export class SuperadminService {
@@ -41,6 +44,35 @@ export class SuperadminService {
     @InjectRepository(WalletEntity)
     private readonly walletRepo: Repository<WalletEntity>,
   ) {}
+
+  async updateUser(id: number, data: AdminUpdateUesrDto) {
+    const {
+      birthday = 0,
+      city = 0,
+      firstname = 0,
+      gender = null,
+      lastname = 0,
+      nationalCode = 0,
+      password = 0,
+      phone = 0,
+      username = 0,
+    } = data;
+    const user = await this.userRepo.findOne({ where: { id } });
+    if (!user) throw new NotFoundException('USER.NOT_FOUND');
+    const profile = await this.userService.getProfile(user.username);
+    if (!profile) throw new NotFoundException('USER.NOT_FOUND');
+    const prof = new ProfileDto();
+    if (birthday != 0) prof.birthday = birthday;
+    if (city != 0) prof.city = city;
+    if (firstname != 0) prof.firstname = firstname;
+    if (gender != null) prof.gender = GenderEnum[gender];
+    if (lastname != 0) prof.lastname = lastname;
+    if (nationalCode != 0) prof.nationalCode = nationalCode;
+    if (phone != 0) prof.phone = phone;
+    const res = await this.userService.updateProfile(user.username, prof);
+    return res;
+  }
+
   async getQuestions() {
     return await this.securityQservice.getQuestions();
   }
