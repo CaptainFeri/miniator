@@ -23,7 +23,7 @@ export class AdminUserManagmentController {
   @ApiBearerAuth()
   @UseGuards(SubadminAuthGuard)
   async updateUser(@Param('id') id: number, @Body() data: AdminUpdateUesrDto) {
-    const resUser = await this.superadminSerivce.updateUser(id, data);
+    const resUser = await this.adminService.updateUser(id, data);
     return {
       data: resUser,
     };
